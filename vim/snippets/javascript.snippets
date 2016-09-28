@@ -1,0 +1,48 @@
+snippet cl
+	console.log(${1})
+
+snippet func
+	(${1}) => {
+		${2}
+	}
+
+snippet expf
+	export default (${1}) => {
+		${2}
+	}
+
+snippet expc
+	export default const ${1} = ${2}
+
+snippet import
+	import ${1} from '${2}'
+
+snippet describe
+	describe('${1}', () => {
+		${2}
+	})
+
+snippet it
+	it('${1}', () => {
+		${2}
+	})
+
+snippet beforeEach
+	beforeEach() => {
+		${2}
+	})
+
+snippet afterEach
+	afterEach() => {
+		${2}
+	})
+
+snippet context
+	context('${1}', () => {
+		${2}
+	})
+
+snippet promise
+	Promise((resolve, reject) => {
+		${1}
+	})

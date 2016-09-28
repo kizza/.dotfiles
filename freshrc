@@ -1,0 +1,25 @@
+#!/bin/sh
+
+fresh freshshell/fresh bin/fresh --bin
+fresh freshshell/fresh contrib/source-build.sh --file=~/.zshrc
+
+fresh config/\*
+
+# Git
+fresh-options --file=~/.gitconfig --marker
+  fresh git/config
+  fresh git/alias
+fresh-options
+
+# Vim
+fresh vim/begin.vim --file=~/.vimrc
+fresh-options --file=~/.vimrc
+  fresh vim/plugins/\*.vim
+fresh-options
+fresh vim/end.vim --file=~/.vimrc
+fresh vim/config/\*.vim --file=~/.vimrc
+
+# Snippets
+fresh vim/snippets/javascript.snippets --file=~/.vim/snippets/javascript.snippets
+fresh vim/snippets/python.snippets --file=~/.vim/snippets/python.snippets
+fresh vim/snippets/ruby.snippets --file=~/.vim/snippets/ruby.snippets
