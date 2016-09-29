@@ -18,8 +18,6 @@ set noeol
 
 " Window
 set hidden          " Allow hiding buffers with unsaved changes
-set number          " Show line numbers
-set relativenumber
 set ruler           " Show cursor position
 set spelllang=en_au " Australian English
 set cursorline      " Show current line
@@ -28,5 +26,11 @@ set autoindent
 " set smartindent
 set guifont=Source\ Code\ Pro\ 11
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
+
+" Moving around
+set number          " Show line numbers
+set relativenumber
+set scrolloff=3     " Keep 3 context lines above and below cursor
+
 
 runtime macros/matchit.vim
