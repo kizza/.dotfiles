@@ -11,13 +11,17 @@
 
   # Standard aliases
   ad = add
-  ch = checkout
   br = branch
+  ch = checkout
   cm = commit
-  s = status
   d = diff
-  pu = push
+  discard = checkout --
+  fixup = commit --fixup
   pl = pull
+  pu = push
+  s = status
+  unstage = reset HEAD
+  wipe = reset --hard HEAD
 
   # list aliases
   la = "!git config -l | grep alias | cut -c 7-"
