@@ -20,6 +20,7 @@
   pl = pull
   pu = push
   s = status
+  since-master = diff --name-only origin/master
   unstage = reset HEAD
   wipe = reset --hard HEAD
 
