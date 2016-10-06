@@ -10,9 +10,9 @@ Plug 'tpope/vim-endwise'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'rking/ag.vim'
 Plug 'tpope/vim-sensible' " Be sensible
-" Plug 'sheerun/vim-polyglot' " Language packs
+Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'vim-scripts/ReplaceWithRegister' " (eg. griw)
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-lastpat' " Search reuslts as text objects (eg. di/)
 Plug 'kana/vim-textobj-indent'  " Motions on similar indents of text (eg. <<ii, <<iI)
-" Plug 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
