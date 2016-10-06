@@ -6,6 +6,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-endwise'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'rking/ag.vim'
 Plug 'tpope/vim-sensible' " Be sensible
