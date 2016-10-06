@@ -92,8 +92,5 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Rails testing
-mini () { bin/rake test "$@" }
-
 # Syntax
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

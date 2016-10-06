@@ -9,6 +9,10 @@ alias vimrc="v ~/.vimrc"
 alias tmuxrc="v ~/.tmux.conf"
 alias bnode="node_modules/.bin/babel-node"
 
+alias fastcop='git since-master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion'
+mini () { bin/rake test "$@" }
+spec () { bin/rspec "$@" }
+
 alias g="git"
 alias gs="git status"
 alias gc="git commit"
