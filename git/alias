@@ -1,13 +1,16 @@
 [alias]
-  lg = !"git lg1"
-  lg1 = !"git lg1-specific --all"
-  lg2 = !"git lg2-specific --all"
-  lg3 = !"git lg3-specific --all"
-
-  lg1-specific = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  # lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-  lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-  lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
+  # Logs
+  l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit
+  l1 = !git l -n 1
+  l2 = !git l -n 2
+  l3 = !git l -n 3
+  l4 = !git l -n 4
+  l5 = !git l -n 5
+  l10 = !git l -n 10
+  l15 = !git l -n 15
+  l20 = !git l -n 20
+  l25 = !git l -n 25
+  latest = log -n 1
 
   # Standard aliases
   ad = add
