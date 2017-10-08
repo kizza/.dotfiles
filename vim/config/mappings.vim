@@ -15,9 +15,9 @@ nnoremap <Leader>b{ :normal! $%s}s{
 " Mapping Y to yank from current cursor position till end of line
 noremap Y y$
 
-" Tab navigation
-nmap <Tab> gt
-nmap <S-Tab> gT
+" " Tab navigation
+" nmap <Tab> gt
+" nmap <S-Tab> gT
 
 " Improve search commands
 nmap * *zz
