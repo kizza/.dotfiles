@@ -1,14 +1,14 @@
 " vimrc.js attemp
 " Plug 'othree/yajs.vim'
 " Plug 'othree/es.next.syntax.vim'
-Plug 'mxw/vim-jsx'
-let g:jsx_ext_required = 0
+" Plug 'mxw/vim-jsx'
+" let g:jsx_ext_required = 0
 " Plug 'othree/javascript-libraries-syntax.vim'
 
 Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
 
-" Plugin 'isRuslan/vim-es6'
+Plug 'isRuslan/vim-es6'
 " Plugin 'jelera/vim-javascript'
 " autocmd FileType javascript setlocal makeprg=standard
 
