@@ -23,3 +23,4 @@ fresh vim/config/\*.vim --file=~/.vimrc
 fresh vim/snippets/javascript.snippets --file=~/.vim/snippets/javascript.snippets
 fresh vim/snippets/python.snippets --file=~/.vim/snippets/python.snippets
 fresh vim/snippets/ruby.snippets --file=~/.vim/snippets/ruby.snippets
+fresh vim/snippets/elixir.snippets --file=~/.vim/snippets/elixir.snippets
