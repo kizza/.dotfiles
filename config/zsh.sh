@@ -50,7 +50,8 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z zsh-syntax-highlighting)
+# plugins=(git z zsh-syntax-highlighting)
+plugins=(z zsh-syntax-highlighting)
 
 # User configuration
 
@@ -62,6 +63,8 @@ export PATH=$PATH:$HOME/Code/plain-utils/bin:
 # export XDG_CONFIG_HOME="$HOME/.config"
 
 source $ZSH/oh-my-zsh.sh
+
+[ -f ~/.fzf.zsh  ] && source ~/.fzf.zsh
 
 # Docker compose
 # You may need to manually set your language environment
