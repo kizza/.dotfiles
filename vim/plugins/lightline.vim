@@ -21,13 +21,13 @@ let g:lightline = {
       \ }
       " \ 'subseparator': { 'left': '', 'right': '' }
 
-" Update lightline when syntaxtic is run
-augroup AutoSyntaxticLightLine
-  autocmd!
-  autocmd BufWritePost *.* call s:syntastic_update_lightline()
-augroup END"+
+" " Update lightline when syntaxtic is run
+" augroup AutoSyntaxticLightLine
+"   autocmd!
+"   autocmd BufWritePost *.* call s:syntastic_update_lightline()
+" augroup END"+
 
-function! s:syntastic_update_lightline()
-  SyntasticCheck
-  call lightline#update()
-endfunction
+" function! s:syntastic_update_lightline()
+"   SyntasticCheck
+"   call lightline#update()
+" endfunction
