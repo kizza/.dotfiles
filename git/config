@@ -12,6 +12,8 @@
   trustExitCode = true
 [mergetool]
   keepBackup = false
+[fetch]
+  prune = true
 [push]
   default = current
 [secrets]
