@@ -22,3 +22,18 @@
 # gettext			libuv			pow			zsh-completions
 # git-secrets		libvterm		pssh			zsh-syntax-highlighting
 # glib			libyaml			python
+
+# brew install direnv
+
+# brew install fzf
+# $(brew --prefix)/opt/fzf/install
+
+# brew install git-secrets
+# git secrets --install
+# git secrets --register-aws
+
+# brew install rg
+
+# brew install zsh-syntax-highlighting
+
+# chsh -s /bin/zsh (needed to be run)

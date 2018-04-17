@@ -57,7 +57,7 @@ plugins=(z zsh-syntax-highlighting)
 
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:/Users/keiran.oleary/.rbenv/shims:/Users/keiran.oleary/.rbenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/mysql/bin:/usr/local/var/rbenv/bin:/usr/local/sbin:usr/local/bin/pylint:$PATH"
 # export PATH="/Users/keiran.oleary/code/plain-utils/bin:$PATH"
-export PATH=$PATH:$HOME/Code/plain-utils/bin:
+# export PATH=$PATH:$HOME/Code/plain-utils/bin:
 
 # nvim
 # export XDG_CONFIG_HOME="$HOME/.config"
@@ -96,4 +96,4 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Syntax
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

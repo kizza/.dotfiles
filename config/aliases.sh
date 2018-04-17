@@ -1,4 +1,5 @@
-alias v="vim iu ~/.vimrc"
+# alias v="vim iu ~/.vimrc"
+alias v="vim"
 alias reload=". ~/.bashrc"
 
 alias dc="docker-compose"

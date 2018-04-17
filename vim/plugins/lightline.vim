@@ -19,6 +19,7 @@ let g:lightline = {
       \ 'separator': { 'left': '', 'right': '' },
       \ 'subseparator': { 'left': '', 'right': '' }
       \ }
+
       " \ 'subseparator': { 'left': '', 'right': '' }
 
 " " Update lightline when syntaxtic is run

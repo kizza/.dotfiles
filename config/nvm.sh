@@ -1,5 +1,8 @@
 source ~/.nvm/nvm.sh
 
+export NVM_DIR="$HOME/.nvm"
+   . "/usr/local/opt/nvm/nvm.sh"
+
 autoload -U add-zsh-hook
 load-nvmrc() {
   if [[ -f .nvmrc && -r .nvmrc  ]]; then

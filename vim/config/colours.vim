@@ -9,6 +9,7 @@ set t_Co=256
 " let g:grupvbox_contrast_dark = "hard"
 " let g:indent_guides_auto_colors = 1
 
+let g:solarized_termcolors=256
 colorscheme solarized
 
 highlight SpellBad ctermfg=magenta

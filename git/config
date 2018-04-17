@@ -1,9 +1,9 @@
 [user]
   name = Keiran
-  email = keiran.oleary@everydayhero.com.au
+  email = keiran.oleary@stacktracehq.com
 [core]
   excludesfile = /Users/keiran.oleary/.gitignore_global
-  editor = nvim
+  editor = vim
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
