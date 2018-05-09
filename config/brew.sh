@@ -37,3 +37,5 @@
 # brew install zsh-syntax-highlighting
 
 # chsh -s /bin/zsh (needed to be run)
+
+# brew cask install macdown
