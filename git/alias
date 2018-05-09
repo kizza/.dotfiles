@@ -21,7 +21,7 @@
   d = diff
   discard = checkout --
   fixup = commit --fixup
-  pl = pull
+  pl = pull --rebase
   pu = push
   s = status
   since-master = diff --name-only origin/master
