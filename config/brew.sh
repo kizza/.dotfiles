@@ -34,6 +34,8 @@
 
 # brew install rg
 
+# brew install diff-so-fancy
+
 # brew install zsh-syntax-highlighting
 
 # chsh -s /bin/zsh (needed to be run)
