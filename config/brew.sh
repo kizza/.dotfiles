@@ -32,6 +32,8 @@
 # git secrets --install
 # git secrets --register-aws
 
+# brew install fd
+# brew install tree
 # brew install rg
 
 # brew install diff-so-fancy

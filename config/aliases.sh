@@ -10,6 +10,7 @@ alias tmuxrc="v ~/.tmux.conf"
 alias bnode="node_modules/.bin/babel-node"
 alias filesize="du -hs"
 alias generate_uuid="uuid -v5 ns:URL keirans-test-$(date +%s) | pbcopy"
+# alias eye="cd $(fd -t d | fzf --preview 'tree {}')"
 
 alias fastcop='git since-master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion'
 mini () { bin/rake test "$@" }
