@@ -19,6 +19,9 @@ fresh-options
 fresh vim/end.vim --file=~/.vimrc
 fresh vim/config/\*.vim --file=~/.vimrc
 
+# Vscode
+fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/keybindings.json"
+
 # Snippets
 fresh vim/snippets/javascript.snippets --file=~/.vim/snippets/javascript.snippets
 fresh vim/snippets/python.snippets --file=~/.vim/snippets/python.snippets
