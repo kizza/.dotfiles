@@ -11,6 +11,10 @@ fresh-options --file=~/.gitconfig --marker
   fresh git/alias
 fresh-options
 
+# Base 16
+fresh chriskempson/base16-shell . --file=~/.config/base16-shell/
+fresh config/base-16.sh
+
 # Vim
 fresh vim/begin.vim --file=~/.vimrc
 fresh-options --file=~/.vimrc

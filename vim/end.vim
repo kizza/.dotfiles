@@ -1,5 +1,11 @@
 call plug#end()
 
+" base16
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
 " using Source Code Pro
 " set anti enc=utf-8
 
