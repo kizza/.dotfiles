@@ -33,6 +33,7 @@
 # git secrets --register-aws
 
 # brew install fd
+# brew install jq
 # brew install tree
 # brew install rg
 
