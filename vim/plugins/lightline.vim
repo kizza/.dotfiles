@@ -1,24 +1,33 @@
-Plug 'itchyny/lightline.vim'
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'relativepath', 'modified' ] ],
-      \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&readonly?"":""}',
-      \   'fileformat': '',
-      \   'fileencoding' :''
-      \ },
-      \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag'
-      \ },
-      \ 'component_type': {
-      \   'syntastic': 'error'
-      \ },
-      \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '', 'right': '' }
-      \ }
+" Plug 'itchyny/lightline.vim'
+" let g:lightline = {
+"       \ 'colorscheme': 'solarized',
+"       \ 'active': {
+"       \   'left': [ [ 'mode', 'paste' ], [ 'relativepath', 'modified' ] ],
+"       \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+"       \ },
+"       \ 'component': {
+"       \   'readonly': '%{&readonly?"":""}',
+"       \   'fileformat': '',
+"       \   'fileencoding' :''
+"       \ },
+"       \ 'component_expand': {
+"       \   'syntastic': 'SyntasticStatuslineFlag'
+"       \ },
+"       \ 'component_type': {
+"       \   'syntastic': 'error'
+"       \ },
+"       \ 'separator': { 'left': '', 'right': '' },
+"       \ 'subseparator': { 'left': '', 'right': '' }
+"       \ }
+
+
+
+
+
+
+
+
+
 
       " \ 'subseparator': { 'left': '', 'right': '' }
 
