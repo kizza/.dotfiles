@@ -33,4 +33,5 @@ fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/ke
 fresh vim/snippets/javascript.snippets --file=~/.vim/snippets/javascript.snippets
 fresh vim/snippets/python.snippets --file=~/.vim/snippets/python.snippets
 fresh vim/snippets/ruby.snippets --file=~/.vim/snippets/ruby.snippets
+fresh vim/snippets/typescript.snippets --file=~/.vim/snippets/typescript.snippets
 fresh vim/snippets/elixir.snippets --file=~/.vim/snippets/elixir.snippets
