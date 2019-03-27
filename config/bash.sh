@@ -14,3 +14,18 @@ function finished {
   echo "\n${GREEN}${TICK} Done!${RESET}"
 }
 
+function exitcode {
+  scratch=$(mktemp /tmp/scratch.XXXXX)
+  trap "rm -f $scratch" EXIT
+
+  eval $1 &> "$scratch"
+
+  if [ $? -eq 0 ]
+  then
+    echo "${GREEN}${TICK} Success${RESET}"
+  else
+    echo "${RED}${CROSS} Failure${RESET}" 2>&1
+    echo $(cat $scratch)
+  fi
+}
+

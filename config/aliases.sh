@@ -20,6 +20,8 @@ alias fastcop='git since-master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rub
 mini () { bin/rake test "$@" }
 spec () { bin/rspec "$@" }
 
+alias quiet="exitcode $1"
+
 alias g="git"
 alias gs="git status --branch"
 alias gc="git commit"
