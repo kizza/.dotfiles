@@ -1,6 +1,7 @@
 # alias v="vim iu ~/.vimrc"
 alias v="vim"
 alias reload=". ~/.zshrc"
+alias dotfiles="cd ~/.dotfiles"
 
 alias cat="bat"
 alias dc="docker-compose"
