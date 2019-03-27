@@ -2,6 +2,7 @@
 alias v="vim"
 alias reload=". ~/.zshrc"
 
+alias cat="bat"
 alias dc="docker-compose"
 alias whatalias="alias | grep"
 alias zshrc="v ~/.zshrc"
