@@ -26,6 +26,9 @@ fresh-options
 fresh vim/end.vim --file=~/.vimrc
 fresh vim/config/\*.vim --file=~/.vimrc
 
+# Alacritty
+fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
+
 # Vscode
 fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/keybindings.json"
 
