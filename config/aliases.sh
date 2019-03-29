@@ -1,4 +1,5 @@
 # alias v="vim iu ~/.vimrc"
+alias vim="/usr/local/bin/vim"
 alias v="vim"
 alias reload=". ~/.zshrc"
 alias dotfiles="cd ~/.dotfiles"

@@ -13,7 +13,8 @@ syntax on
 " colorscheme solarized
 
 highlight SpellBad ctermfg=magenta
-highlight Search guibg=NONE guifg=197 gui=underline ctermfg=197 ctermbg=NONE cterm=underline
+" highlight Search guibg=NONE guifg=197 gui=underline ctermfg=197 ctermbg=NONE cterm=underline
+highlight Search guibg=NONE guifg=DeepPink2 gui=underline
 highlight MatchParen ctermbg=110
 highlight ColorColumn ctermbg=217
 call matchadd('ColorColumn', '\(\%80v\|\%100v\)', 100)  " Show +80 as coloured
