@@ -14,6 +14,9 @@ fresh-options
 # Oh my zsh
 fresh robbyrussell/oh-my-zsh . --file=~/.config/oh-my-zsh/
 
+# Syntax highlighting
+fresh zsh-users/zsh-syntax-highlighting . --file=~/.config/oh-my-zsh-custom/plugins/zsh-syntax-highlighting/
+
 # Base 16
 fresh chriskempson/base16-shell . --file=~/.config/base16-shell/
 fresh config/base-16.sh

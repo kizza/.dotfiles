@@ -1,6 +1,7 @@
 # Path to your oh-my-zsh installation.
 # export ZSH="$HOME/.config/oh-my-zsh"; sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 export ZSH="$HOME/.config/oh-my-zsh";
+export ZSH_CUSTOM="$HOME/.config/oh-my-zsh-custom";
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
