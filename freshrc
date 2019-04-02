@@ -11,6 +11,9 @@ fresh-options --file=~/.gitconfig --marker
   fresh git/alias
 fresh-options
 
+# Oh my zsh
+fresh robbyrussell/oh-my-zsh . --file=~/.config/oh-my-zsh/
+
 # Base 16
 fresh chriskempson/base16-shell . --file=~/.config/base16-shell/
 fresh config/base-16.sh
