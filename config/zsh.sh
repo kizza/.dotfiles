@@ -53,7 +53,7 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git z zsh-syntax-highlighting)
-plugins=(z zsh-syntax-highlighting vi-mode)
+plugins=(z zsh-completions zsh-syntax-highlighting vi-mode)
 
 # User configuration
 
