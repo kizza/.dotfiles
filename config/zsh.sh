@@ -53,7 +53,13 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git z zsh-syntax-highlighting)
-plugins=(z zsh-completions zsh-syntax-highlighting vi-mode)
+plugins=(
+  z
+  zsh-completions
+  zsh-history-substring-search
+  zsh-syntax-highlighting
+  vi-mode
+)
 
 # User configuration
 
@@ -89,6 +95,16 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
+
+# Substring history search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
+
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
 
 
 # Docker compose
