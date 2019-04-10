@@ -1,3 +1,8 @@
+# Autorun tmux
+if [ -z "$TMUX" ]; then
+  tmux attach -t TMUX || tmux new -s TMUX
+fi
+
 # Path to your oh-my-zsh installation.
 # export ZSH="$HOME/.config/oh-my-zsh"; sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 export ZSH="$HOME/.config/oh-my-zsh";
