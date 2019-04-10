@@ -32,6 +32,6 @@ alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add"
 alias gl="git l"
-alias gbd="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 
 export MYVIMRC=~/.vimrc
