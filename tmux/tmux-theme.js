@@ -90,7 +90,7 @@ set -g display-panes-colour ${active}
 set -g display-panes-active-colour colour245
 
 # Clock mode
-set -g clock-mode-colour colour24
+set -g clock-mode-colour ${active}
 set -g clock-mode-style 24
 
 # Message
