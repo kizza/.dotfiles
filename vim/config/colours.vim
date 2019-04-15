@@ -19,3 +19,8 @@ highlight MatchParen ctermbg=110
 highlight ColorColumn ctermbg=217
 call matchadd('ColorColumn', '\(\%80v\|\%100v\)', 100)  " Show +80 as coloured
 
+" Tabs
+hi TabLine ctermfg=15 ctermbg=8
+hi TabLineFill ctermfg=15 ctermbg=8
+hi TabLineSel cterm=bold ctermfg=green ctermbg=black
+
