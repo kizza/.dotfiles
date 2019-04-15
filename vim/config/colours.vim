@@ -33,3 +33,8 @@ hi ALEError ctermfg=17 cterm=underline
 
 " Marks
 hi MarkologyHLo ctermfg=grey ctermbg=18
+
+" FZF
+hi fzf1 ctermfg=lightgrey ctermbg=black
+hi fzf2 ctermfg=lightgrey ctermbg=black
+hi fzf3 ctermfg=lightgrey ctermbg=black
