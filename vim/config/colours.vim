@@ -24,3 +24,6 @@ hi TabLine ctermfg=15 ctermbg=8
 hi TabLineFill ctermfg=15 ctermbg=8
 hi TabLineSel cterm=bold ctermfg=green ctermbg=black
 
+" Statusline
+hi StatusLine ctermfg=darkgrey ctermbg=black
+hi WildMenu cterm=bold ctermfg=18 ctermbg=20
