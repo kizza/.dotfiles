@@ -30,3 +30,6 @@ hi WildMenu cterm=bold ctermfg=18 ctermbg=20
 
 " Ale
 hi ALEError ctermfg=17 cterm=underline
+
+" Marks
+hi MarkologyHLo ctermfg=grey ctermbg=18
