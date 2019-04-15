@@ -23,9 +23,14 @@ set spelllang=en_au " Australian English
 set cursorline      " Show current line
 set autoread        " Reload file when edited externally
 set autoindent
+set mouse=a
+
 " set smartindent
 set guifont=Source\ Code\ Pro\ 11
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
+
+" Update faster (used for gitgutter)
+set updatetime=100
 
 " Moving around
 set number          " Show line numbers
