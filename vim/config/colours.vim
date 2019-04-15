@@ -27,3 +27,6 @@ hi TabLineSel cterm=bold ctermfg=green ctermbg=black
 " Statusline
 hi StatusLine ctermfg=darkgrey ctermbg=black
 hi WildMenu cterm=bold ctermfg=18 ctermbg=20
+
+" Ale
+hi ALEError ctermfg=17 cterm=underline

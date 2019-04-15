@@ -5,6 +5,4 @@ let g:ale_fixers = {
   \'elm': ['format'],
   \}
 let g:ale_fix_on_save = 1
-
-" highlight Search guibg=NONE guifg=197 gui=underline ctermfg=197 ctermbg=NONE cterm=underline
-highlight ALEError guibg=NONE guifg=Magenta gui=underline ctermfg=Magenta ctermbg=NONE cterm=underline
+let g:ale_sign_error = '!'
