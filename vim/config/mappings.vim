@@ -4,6 +4,8 @@ noremap <leader>n :NERDTree<cr>
 noremap <leader>f :NERDTreeFind<cr>
 nnoremap <C-p> :FZF<CR>
 nnoremap <Leader>/ :noh<CR><ESC>|
+nnoremap gd :ALEGoToDefinition<CR>
+nnoremap gh :ALEHover<CR>
 nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap <leader>it :tabedit %<CR>
