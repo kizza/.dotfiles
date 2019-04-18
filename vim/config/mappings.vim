@@ -2,6 +2,12 @@ let mapleader=","
 let g:mapleader = ","
 noremap <leader>n :NERDTree<cr>
 noremap <leader>f :NERDTreeFind<cr>
+
+" Buffer navigation
+nnoremap <leader>bb :BufExplorer<cr>
+nnoremap gt :bnext<CR>
+nnoremap gT :bprev<CR>
+
 nnoremap <C-p> :FZF<CR>
 nnoremap <Leader>/ :noh<CR><ESC>|
 nnoremap gd :ALEGoToDefinition<CR>
