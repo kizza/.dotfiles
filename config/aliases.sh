@@ -34,4 +34,14 @@ alias ga="git add"
 alias gl="git l"
 alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 
+wip() {
+  if [[ $# > 0 ]]; then
+    message="WIP: $*"
+  else
+    message="WIP"
+  fi
+
+  git commit -m "$(printf "$message\n\n[ci skip]\n")"
+}
+
 export MYVIMRC=~/.vimrc
