@@ -8,10 +8,13 @@ nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
 
-nnoremap <C-p> :FZF<CR>
 nnoremap <Leader>/ :noh<CR><ESC>|
 nnoremap gd :ALEGoToDefinition<CR>
 nnoremap gh :ALEHover<CR>
+nnoremap <Leader>ne :ALENextWrap<CR>
+nnoremap <Leader>pe :ALEPreviousWrap<CR>
+
+nnoremap <C-p> :FZF<CR>
 nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap <leader>it :tabedit %<CR>
