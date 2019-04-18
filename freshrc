@@ -13,6 +13,7 @@ fresh-options
 
 # Oh my zsh
 fresh robbyrussell/oh-my-zsh . --file=~/.config/oh-my-zsh/
+fresh zsh/kizza.zsh-theme --file=~/.config/oh-my-zsh-custom/themes/kizza.zsh-theme
 
 # Syntax highlighting
 fresh zsh-users/zsh-syntax-highlighting . --file=~/.config/oh-my-zsh-custom/plugins/zsh-syntax-highlighting/
