@@ -61,7 +61,7 @@ set -g status-right "${prefix}#[fg=colour235,bg=${active}]#[fg=${lightText},b
 
 # Window status
 set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir}#F "
-set -g window-status-current-format " #[fg=colour240]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag,🔍 ,}"
+set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag,🔍 ,}"
 
 # Current window status
 set -g window-status-current-bg ${activeTabBg}
