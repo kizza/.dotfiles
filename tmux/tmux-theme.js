@@ -4,7 +4,7 @@ const theme = process.env.THEME
 const date = '#(date \'+%a, %b %d\')'
 const time = '#(date \'+%I:%M\')'
 const dir = '#{b:pane_current_path}'
-const prefix = '#{?client_prefix,🔥,} '
+const prefix = '#{?client_prefix,#[fg=black]PREFIX,} '
 
 const colours = (dark) => {
   const background = 'black'
