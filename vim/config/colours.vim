@@ -41,3 +41,9 @@ hi MarkologyHLo ctermfg=grey ctermbg=18
 hi fzf1 ctermfg=lightgrey ctermbg=black
 hi fzf2 ctermfg=lightgrey ctermbg=black
 hi fzf3 ctermfg=lightgrey ctermbg=black
+
+" NERDTree
+" hi NERDTreeDir ctermbg=green
+hi NERDTreeDirSlash ctermfg=grey
+hi NERDTreeFile ctermfg=20
+hi NERDTreeFlags ctermfg=8

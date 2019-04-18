@@ -34,6 +34,10 @@ fresh-options
 fresh vim/end.vim --file=~/.vimrc
 fresh vim/config/\*.vim --file=~/.vimrc
 
+# Syntax
+fresh vim/syntax/nerdtree.vim --file=~/.vim/syntax/nerdtree.vim
+fresh vim/syntax/typescript.vim --file=~/.vim/syntax/typescript.vim
+
 # Alacritty
 fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
 
