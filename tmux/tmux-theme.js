@@ -79,11 +79,11 @@ set -g window-status-separator ""
 
 # Pane border
 set -g pane-border-bg default
-set -g pane-border-fg colour238
+set -g pane-border-fg colour18
 
 # Active pane border
 set -g pane-active-border-bg default
-set -g pane-active-border-fg ${active}
+set -g pane-active-border-fg colour18
 
 # Pane number indicator
 set -g display-panes-colour ${active}
