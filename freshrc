@@ -5,6 +5,9 @@ fresh freshshell/fresh contrib/source-build.sh --file=~/.zshrc
 
 fresh config/\*
 
+# Bin scripts
+fresh bin/\* --bin
+
 # Git
 fresh-options --file=~/.gitconfig --marker
   fresh git/\*
