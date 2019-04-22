@@ -7,8 +7,7 @@ fresh config/\*
 
 # Git
 fresh-options --file=~/.gitconfig --marker
-  fresh git/config
-  fresh git/alias
+  fresh git/\*
 fresh-options
 
 # Oh my zsh
