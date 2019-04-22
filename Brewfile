@@ -15,6 +15,7 @@ brew "git"
 brew "git-secrets"
 brew "htop"
 brew "jq"
+brew "neovim", args: ["HEAD"]
 brew "nuget"
 brew "ossp-uuid"
 brew "ripgrep"
