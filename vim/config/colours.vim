@@ -44,3 +44,8 @@ hi fzf3 ctermfg=lightgrey ctermbg=black
 hi NERDTreeDirSlash ctermfg=grey
 hi NERDTreeFile ctermfg=20
 hi NERDTreeFlags ctermfg=8
+
+" Coc
+hi CocHighlightText cterm=underline ctermbg=18    " Current mouseover
+hi CocHighlightRead cterm=underline ctermbg=18    " Related mouseover
+hi CocErrorSign ctermfg=black ctermbg=16
