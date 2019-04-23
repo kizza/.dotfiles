@@ -1,0 +1,19 @@
+{
+  "diagnostic.errorSign": "!",
+  "diagnostic.warningSign": "!",
+  "diagnostic.infoSign": ">>",
+  "diagnostic.hintSign": ">>",
+  "diagnostic.highlightOffset": 9999,
+  "diagnostic.signOffset": 9999,
+  "suggest.completionItemKindLabels": {
+    "file": "",
+    "folder": ""
+  },
+  "snippets.priority": 140,
+  "snippets.loadFromExtensions": false,
+  "snippets.extends": {
+    "typescript": [
+      "javascript"
+    ]
+  }
+}
