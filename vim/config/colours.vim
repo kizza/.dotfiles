@@ -3,6 +3,21 @@ syntax on
 " set background=light
 " set t_Co=256
 
+" base16
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
+" Conditional colours
+if $BASE16_THEME =~ "light"
+  set background="light"
+  source ~/.vim/syntax/light.vim
+else
+  set background="dark"
+  source ~/.vim/syntax/dark.vim
+endif
+
 " " colorscheme gruvbox
 " " set background=dark
 " " let g:gruvbox_italicize_comments = 1
