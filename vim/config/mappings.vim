@@ -26,6 +26,10 @@ noremap Y y$
 " nmap <Tab> gt
 " nmap <S-Tab> gT
 
+" ALE
+nnoremap <Leader>ne :ALENextWrap<CR>
+nnoremap <Leader>pe :ALEPreviousWrap<CR>
+
 " Improve search commands
 nmap * *zz
 nmap n nzz

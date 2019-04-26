@@ -60,6 +60,8 @@ hi NERDTreeDirSlash ctermfg=grey
 hi NERDTreeFile ctermfg=20
 hi NERDTreeFlags ctermfg=8
 
+" ALE
+hi ALEError ctermfg=15 ctermbg=Red
 " Coc
 hi CocHighlightText cterm=underline ctermbg=18    " Current mouseover
 hi CocHighlightRead cterm=underline ctermbg=18    " Related mouseover
