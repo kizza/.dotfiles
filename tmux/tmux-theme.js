@@ -11,7 +11,7 @@ const colours = (dark) => {
   const lightGrey = 'colour245'
   let active = 'green'
   let lightText = background
-  let darkText = 'colour232'
+  let darkText = active
 
   if (dark) {
     active = 'green'
