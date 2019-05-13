@@ -27,19 +27,27 @@ endif
 " let g:solarized_termcolors=256
 " colorscheme solarized
 
-highlight SpellBad ctermfg=magenta
-" highlight Search guibg=NONE guifg=197 gui=underline ctermfg=197 ctermbg=NONE cterm=underline
-highlight Search guibg=NONE guifg=DeepPink2 gui=underline
+" highlight SpellBad ctermfg=17
 highlight MatchParen ctermbg=110
-highlight ColorColumn ctermbg=217
+
+" Ruler at 80 and 100 (only shows within characters that go over it)
+highlight ColorColumn ctermbg=18
 call matchadd('ColorColumn', '\(\%80v\|\%100v\)', 100)  " Show +80 as coloured
 
 " Visual
-hi Visual ctermbg=18 ctermfg=21
+" hi Visual ctermbg=18 ctermfg=21
+
+" GitGutter
+" hi GitGutterAdd ctermfg=black ctermbg=green
+" hi GitGutterChange ctermfg=black ctermbg=blue
+" hi GitGutterDelete ctermfg=black ctermbg=16
+hi GitGutterAdd ctermfg=green
+hi GitGutterChange ctermfg=blue
+hi GitGutterDelete ctermfg=16
 
 " Tabs
-hi TabLine ctermfg=15 ctermbg=8
-hi TabLineFill ctermfg=15 ctermbg=8
+hi TabLine ctermfg=255 ctermbg=8
+hi TabLineFill ctermfg=255 ctermbg=8
 hi TabLineSel cterm=bold ctermfg=green ctermbg=black
 
 " Statusline
@@ -61,8 +69,15 @@ hi NERDTreeFile ctermfg=20
 hi NERDTreeFlags ctermfg=8
 
 " ALE
-hi ALEError ctermfg=15 ctermbg=Red
+hi ALEError ctermfg=15 ctermbg=red
+hi ALEErrorSign ctermfg=15 ctermbg=red
+hi ALEWarning ctermfg=15 ctermbg=yellow
+hi ALEWarningSign ctermfg=15 ctermbg=yellow
+
 " Coc
-hi CocHighlightText cterm=underline ctermbg=18    " Current mouseover
-hi CocHighlightRead cterm=underline ctermbg=18    " Related mouseover
-hi CocErrorSign ctermfg=black ctermbg=16
+hi CocErrorSign ctermfg=15 ctermbg=red
+hi CocErrorHighlight ctermfg=15 ctermbg=red
+" hi CocErrorHighlight ctermfg=red ctermbg=none
+hi CocWarningSign ctermfg=15 ctermbg=yellow
+hi CocWarningHighlight ctermfg=15 ctermbg=yellow
+" hi CocWarningHighlight ctermfg=yellow ctermbg=none

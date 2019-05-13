@@ -42,9 +42,12 @@ fresh vim/misc/coc-settings.json --file=~/.config/nvim/coc-settings.json
 fresh vim/misc/coc-settings.json --file=~/.vim/coc-settings.json
 
 # Syntax
+fresh vim/syntax/dark.vim --file=~/.vim/syntax/dark.vim
+fresh vim/syntax/light.vim --file=~/.vim/syntax/light.vim
 fresh vim/syntax/nerdtree.vim --file=~/.vim/syntax/nerdtree.vim
 fresh vim/syntax/gitcommit.vim --file=~/.vim/syntax/gitcommit.vim
 fresh vim/syntax/typescript.vim --file=~/.vim/syntax/typescript.vim
+fresh vim/syntax/typescript.vim --file=~/.vim/after/syntax/typescript.vim
 
 # Alacritty
 fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
