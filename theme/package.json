@@ -1,0 +1,14 @@
+{
+  "name": "kizza-theme-builder",
+  "version": "1.0.0",
+  "description": "Builds my themes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Keiran O'Leary",
+  "license": "ISC",
+  "dependencies": {
+    "color": "^3.1.1"
+  }
+}
