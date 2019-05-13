@@ -1,7 +1,7 @@
 # Set my terminal/tmux/vim theme to "light" or "dark"
 
 function setTheme {
-  node ~/.dotfiles/tmux/tmux-theme.js
+  node ~/.dotfiles/theme/tmux.js
   tmux source-file ~/.tmux.conf
 }
 
