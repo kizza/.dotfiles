@@ -2,7 +2,7 @@
   "diagnostic.errorSign": "!",
   "diagnostic.warningSign": "!",
   "diagnostic.infoSign": ">>",
-  "diagnostic.hintSign": ">>",
+  "diagnostic.hintSign": "?",
   "diagnostic.highlightOffset": 9999,
   "diagnostic.signOffset": 9999,
   "suggest.completionItemKindLabels": {
@@ -15,5 +15,6 @@
     "typescript": [
       "javascript"
     ]
-  }
+  },
+  "coc.preferences.formatOnSaveFiletypes": ["javascript", "typescript", "Markdown"]
 }
