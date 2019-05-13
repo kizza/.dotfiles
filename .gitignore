@@ -1,1 +1,4 @@
 config/secrets.sh
+node_modules
+theme/dist/*
+!theme/dist/.gitkeep
