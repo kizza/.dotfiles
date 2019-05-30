@@ -1,5 +1,7 @@
+BLACK=$(tput setaf 0)
 YELLOW=$(tput setaf 3)
 GREEN=$(tput setaf 2)
+GREENBG=$(tput setab 2)
 RED=$(tput setaf 1)
 RESET=$(tput sgr0)
 CHEVRON="\u2023"
@@ -11,8 +13,17 @@ function heading {
 }
 
 function finished {
-  echo "\n${GREEN}${TICK} Done!${RESET}"
+  echo "" && donetick
 }
+
+function donebox {
+  echo "${BLACK}${GREENBG} ${1:-Done} ${RESET}"
+}
+
+function donetick {
+  echo "${GREEN}${TICK} ${1:-Done}${RESET}"
+}
+
 
 function exitcode {
   scratch=$(mktemp /tmp/scratch.XXXXX)
