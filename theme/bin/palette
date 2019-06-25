@@ -1,0 +1,8 @@
+#!/bin/sh
+
+node built/palette.js "$@"
+if [ $? == 0 ]; then
+  chmod +x dist/shell.theme.sh
+  dist/shell.theme.sh
+  colours
+fi

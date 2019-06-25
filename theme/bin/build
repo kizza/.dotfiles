@@ -1,6 +1,6 @@
 #!/bin/sh
 
-node index.js "$1"
+node built/index.js "$1"
 chmod +x dist/shell.theme.sh
 dist/shell.theme.sh
 colours
