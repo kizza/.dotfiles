@@ -1,6 +1,7 @@
 import chroma from "chroma-js";
 import fs from "fs";
-import { formatNumber, formatColour } from "./funs";
+import { formatNumber, formatColour, randomiseArray } from "./funs";
+import { Colour } from "./models";
 
 const { assign, keys } = Object;
 
@@ -8,7 +9,7 @@ export default (color: string[], foreground: string, background: string) => {
   const hex: Record<string, string> = Array.from(color.keys()).reduce(
     (acc, i) =>
       assign({}, acc, {
-        [`COLOUR${formatNumber(i)}`]: color[i]
+        [`COLOUR_${formatNumber(i)}`]: color[i]
       }),
     {
       NORMAL_FOREGROUND: foreground,
@@ -27,6 +28,15 @@ export default (color: string[], foreground: string, background: string) => {
         .toString()
     }
   );
+
+  const additional = randomiseArray(color).map(x => chroma(x).saturate(1));
+  // const additional: Colour[] = chroma
+  //   .scale(color)
+  //   .mode("lch")
+  //   .colors(2)
+  //   .map(x => chroma(x));
+  hex["COLOUR_EXTRA_01"] = additional[0].toString();
+  hex["COLOUR_EXTRA_02"] = additional[1].toString();
 
   const colours: Record<string, string> = keys(hex).reduce(
     (acc, key) =>
