@@ -69,7 +69,9 @@ plugins=(
 
 # User configuration
 
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:/Users/keiran.oleary/.rbenv/shims:/Users/keiran.oleary/.rbenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/mysql/bin:/usr/local/var/rbenv/bin:/usr/local/sbin:usr/local/bin/pylint:$PATH"
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/mysql/bin:/usr/local/var/rbenv/bin:/usr/local/sbin:usr/local/bin/pylint:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.yarn/bin:$PATH"
 # export PATH="/Users/keiran.oleary/code/plain-utils/bin:$PATH"
 # export PATH=$PATH:$HOME/Code/plain-utils/bin:
 
