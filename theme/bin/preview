@@ -1,0 +1,61 @@
+##!/bin/bash
+
+files=( $(ls ~/.config/base16-shell/scripts/base16-*.sh) )
+# for path in "${files[@]}"; do
+#   echo "$path is a registered user"
+# done
+
+function set_theme() {
+  chmod +x $1
+  eval $1
+  chmod -x $path
+}
+
+function preview_theme() {
+  if [[ -z "${files[$1]}" ]]
+  then
+    echo "Theme does not exist"
+    return 0
+  fi
+
+  path=${files[$1]}
+  BASEPATH=$(basename $path)
+  FILE="${BASEPATH%%.*}"
+  THEME="${FILE/base16-/}"
+
+  clear
+  set_theme $path
+  colours
+
+  prev=$(($1 - 1))
+  next=$(($1 + 1))
+
+  echo ""
+  key=$(translate_key "How about '$THEME'? (base16_$THEME)")
+  case "$key" in
+      'left') preview_theme $prev;;
+      'right') preview_theme $next;;
+  esac
+}
+
+function translate_key() {
+  uparrow=$'\x1b[A'
+  downarrow=$'\x1b[B'
+  leftarrow=$'\x1b[D'
+  rightarrow=$'\x1b[C'
+
+  read -s -n3 -p "$1" key
+
+  case "$key" in
+  $uparrow)
+     echo "up";;
+  $downarrow)
+     echo "down";;
+  $leftarrow)
+     echo "left";;
+  $rightarrow)
+     echo "right";;
+  esac
+}
+
+preview_theme 0
