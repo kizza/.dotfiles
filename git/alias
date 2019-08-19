@@ -30,3 +30,6 @@
 
   # list aliases
   la = "!git config -l | grep alias | cut -c 7-"
+
+  # reset diff of file modes (will claim "bad input" if there are no diffs found)
+  permission-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
