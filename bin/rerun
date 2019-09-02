@@ -1,0 +1,20 @@
+#
+# Rerun sent command in particular tmux window
+#
+
+SESSIONS=( $(tmux list-sessions | grep -o -E '^[^:]+') )
+
+for SESSION in "${SESSIONS[@]}"; do
+  LINE=$(tmux list-windows -t $SESSION | grep -E 'Run')
+  if [[ ! -z "$LINE" ]]; then
+    PANE=$(echo $LINE | grep -o -E '^[0-9]')
+    FOUND="$SESSION:$PANE"
+  fi
+done
+
+if [ -z "$FOUND" ]; then
+  echo "Could not find window 'Run'"
+else
+  tmux send-keys -t $FOUND -X cancel
+  tmux send-keys -t $FOUND C-c "$1" Enter
+fi
