@@ -18,5 +18,5 @@ if [ -z "$FOUND" ]; then
   echo "Could not find window 'Run'"
 else
   tmux send-keys -t $FOUND -X cancel
-  tmux send-keys -t $FOUND C-c "$1" Enter
+  tmux send-keys -t $FOUND C-c "$1 && notify \"Yes\" \"It worked\" || notify \"Bummer\" \"It didn't work\"" Enter
 fi
