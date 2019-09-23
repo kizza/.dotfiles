@@ -44,6 +44,10 @@ fresh vim/config/\*.vim --file=~/.vimrc
 fresh vim/misc/coc-settings.json --file=~/.config/nvim/coc-settings.json
 fresh vim/misc/coc-settings.json --file=~/.vim/coc-settings.json
 
+# ft plugin
+fresh vim/ftplugin/cs.vim --file=~/.vim/ftplugin/cs.vim
+fresh vim/ftplugin/markdown.vim --file=~/.vim/ftplugin/markdown.vim
+
 # Syntax
 fresh vim/syntax/dark.vim --file=~/.vim/syntax/dark.vim
 fresh vim/syntax/light.vim --file=~/.vim/syntax/light.vim
@@ -59,8 +63,8 @@ fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
 fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/keybindings.json"
 
 # Snippets
-fresh vim/snippets/javascript.snippets --file=~/.vim/snippets/javascript.snippets
-fresh vim/snippets/python.snippets --file=~/.vim/snippets/python.snippets
-fresh vim/snippets/ruby.snippets --file=~/.vim/snippets/ruby.snippets
-fresh vim/snippets/typescript.snippets --file=~/.vim/snippets/typescript.snippets
-fresh vim/snippets/elixir.snippets --file=~/.vim/snippets/elixir.snippets
+fresh vim/snippets/javascript.snippets --file=~/.config/coc/ultisnips/javascript.snippets
+fresh vim/snippets/javascript.snippets --file=~/.config/coc/ultisnips/typescript.snippets
+# fresh vim/snippets/python.snippets --file=~/.config/coc/utilsnips/python.snippets
+# fresh vim/snippets/ruby.snippets --file=~/.config/coc/utilsnips/ruby.snippets
+# fresh vim/snippets/elixir.snippets --file=~/.config/coc/utilsnips/elixir.snippets

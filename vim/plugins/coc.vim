@@ -1,4 +1,6 @@
+" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+" Plug '~/Code/coc.nvim', {'do': { -> coc#util#install()}}
 
 "
 " Airline integration
@@ -117,7 +119,8 @@ vmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+" nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>ac  CocAction('codeActions')
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
@@ -162,3 +165,4 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " Commands
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 command! -nargs=0 OrganiseImports :CocCommand tsserver.organizeImports
+command! -nargs=0 FixAllImports :CocCommand tsserver.executeAutoFix

@@ -1,53 +1,14 @@
-snippet cl
-	console.log(${1})
+snippet foo "emitter properties" b
+private readonly ${1} = new Emitter<$2>()
+public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+endsnippet
 
-snippet func
-	(${1}) => {
-		${2}
-	}
-
-snippet expf
-	export default (${1}) => {
-		${2}
-	}
-
-snippet expc
-	export default const ${1} = ${2}
-
-snippet import
-	import ${1} from '${2}'
+snippet cl "console.log" b
+console.log(${1})
+endsnippet
 
 snippet describe
-	describe('${1}', () => {
-		${2}
-	})
-
-snippet it
-	it('${1}', () => {
-		${2}
-	})
-
-snippet beforeEach
-	beforeEach() => {
-		${2}
-	})
-
-snippet afterEach
-	afterEach() => {
-		${2}
-	})
-
-snippet context
-	context('${1}', () => {
-		${2}
-	})
-
-snippet promise
-	Promise((resolve, reject) => {
-		${1}
-	})
-
-snippet catch
-	catch((err) => {
-		${1}
-	})
+describe('${1}', () => {
+	${2}
+})
+endsnippet

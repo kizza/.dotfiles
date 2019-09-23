@@ -1,6 +1,24 @@
 syntax on
 
-" set background=light
+" if !exists('*LetThereBeLight')
+"   function! LetThereBeLight()
+"     " execute "!light"
+"     set background=light
+"     source ~/.vim/syntax/light.vim
+"   endfunction
+
+"   function! DarknessFalls()
+"     " execute "!dark"
+"     set background=dark
+"     source ~/.vim/syntax/dark.vim
+"   endfunction
+
+"   command Light call LetThereBeLight()
+"   command Dark call DarknessFalls()
+
+"   set background=light
+" endif
+
 " set t_Co=256
 
 " base16
@@ -76,8 +94,9 @@ hi ALEWarningSign ctermfg=15 ctermbg=yellow
 
 " Coc
 hi CocErrorSign ctermfg=15 ctermbg=red
-hi CocErrorHighlight ctermfg=15 ctermbg=red
-" hi CocErrorHighlight ctermfg=red ctermbg=none
-hi CocWarningSign ctermfg=15 ctermbg=yellow
-hi CocWarningHighlight ctermfg=15 ctermbg=yellow
-" hi CocWarningHighlight ctermfg=yellow ctermbg=none
+" hi CocErrorHighlight ctermfg=15 ctermbg=red
+hi CocErrorHighlight ctermfg=red ctermbg=none cterm=underline
+hi CocWarningSign ctermfg=yellow ctermbg=none
+hi CocWarningHighlight ctermfg=yellow ctermbg=none cterm=underline
+hi CocInfoSign ctermfg=yellow ctermbg=none
+hi CocInfoHighlight ctermfg=yellow ctermbg=none cterm=underline

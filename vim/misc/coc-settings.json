@@ -1,7 +1,7 @@
 {
   "diagnostic.errorSign": "!",
   "diagnostic.warningSign": "!",
-  "diagnostic.infoSign": ">>",
+  "diagnostic.infoSign": "i",
   "diagnostic.hintSign": "?",
   "diagnostic.highlightOffset": 9999,
   "diagnostic.signOffset": 9999,
@@ -12,9 +12,25 @@
   "snippets.priority": 140,
   "snippets.loadFromExtensions": false,
   "snippets.extends": {
-    "typescript": [
-      "javascript"
-    ]
+    "typescript": ["javascript"]
   },
-  "coc.preferences.formatOnSaveFiletypes": ["javascript", "typescript", "Markdown"]
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "Markdown"
+  ],
+  "languageserver": {
+    "elmLS": {
+      "command": "elm-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["elm"],
+      "rootPatterns": ["elm.json"],
+      "initializationOptions": {
+        "runtime": "node",
+        "elmPath": "elm",
+        "elmFormatPath": "elm-format",
+        "elmTestPath": "elm-test"
+      }
+    }
+  }
 }
