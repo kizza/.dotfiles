@@ -8,6 +8,9 @@ nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
 
+" Close all other buffers
+nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR>
+
 nnoremap <Leader>/ :noh<CR><ESC>|
 
 nnoremap <C-p> :FZF<CR>
