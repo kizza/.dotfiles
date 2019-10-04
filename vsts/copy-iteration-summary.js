@@ -1,19 +1,14 @@
 var { assign, keys } = Object;
 
-var getIterationNameFromUrl = () =>
-  new Promise((resolve, _reject) => {
-    const url = window.location.href;
+var organisation = "";
 
-    return resolve(
-      decodeURI(url)
-        .replace(/\\/g, "/")
-        .split("/")
-        .pop()
-        .replace(/%20/g, " ")
-    );
-  });
+var product = "";
 
-var copyToClipboardFromBrowser = message => {
+var fetchJson = url => fetch(url).then(response => response.json());
+
+var asyncMap = fun => items => Promise.all(items.map(fun));
+
+var copyToClipboard = message => {
   const el = document.createElement("textarea");
   el.value = message;
   el.setAttribute("readonly", "");
@@ -25,39 +20,25 @@ var copyToClipboardFromBrowser = message => {
   console.log(message);
 };
 
+var getIterationNameFromUrl = () =>
+  decodeURI(window.location.href)
+    .replace(/\\/g, "/")
+    .split("/")
+    .pop()
+    .replace(/%20/g, " ");
+
 var filterToStoryUrl = workItems =>
   workItems.filter(item => item.source === null).map(item => item.target.url);
 
 var getWorkItemsFromIteration = iteration =>
   Promise.resolve(iteration["_links"].workitems.href)
-    .then(fetch)
-    .then(response => response.json())
+    .then(fetchJson)
     .then(json => json.workItemRelations);
 
-var hydrateWorkItems = urls => Promise.all(urls.map(hydrateWorkItem));
-
-var getIterationByName = name =>
-  fetch(
+var getIterationsList = () =>
+  fetchJson(
     `https://${organisation}.visualstudio.com/Products/${product}/_apis/work/teamsettings/iterations?api-version=5.1`
-  )
-    .then(response => response.json())
-    .then(iterations => {
-      const iteration = iterations.value.find(
-        iteration => iteration.name.toUpperCase() === name.toUpperCase()
-      );
-
-      if (!iteration) {
-        alert(
-          `Could not find iteration "${name}", check console log for more details`
-        );
-        console.error(`Could not find iteration "${name}" within`, iterations);
-        throw new Error(`Could not find iteration "${name}"`);
-      }
-
-      return iteration;
-    })
-    .then(iteration => fetch(iteration.url))
-    .then(response => response.json());
+  ).then(iterations => iterations.value);
 
 var partitionWorkItems = workItems =>
   workItems.reduce((acc, each) => {
@@ -73,47 +54,45 @@ var countPartitionPoints = partition =>
 
 var partitionAsBlurb = (state, partition) => {
   const total = countPartitionPoints(partition);
+  const points = total > 0 ? `(${total} points)` : "";
   const items = partition
     .map(({ title, type, link }) => `${title} _(${type})_ ${link}`)
     .join("\n\n");
 
-  return `${stateToEmoji(state)} (${total} points)\n\n${items}`;
+  return `${stateToEmoji(state)} ${points}\n\n${items}`;
 };
 
 var stateToEmoji = state => {
   const emoji = {
     Closed: ":balloon: *Closed*",
     New: ":sparkles: *New stories*",
-    Active: ":hammer_and_wrench: *Carried over*"
+    Active: ":hammer_and_wrench: *Carried over*",
+    Resolved: ":ok_hand: *Resolved*"
   };
 
   return emoji[state] || state;
 };
 
-var formatSummaryResult = partitionWorkItems =>
-  Promise.resolve(partitionWorkItems)
-    .then(partitioned =>
-      keys(partitioned).reduce(
-        (acc, key) =>
-          acc.concat(
-            `${key} ${partitioned[key].length} stories (${countPartitionPoints(
-              partitioned[key]
-            )} points)`
-          ),
-        []
-      )
+var partitionSummary = partitionedWorkItems =>
+  keys(partitionedWorkItems)
+    .reduce(
+      (acc, key) =>
+        acc.concat(
+          `${key} ${
+            partitionedWorkItems[key].length
+          } stories (${countPartitionPoints(partitionedWorkItems[key])} points)`
+        ),
+      []
     )
-    .then(formattedPartitions => formattedPartitions.join("\n"));
+    .join("\n");
 
-var formatDetailedResult = partitionWorkItems =>
-  Promise.resolve(partitionWorkItems)
-    .then(partitioned =>
-      keys(partitioned).reduce(
-        (acc, key) => acc.concat(partitionAsBlurb(key, partitioned[key])),
-        []
-      )
+var partitionSummaryWithItems = partitionWorkItems =>
+  keys(partitionWorkItems)
+    .reduce(
+      (acc, key) => acc.concat(partitionAsBlurb(key, partitionWorkItems[key])),
+      []
     )
-    .then(formattedPartitions => formattedPartitions.join("\n\n\n"));
+    .join("\n\n\n");
 
 var formatWorkItems = workItems =>
   workItems.map(item => ({
@@ -124,24 +103,80 @@ var formatWorkItems = workItems =>
     link: item["_links"].html.href
   }));
 
-var hydrateWorkItem = workItemUrl =>
-  fetch(workItemUrl).then(response => response.json());
+var partitionIteration = iteration =>
+  getWorkItemsFromIteration(iteration)
+    .then(filterToStoryUrl)
+    .then(asyncMap(fetchJson))
+    .then(formatWorkItems)
+    .then(partitionWorkItems);
 
-getIterationNameFromUrl()
-  .then(getIterationByName)
-  .then(getWorkItemsFromIteration)
-  .then(filterToStoryUrl)
-  .then(hydrateWorkItems)
-  .then(formatWorkItems)
-  .then(partitionWorkItems)
-  .then(partitioned =>
-    formatDetailedResult(partitioned)
-      .then(copyToClipboardFromBrowser)
-      .then(() =>
-        formatSummaryResult(partitioned).then(summary => {
-          alert(`Copied result to clipboard\n\n${summary}`);
-        })
+var filterIteration = (partitionedIteration, predicate) =>
+  keys(partitionedIteration).reduce(
+    (acc, key) =>
+      predicate(key) ? assign(acc, { [key]: partitionedIteration[key] }) : acc,
+    {}
+  );
+
+var closedPartitionedPredicate = key =>
+  ["Closed", "Resolved"].indexOf(key) !== -1;
+
+var couldNotFindIterationWithin = (name, iterations) => {
+  alert(
+    `Could not find this iteration "${name}", check console log for more details`
+  );
+  console.error(`Could not find iteration "${name}" within`, iterations);
+  return new Error(`Could not find iteration "${name}"`);
+};
+
+var stringEquals = (string1, string2) =>
+  string1.toUpperCase() === string2.toUpperCase();
+
+var getCurrentAndPrevoiusIterations = () =>
+  getIterationsList().then(iterations => {
+    const currentInterationName = getIterationNameFromUrl();
+    const currentIteration = iterations.find(iteration =>
+      stringEquals(iteration.name, currentInterationName)
+    );
+
+    if (!currentIteration) {
+      return couldNotFindIterationWithin(currentInterationName, iterations);
+    }
+
+    const previousIteration =
+      iterations[iterations.indexOf(currentIteration) - 1];
+
+    return [currentIteration, previousIteration];
+  });
+
+var hydrateIteration = iteration => fetchJson(iteration.url);
+
+var tap = fun => input => {
+  fun(input);
+  return input;
+};
+
+getCurrentAndPrevoiusIterations()
+  .then(asyncMap(hydrateIteration))
+  .then(asyncMap(partitionIteration))
+  .then(([current, previous]) => [
+    current,
+    filterIteration(previous, closedPartitionedPredicate)
+  ])
+  .then(
+    tap(([current, previous]) =>
+      console.log("Previous", previous, "Current", current)
+    )
+  )
+  .then(iterations =>
+    Promise.resolve(iterations)
+      .then(asyncMap(partitionSummaryWithItems))
+      .then(formatted => formatted.reverse().join("\n\n\n"))
+      .then(copyToClipboard)
+      .then(_ => iterations)
+      .then(([current, _]) => current)
+      .then(partitionSummary)
+      .then(summary =>
+        alert(`${summary}\n\n(Copied full summary to clipboard)`)
       )
   )
-  .then(result => console.log(result))
-  .catch(e => console.log("There was an error", e));
+  .catch(e => console.error("There was an error :(", e));
