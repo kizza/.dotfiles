@@ -1,5 +1,6 @@
 config/secrets.sh
 node_modules
+theme/temp.png
 theme/built/*
 theme/dist/*
 !theme/dist/.gitkeep
