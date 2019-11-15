@@ -3,6 +3,8 @@ let g:mapleader = ","
 noremap <leader>n :NERDTree<cr>
 noremap <leader>f :NERDTreeFind<cr>
 
+inoremap jj <Esc>
+
 " Buffer navigation
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
@@ -13,8 +15,12 @@ nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 nnoremap <Leader>/ :noh<CR><ESC>|
 
+" FZF
 nnoremap <C-p> :FZF<CR>
-nnoremap <C-f> :call fzf#vim#ag('.', fzf#vim#with_preview({'options': ['--query', expand('<cword>')]}))<CR>
+nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
+nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
+nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
+
 nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap <leader>it :tabedit %<CR>
@@ -48,6 +54,9 @@ noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . 
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
+
+" Next diagnostic
+nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)

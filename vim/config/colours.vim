@@ -68,6 +68,9 @@ hi TabLine ctermfg=255 ctermbg=8
 hi TabLineFill ctermfg=255 ctermbg=8
 hi TabLineSel cterm=bold ctermfg=green ctermbg=black
 
+" Comments
+hi Comment ctermfg=8
+
 " Statusline
 hi StatusLine ctermfg=darkgrey ctermbg=black
 hi WildMenu cterm=bold ctermfg=18 ctermbg=20

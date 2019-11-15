@@ -17,6 +17,7 @@
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
     "typescript",
+    "typescript.tsx",
     "Markdown"
   ],
   "languageserver": {
