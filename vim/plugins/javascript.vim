@@ -13,6 +13,8 @@
 
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
+
 " " Plug 'isRuslan/vim-es6'
 
 " Plug 'elzr/vim-json'
