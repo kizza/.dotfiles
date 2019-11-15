@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+tsc $1 --lib es6,dom --outFile bookmarklet.js
+cat bookmarklet.js | pbcopy
+rm bookmarklet.js
+echo "Copied bookmarklet to clipboard"
+
+
