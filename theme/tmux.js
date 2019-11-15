@@ -1,23 +1,18 @@
-const fs = require('fs')
-const Color = require('color')
+const fs = require("fs");
 
-const theme = process.env.THEME
-const date = '#(date \'+%a, %b %d\')'
-const time = '#(date \'+%I:%M\')'
-const dir = '#{b:pane_current_path}'
-const prefix = '#{?client_prefix,#[fg=black]PREFIX,} '
+const date = "#(date '+%a, %b %d')";
+const time = "#(date '+%I:%M')";
+const dir = "#{b:pane_current_path}";
+const prefix = "#{?client_prefix,#[fg=black]PREFIX,} ";
 
-const colours = (dark) => {
-  const background = 'black'
-  const lightGrey = 'colour245'
-  let active = 'green'
-  let lightText = background
-  let darkText = active
+const colours = dark => {
+  const background = "black";
+  let active = "green";
+  let lightText = background;
+  let darkText = active;
 
   if (dark) {
-    active = 'green'
-    lightText = 'white'
-    darkText = active
+    lightText = "white";
   }
 
   return {
@@ -29,8 +24,8 @@ const colours = (dark) => {
     activeTabFg: darkText,
     inactiveTabBg: active,
     inactiveTabFg: background
-  }
-}
+  };
+};
 
 const buildTheme = ({
   active,
@@ -41,7 +36,7 @@ const buildTheme = ({
   inactiveTabBg,
   inactiveTabFg
 }) =>
-`
+  `
 # Status update interval
 set -g status-interval 1
 
@@ -60,7 +55,7 @@ set -g status-right "${prefix}#[fg=colour235,bg=${active}]#[fg=${lightText},b
 
 # Window status
 set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir}#F "
-set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag,🔍 ,}"
+set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag, ,}"
 
 # Current window status
 set -g window-status-current-style bg=${activeTabBg},fg=${activeTabFg}
@@ -98,16 +93,12 @@ set -g message-command-style bg=red,fg=yellow
 set -g mode-style bg=${active},fg=colour231
 `;
 
-const homedir = require('os').homedir();
-const writeTheme = (contents) =>
-  fs.writeFile(homedir + '/tmux-theme.conf', contents, 'utf8', (e) => {
-    console.log(e || 'Done')
+const homedir = require("os").homedir();
+const writeTheme = contents =>
+  fs.writeFile(homedir + "/tmux-theme.conf", contents, "utf8", e => {
+    console.log(e || "Done");
   });
 
 writeTheme(
-  buildTheme(
-    colours(
-      process.env.BASE16_THEME.indexOf('light') === -1
-    )
-  )
-)
+  buildTheme(colours(process.env.BASE16_THEME.indexOf("light") === -1))
+);
