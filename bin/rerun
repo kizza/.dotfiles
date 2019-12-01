@@ -1,20 +1,34 @@
 #
-# Rerun sent command in particular tmux window
+# Run sent command in particular tmux window (and pane)
+#
+# - Loops through tmux sessions to find windows matching "Run"
+# - Sends keys to the last pane within that matching window (within that session)
 #
 
+IFS=$'\n' # Match array on line break over space
 SESSIONS=( $(tmux list-sessions | grep -o -E '^[^:]+') )
-
 for SESSION in "${SESSIONS[@]}"; do
-  LINE=$(tmux list-windows -t $SESSION | grep -E 'Run')
-  if [[ ! -z "$LINE" ]]; then
-    PANE=$(echo $LINE | grep -o -E '^[0-9]')
-    FOUND="$SESSION:$PANE"
+
+  RERUN_WINDOW=$(tmux list-windows -t $SESSION | grep -E 'Run')
+  if [[ ! -z "$RERUN_WINDOW" ]]; then
+
+    # Found matching window
+    WINDOW=$(echo $RERUN_WINDOW | grep -o -E '^[0-9]')
+    PANES=( $(tmux list-panes -t "$SESSION:$WINDOW" | grep -o -E '^[0-9]') )
+    LAST_PANE_INDEX=${#PANES[@]}-1
+    PANE=${PANES[$LAST_PANE_INDEX]}
+
+    # TMUX path to pane
+    FOUND="$SESSION:$WINDOW.$PANE"
+    echo "Found tmux path $FOUND"
   fi
 done
 
 if [ -z "$FOUND" ]; then
   echo "Could not find window 'Run'"
+  notify "Oops" "Could not find 'Run' window"
 else
+  # Cancel process the run sent command
   tmux send-keys -t $FOUND -X cancel
   tmux send-keys -t $FOUND C-c "$1 && notify \"Yes\" \"It worked\" || notify \"Bummer\" \"It didn't work\"" Enter
 fi
