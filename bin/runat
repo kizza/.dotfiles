@@ -1,0 +1,49 @@
+#
+# Run sent command in particular tmux window (and pane)
+#
+# - Loops through tmux sessions to find windows matching "$1"
+# - Sends keys to the last pane within that matching window (unless specified PANE is provided)
+#
+
+# Usage: ^Window* {Pane?} Command
+if [[ $# -eq 3 ]]; then
+  PANE="$2"
+  COMMAND="$3"
+elif [[ $# -eq 2 ]]; then
+  COMMAND="$2"
+else
+  echo "Illegal number of parameters"
+  echo "Usage: ^Window* {Pane?} Command"
+  exit 2
+fi
+
+IFS=$'\n' # Match array on line break over space
+SESSIONS=( $(tmux list-sessions | grep -o -E '^[^:]+') )
+for SESSION in "${SESSIONS[@]}"; do
+
+  # Find matching window
+  MATCHING_WINDOW=$(tmux list-windows -t $SESSION | grep -E "$1")
+  if [[ ! -z "$MATCHING_WINDOW" ]]; then
+    WINDOW=$(echo $MATCHING_WINDOW | grep -o -E '^[0-9]')
+
+    # Use last pane (if not provided)
+    if [ -z "$PANE" ]; then
+      PANES=( $(tmux list-panes -t "$SESSION:$WINDOW" | grep -o -E '^[0-9]') )
+      LAST_PANE_INDEX=${#PANES[@]}-1
+      PANE=${PANES[$LAST_PANE_INDEX]}
+    fi
+
+    # TMUX path
+    FOUND="$SESSION:$WINDOW.$PANE"
+    echo "Found tmux path $FOUND"
+  fi
+done
+
+if [ -z "$FOUND" ]; then
+  echo "Could not find window '$1'"
+  notify "Oops" "Could not find '$1' window"
+else
+  # Cancel process the run sent command
+  tmux send-keys -t $FOUND -X cancel
+  tmux send-keys -t $FOUND C-c "$COMMAND" Enter
+fi
