@@ -18,6 +18,7 @@
     "javascript",
     "typescript",
     "typescript.tsx",
+    "typescriptreact",
     "Markdown"
   ],
   "languageserver": {
