@@ -9,6 +9,7 @@ inoremap jj <Esc>
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
+nnoremap <leader>x :bdelete<CR>
 
 " Close all other buffers
 nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR>
