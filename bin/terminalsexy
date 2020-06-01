@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# 1. Export a theme from http://terminal.sexy.com as JSON scheme
+# Run `terminalsexy '...'` (pasting in the json that was exported between single quotes)
+
+pushd ~/.dotfiles/theme
+bin/build $1
+popd
