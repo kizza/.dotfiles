@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Run `base16preview`
+
+pushd ~/.dotfiles/theme
+bin/preview
+popd
