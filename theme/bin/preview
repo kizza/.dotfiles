@@ -1,9 +1,10 @@
 ##!/bin/bash
 
+#
+# Previews from the base16 available themes
+#
+
 files=( $(ls ~/.config/base16-shell/scripts/base16-*.sh) )
-# for path in "${files[@]}"; do
-#   echo "$path is a registered user"
-# done
 
 function set_theme() {
   chmod +x $1
@@ -31,7 +32,7 @@ function preview_theme() {
   next=$(($1 + 1))
 
   echo ""
-  key=$(translate_key "How about '$THEME'? (base16_$THEME)")
+  key=$(translate_key "How about '$THEME'? (base16_$THEME) - use [left] and [right]")
   case "$key" in
       'left') preview_theme $prev;;
       'right') preview_theme $next;;
@@ -58,4 +59,13 @@ function translate_key() {
   esac
 }
 
-preview_theme 0
+#
+# Show a list of available themes, or preview it
+#
+# if [ -q $1]; then
+#   for path in "${files[@]}"; do
+#     echo $path | sed -E 's/.*base16-([^\.]+).sh/\1/'
+#   done
+# else
+  preview_theme 0
+# fi
