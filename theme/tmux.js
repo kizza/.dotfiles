@@ -95,7 +95,7 @@ set -g mode-style bg=${active},fg=colour231
 
 const homedir = require("os").homedir();
 const writeTheme = contents =>
-  fs.writeFile(homedir + "/tmux-theme.conf", contents, "utf8", e => {
+  fs.writeFile(homedir + "/.tmux-theme.conf", contents, "utf8", e => {
     console.log(e || "Done");
   });
 
