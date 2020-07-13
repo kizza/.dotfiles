@@ -29,6 +29,9 @@ fresh config/base-16.sh
 # tmux-up
 fresh jamesottaway/tmux-up tmux-up --bin
 
+# z
+fresh rupa/z z.sh --bin
+
 # Tmux
 fresh tmux/.tmux.conf --file=~/.tmux.conf
 
