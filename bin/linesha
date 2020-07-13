@@ -1,0 +1,7 @@
+echo "$1"
+echo "$2"
+git blame -L "$2,+1" -- "$1" | grep -o -E '^\^(([0-9]|[a-z]|[A-Z])+)'
+
+
+git blame -L 112,+1 -- src/app/registration-form/effects/get-privacy-policy-url.effect.spec.ts | grep -E -o '^([0-9]|[a-z]|[A-Z])+'
+
