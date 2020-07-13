@@ -9,6 +9,7 @@
     "file": "",
     "folder": ""
   },
+  "prettier.arrowParens": "avoid",
   "snippets.priority": 140,
   "snippets.loadFromExtensions": false,
   "snippets.extends": {

@@ -1,9 +1,10 @@
 " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim' ", {'branch': 'release', 'do': 'yarn install --frozen-lockfile'}
 " Plug '~/Code/coc.nvim', {'do': { -> coc#util#install()}}
 
 "If working on an old node app, we need a current nodejs
-let g:coc_node_path = '/Users/keiran/.nvm/versions/node/v10.15.3/bin/node'
+" let g:coc_node_path = '/Users/keiran/.nvm/versions/node/v10.15.3/bin/node'
 
 "
 " Airline integration
