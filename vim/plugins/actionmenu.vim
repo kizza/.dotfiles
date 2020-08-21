@@ -1,7 +1,5 @@
 if has('nvim')
-  Plug '~/Code/kizza/plugins/actionmenu.nvim'
-  " Plug 'kizza/actionmenu.nvim'
-  " Plug 'kizza/actionmenu.nvim', { 'branch': 'coc-code-actions' }
+  Plug 'kizza/actionmenu.nvim'
 endif
 
 "
