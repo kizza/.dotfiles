@@ -24,6 +24,10 @@ spec () { bin/rspec "$@" }
 alias quiet="exitcode $1"
 
 #
+# For ubuntu... phcopy (for my brain)
+alias pbcopy="xclip -selection clipboard"
+
+#
 # Git related
 #
 
