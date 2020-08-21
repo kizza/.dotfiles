@@ -76,6 +76,18 @@ stashrebase() {
   donebox
 }
 
+# Stash (include untracked files, keep current index), interactive rebase, then unstash
+stashpull() {
+  heading 'Stashing and pulling...'
+  git stash push -u -k -m 'Stashed for pull' --quiet
+  git pull --rebase
+  heading 'Unstashing...'
+  git stash pop --quiet
+  git reset --quiet
+  git status
+  donebox
+}
+
 # Create a fixup commit from fzf search of your branch's commits
 fixup() {
   local out sha
