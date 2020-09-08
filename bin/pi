@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+tmux rename-session "HASS"
+tmux rename-window "Home Assistant"
+echo "sudo su -- homeassistant | pbcopy"
+
+tmux send-keys 'clear' C-m
+tmux send-keys 'ssh pi@192.168.144.40' C-m
+
+# tmux splitw -h
+# tmux send-keys 'clear' C-m
+# tmux send-keys 'ssh pi@192.168.144.40' C-m
+
+tmux new-window
+tmux send-keys 'clear' C-m
+tmux send-keys 'cd ~/Code/kizza/happy-singing-kids-frontend' C-m
+tmux send-keys 'ssh pi@192.168.144.40' C-m
