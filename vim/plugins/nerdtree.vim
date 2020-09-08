@@ -12,3 +12,6 @@ let NERDTreeAutoDeleteBuffer = 1
 " autocmd vimenter * NERDTree
 
 Plug 'ryanoasis/vim-devicons'   " (see syntax/nerdtree.vim for icons/styles)
+
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " Colour the icons
+
