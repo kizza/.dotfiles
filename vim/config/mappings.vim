@@ -12,13 +12,15 @@ nnoremap gT :bprev<CR>
 nnoremap <leader>x :bdelete<CR>
 
 " Close all other buffers
-nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR>
+nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
 nnoremap <Leader>/ :noh<CR><ESC>|
 
 " FZF
-nnoremap <C-p> :FZF<CR>
-nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
+nnoremap <C-p> :Files<CR>
+nnoremap <C-b> :Buffers<CR>
+" nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
+nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
 nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
 
