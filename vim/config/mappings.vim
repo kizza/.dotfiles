@@ -20,9 +20,25 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 nnoremap <C-p> :Files<CR>
 nnoremap <C-b> :Buffers<CR>
 " nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
-nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
 nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
+
+  " \   'rg --column --line-number --no-heading --color=always '.shellescape(<cword>), 1,
+  " \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  " \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  " \   <bang>0)
+
+" nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
+nnoremap <C-f> :
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(expand('<cword>')), 1,
+  \   fzf#vim#with_preview({'left':'90%'}))<CR>
+
+" " Just use Rg for ag
+" command! -bang -nargs=* Ag
+"   \ call fzf#vim#grep(
+"   \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+"   \   fzf#vim#with_preview(), <bang>0)
 
 nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
