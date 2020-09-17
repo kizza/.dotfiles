@@ -17,8 +17,10 @@ nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 nnoremap <Leader>/ :noh<CR><ESC>|
 
 " FZF
-nnoremap <C-p> :Files<CR>
+" Use :GFiles if git is present
+nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 nnoremap <C-b> :Buffers<CR>
+
 " nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
 nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
