@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Usage: Run during rebase at particular commit
+# Format: 2020-09-25t21:10:43+10:00
+
+DATE=$1
+GIT_COMMITER_DATE="$DATE" git commit --amend --date="$DATE"
