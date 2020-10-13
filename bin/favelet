@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Generate javascript (from typescript)
+npx --quiet tsc $1 --target es6 --out favelet.js
+
+# URI Encode
+ENCODED=$(node -p 'const buffer = require("fs").readFileSync("./favelet.js"); encodeURIComponent(buffer.toString())')
+
+# Format as favelet
+FAVELET="javascript:(function(){;$ENCODED;})()"
+rm favelet.js
+
+# Copy to clipboard
+echo $FAVELET | pbcopy
+echo "Favelet copied to clipboard"
+
