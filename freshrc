@@ -62,6 +62,9 @@ fresh vim/syntax/typescript.vim --file=~/.vim/after/syntax/typescript.vim
 # Alacritty
 fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
 
+# Karabiner
+fresh karabiner/karabiner.json --file="~/.config/karabiner/karabiner.json"
+
 # Vscode
 fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/keybindings.json"
 
