@@ -43,6 +43,9 @@ fresh-options
 fresh vim/end.vim --file=~/.vimrc
 fresh vim/config/\*.vim --file=~/.vimrc
 
+# nvim
+fresh nvim/init.vim --file=~/.config/nvim/init.vim
+
 # Coc config
 fresh vim/misc/coc-settings.json --file=~/.config/nvim/coc-settings.json
 fresh vim/misc/coc-settings.json --file=~/.vim/coc-settings.json
