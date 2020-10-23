@@ -64,6 +64,7 @@ fresh vim/syntax/typescript.vim --file=~/.vim/after/syntax/typescript.vim
 
 # Alacritty
 fresh alacritty/alacritty.yml --file="~/.config/alacritty/alacritty.yml"
+fresh alacritty/alacritty.icns --file="/Applications/Alacritty.app/Contents/Resources/alacritty.icns"
 
 # Karabiner
 fresh karabiner/karabiner.json --file="~/.config/karabiner/karabiner.json"
