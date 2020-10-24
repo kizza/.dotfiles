@@ -96,11 +96,20 @@ fixup() {
     echo "No files are staged for a fixup"
     return
   fi
-  out=$(
-    git log master.. --graph --color=always \
-        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-    fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
-        --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  if [[ "$BRANCH" = "master" ]]; then
+    out=$(
+      git log HEAD~20 --graph --color=always \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
+          --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
+  else
+    out=$(
+      git log master.. --graph --color=always \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
+          --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
+  fi
   sha=$(sed 's/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
   if [ ! -z "$sha" ]; then
     git commit --fixup "$sha"
