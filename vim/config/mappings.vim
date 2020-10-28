@@ -31,7 +31,8 @@ nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
   " \   <bang>0)
 
 " nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
-nnoremap <C-f> :
+
+nnoremap <silent> <C-f> :
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(expand('<cword>')), 1,
   \   fzf#vim#with_preview({'left':'90%'}))<CR>
