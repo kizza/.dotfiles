@@ -4,6 +4,7 @@ Plug 'junegunn/fzf.vim'
 
 " set rtp+=/usr/local/opt/fzf
 " let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+let g:fzf_layout = { 'down': '80%' }
 
 " Keyword = Purple
 " Function = Aqua
