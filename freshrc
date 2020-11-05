@@ -73,6 +73,11 @@ fresh karabiner/karabiner.json --file="~/.config/karabiner/karabiner.json"
 # Vscode
 fresh vscode/keybindings.json --file="~/Library/Application Support/Code/User/keybindings.json"
 
+# Nix
+# nix-env -f '<nixpkgs>' -iA nix-direnv
+# fresh nix/nix.conf --file="/etc/nix/nix.conf"
+fresh nix/.direnvrc --file="~/.direnvrc"
+
 # Snippets
 fresh vim/snippets/javascript.snippets --file=~/.config/coc/ultisnips/javascript.snippets
 fresh vim/snippets/javascript.snippets --file=~/.config/coc/ultisnips/typescript.snippets
