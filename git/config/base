@@ -1,9 +1,9 @@
 [user]
   name = Keiran
-  email = keiran.oleary@stacktracehq.com
+  email = hello@keiranoleary.com
 [core]
-  excludesfile = /Users/keiran.oleary/.gitignore_global
-  editor = vim
+  excludesfile = ~/.gitignore
+  editor = nvim
   pager = diff-so-fancy | less --tabs=4 -RFX
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"

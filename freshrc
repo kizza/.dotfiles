@@ -10,8 +10,9 @@ fresh bin/\* --bin
 
 # Git
 fresh-options --file=~/.gitconfig --marker
-  fresh git/\*
+  fresh git/config/\*
 fresh-options
+fresh git/.gitignore --file=~/.gitignore
 
 # Oh my zsh
 fresh robbyrussell/oh-my-zsh . --file=~/.config/oh-my-zsh/
