@@ -20,8 +20,13 @@
     "typescript",
     "typescript.tsx",
     "typescriptreact",
-    "Markdown"
+    "Markdown",
+    "ruby"
   ],
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.autoformat": false,
+  "solargraph.hover": true,
   "languageserver": {
     "elmLS": {
       "command": "elm-language-server",
