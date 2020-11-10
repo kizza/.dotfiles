@@ -1,4 +1,5 @@
 config/secrets.sh
+result
 node_modules
 theme/temp.png
 theme/built/*

@@ -1,0 +1,26 @@
+{
+    "home-manager": {
+        "branch": "master",
+        "description": "Manage a user environment using Nix  [maintainer=@rycee] ",
+        "homepage": "https://rycee.gitlab.io/home-manager/",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "18a05a9604c1e5b0141d081e8733d1de4edd5520",
+        "sha256": "04xkn6zgwksil292sy9wkj716rp5vkd2h5nrwp3q619sjd1549b9",
+        "type": "tarball",
+        "url": "https://github.com/nix-community/home-manager/archive/18a05a9604c1e5b0141d081e8733d1de4edd5520.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "89281dd1dfed6839610f0ccad0c0e493606168fe",
+        "sha256": "14jwgdqbhxf9581z9afzjzj0r0maw3m7227gn5bpk4fn8057vs5s",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/89281dd1dfed6839610f0ccad0c0e493606168fe.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}

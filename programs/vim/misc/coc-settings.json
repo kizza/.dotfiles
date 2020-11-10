@@ -1,0 +1,45 @@
+{
+  "diagnostic.errorSign": "!",
+  "diagnostic.warningSign": "!",
+  "diagnostic.infoSign": "i",
+  "diagnostic.hintSign": "?",
+  "diagnostic2.highlightOffset": 9999,
+  "diagnostic2.signOffset": 9999,
+  "suggest.completionItemKindLabels": {
+    "file": "",
+    "folder": ""
+  },
+  "prettier.arrowParens": "avoid",
+  "snippets.priority": 140,
+  "snippets.loadFromExtensions": false,
+  "snippets.extends": {
+    "typescript": ["javascript"]
+  },
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "typescript.tsx",
+    "typescriptreact",
+    "Markdown",
+    "ruby"
+  ],
+  "solargraph.checkGemVersion": false,
+  "solargraph.diagnostics": false,
+  "solargraph.formatting": false,
+  "solargraph.autoformat": false,
+  "solargraph.hover": false,
+  "languageserver": {
+    "elmLS": {
+      "command": "elm-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["elm"],
+      "rootPatterns": ["elm.json"],
+      "initializationOptions": {
+        "runtime": "node",
+        "elmPath": "elm",
+        "elmFormatPath": "elm-format",
+        "elmTestPath": "elm-test"
+      }
+    }
+  }
+}
