@@ -20,7 +20,6 @@
   cm = commit
   d = diff
   discard = checkout --
-  fixup = commit --fixup
   pl = pull --rebase
   pu = push
   s = status
