@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# git@github.com:user/repo.git
+ROOT=$(git config --get remote.origin.url)
+
+# user/repo.git
+TAIL=${ROOT/#git@github\.com:/}
+
+# user/repo
+SLUG=${TAIL/%\.git/}
+
+URL="https://github.com/$SLUG/commits/master/$1"
+open $URL
