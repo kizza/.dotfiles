@@ -8,6 +8,7 @@ alias gl="git l"
 alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 alias gdba="git fetch --prune && git branch | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
 alias master="get checkout master"
+alias ir="git rebase -i master"
 
 fshow() {
   local out shas sha q k
