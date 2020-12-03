@@ -1,6 +1,7 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
+brew "git-fixup"
 brew "nvm"
 cask "karabiner-elements"
 cask "rectangle"
