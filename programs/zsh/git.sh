@@ -92,3 +92,5 @@ wip() {
   fi
   git commit -m "$(printf "$message\n\n[ci skip]\n")"
 }
+
+alias unwip='git log -n 1 | grep -q -c "WIP" && git reset HEAD~1'
