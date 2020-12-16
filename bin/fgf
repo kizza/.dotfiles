@@ -5,7 +5,12 @@ tmux rename-window "Backend"
 
 tmux send-keys 'clear' C-m
 tmux send-keys 'cd ~/Code/fgf' C-m
-tmux send-keys 'script/services start && overmind start' C-m
+tmux send-keys 'bin/webpack --watch --colours' C-m
+
+tmux splitw -h
+tmux send-keys 'cd ~/Code/fgf' C-m
+tmux send-keys 'rails s' C-m
+tmux send-keys 'v .' C-m
 
 # tmux splitw -h
 tmux new-window

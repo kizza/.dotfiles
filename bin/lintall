@@ -1,0 +1,1 @@
+rubocop && erblint --lint-all && script/ci_eslint
