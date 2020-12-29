@@ -47,6 +47,7 @@ nnoremap <silent> <C-f> :
 
 nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
+nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
 nmap <leader>it :tabedit %<CR>
 
 " vnoremap <C-s> d:execute 'normal i' . join(sort(split(getreg('"'))), ' ')<CR>
