@@ -6,6 +6,7 @@ noremap <leader>f :NERDTreeFind<cr>
 inoremap jj <Esc>
 
 " Buffer navigation
+nnoremap <C-b> :Buffers<CR>
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
@@ -19,7 +20,6 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 " FZF
 " Use :GFiles if git is present
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
-nnoremap <C-b> :Buffers<CR>
 
 nnoremap <leader>gc :!gitcontext %<CR>
 
