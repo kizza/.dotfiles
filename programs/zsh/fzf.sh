@@ -1,4 +1,8 @@
-# [ -f ~/.fzf.zsh  ] && source ~/.fzf.zsh
+# History completion
+if [ -n "${commands[fzf-share]}" ]; then
+  source "$(fzf-share)/key-bindings.zsh"
+  source "$(fzf-share)/completion.zsh"
+fi
 
 export FZF_DEFAULT_OPTS=''
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
