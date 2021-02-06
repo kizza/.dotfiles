@@ -5,7 +5,8 @@ let
 in
 
 pkgs.mkShell {
-  buildInputs = [
+  buildInputs = with pkgs; [
+    niv
     home-manager.home-manager
   ];
 
