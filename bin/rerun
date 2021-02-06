@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 #
-# Execute provided command within "Run" tmux window (last PANE)
+# Rerun an existing command
 #
 
-runat "Run" "$1 && notify \"Yes\" \"It worked\" || notify \"Bummer\" \"It didn't work\""
+FOUND=`/Users/keiran/.dotfiles/bin/tmux_at Run`
+
+# Cancel process the run sent command
+tmux send-keys -t $FOUND -X cancel
+tmux send-keys -t $FOUND C-c C-c Up Enter

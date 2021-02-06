@@ -1,22 +1,8 @@
 #!/usr/bin/env bash
 
-#
-# Run sent command in particular tmux window (and pane)
-#
-# - Loops through tmux sessions to find windows matching "$1"
-# - Sends keys to the last pane within that matching window (unless specified PANE is provided)
-#
-
-# Usage: ^Window* {Pane?} Command
-if [[ $# -eq 3 ]]; then
+# Usage: ^Window* {Pane?}
+if [[ $# -eq 2 ]]; then
   PANE="$2"
-  COMMAND="$3"
-elif [[ $# -eq 2 ]]; then
-  COMMAND="$2"
-else
-  echo "Illegal number of parameters"
-  echo "Usage: ^Window* {Pane?} Command"
-  exit 2
 fi
 
 IFS=$'\n' # Match array on line break over space
@@ -37,15 +23,11 @@ for SESSION in "${SESSIONS[@]}"; do
 
     # TMUX path
     FOUND="$SESSION:$WINDOW.$PANE"
-    echo "Found tmux path $FOUND"
   fi
 done
 
 if [ -z "$FOUND" ]; then
-  echo "Could not find window '$1'"
-  notify "Oops" "Could not find '$1' window"
+  exit 1
 else
-  # Cancel process the run sent command
-  tmux send-keys -t $FOUND -X cancel
-  tmux send-keys -t $FOUND C-c C-c "$COMMAND" Enter
+  echo "$FOUND"
 fi
