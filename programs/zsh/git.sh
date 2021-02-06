@@ -20,6 +20,15 @@ function gc() {
   fi
 }
 
+function gaf() {
+  if [ -z "$1" ]; then
+    echo "Pass the fuzzy match to git add with"
+  else
+    fd "$1" | xargs git add
+    git status
+  fi
+}
+
 fshow() {
   local out shas sha q k
   while out=$(
