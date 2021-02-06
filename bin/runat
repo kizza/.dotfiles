@@ -47,5 +47,5 @@ if [ -z "$FOUND" ]; then
 else
   # Cancel process the run sent command
   tmux send-keys -t $FOUND -X cancel
-  tmux send-keys -t $FOUND C-c "$COMMAND" Enter
+  tmux send-keys -t $FOUND C-c C-c "$COMMAND" Enter
 fi

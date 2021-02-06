@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Usage: ^Window* {Pane?}
+if [[ $# -eq 2 ]]; then
+  PANE="$2"
+fi
+
+IFS=$'\n' # Match array on line break over space
+SESSIONS=( $(tmux list-sessions | grep -o -E '^[^:]+') )
+for SESSION in "${SESSIONS[@]}"; do
+
+  # Find matching window
+  MATCHING_WINDOW=$(tmux list-windows -t $SESSION | grep -E "$1")
+  if [[ ! -z "$MATCHING_WINDOW" ]]; then
+    WINDOW=$(echo $MATCHING_WINDOW | grep -o -E '^[0-9]')
+
+    # Use last pane (if not provided)
+    if [ -z "$PANE" ]; then
+      PANES=( $(tmux list-panes -t "$SESSION:$WINDOW" | grep -o -E '^[0-9]') )
+      LAST_PANE_INDEX=${#PANES[@]}-1
+      PANE=${PANES[$LAST_PANE_INDEX]}
+    fi
+
+    # TMUX path
+    FOUND="$SESSION:$WINDOW.$PANE"
+  fi
+done
+
+if [ -z "$FOUND" ]; then
+  exit 1
+else
+  echo "$FOUND"
+fi
