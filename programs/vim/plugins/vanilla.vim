@@ -13,7 +13,10 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-lastpat' " Search reuslts as text objects (eg. di/)
 Plug 'kana/vim-textobj-indent'  " Motions on similar indents of text (eg. <<ii, <<iI)
 " Plug 'jiangmiao/auto-pairs'
+
 Plug 'vim-test/vim-test'
+let test#strategy = "neovim"
+
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jeetsukumaran/vim-markology'
 let g:markology_enable = 0

@@ -168,6 +168,7 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " Commands
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+command! -nargs=0 ESLint :CocCommand eslint.executeAutofix
 command! -nargs=0 OrganiseImports :CocCommand tsserver.organizeImports
 command! -nargs=0 FixAllImports :CocCommand tsserver.executeAutofix
 

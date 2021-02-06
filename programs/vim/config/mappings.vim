@@ -22,10 +22,15 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
 nnoremap <leader>gc :!gitcontext %<CR>
+nnoremap <leader>sh :execute "!linesha ".expand("%")." ".line(".")<CR>
+
+nnoremap <leader>tn :TestNearest<CR>
+nnoremap <leader>tf :TestFile<CR>
+nmap <silent> <leader>rs :let @+ = "HEADLESS=false fd . " . expand("%:h") . " \| entr rspec " . expand("%")<CR>
 
 " nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
-nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
+" nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
 
   " \   'rg --column --line-number --no-heading --color=always '.shellescape(<cword>), 1,
   " \   <bang>0 ? fzf#vim#with_preview('up:60%')
