@@ -1,6 +1,5 @@
 alias g="git"
 alias gs="git status --branch"
-alias gc="git commit"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add"
@@ -9,6 +8,15 @@ alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >
 alias gdba="git fetch --prune && git branch | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
 alias master="get checkout master"
 alias ir="git rebase -i master"
+
+# `gc "Foo"` commits with Foo (otherwise use normally)
+function gc() {
+  if [[ $# -eq 1 ]]; then
+    git commit -m "$1"
+  else
+    git commit "$@"
+  fi
+}
 
 fshow() {
   local out shas sha q k
