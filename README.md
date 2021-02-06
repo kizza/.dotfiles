@@ -14,6 +14,12 @@ sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-v
 nix-shell --run "home-manager switch"
 ```
 
+#### Update
+
+```
+./update
+```
+
 #### Set default shell
 ```
 sudo bash -c "echo $(which zsh) >> /etc/shells"
