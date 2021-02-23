@@ -6,12 +6,14 @@ npx tsc $1 --target es6 --out favelet.js
 
 # URI Encode
 # ENCODED=$(node -p 'const buffer = require("fs").readFileSync("./favelet.js"); encodeURIComponent(buffer.toString())')
-ENCODED=$(cat favelet.js)
+# SINGLE_LINE=$(cat favelet.js | tr -d '[:space:]')
+# ENCODED=$(cat favelet.js | tr -d '[:space:]')
+ENCODED=$(cat favelet.js | sed -e "s/\\n//g")
 
 # Format as favelet
 # FAVELET="javascript:(function(){;$ENCODED;})()"
 FAVELET="$ENCODED"
-# rm favelet.js
+rm favelet.js
 
 # Copy to clipboard
 echo $FAVELET | pbcopy
