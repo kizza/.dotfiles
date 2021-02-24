@@ -10,6 +10,7 @@
     programs/direnv.nix
     programs/git
     programs/karabiner
+    programs/swiftlint.nix
     programs/tmux
     programs/vim
     programs/zsh

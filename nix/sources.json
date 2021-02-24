@@ -22,5 +22,17 @@
         "type": "tarball",
         "url": "https://github.com/NixOS/nixpkgs/archive/2fcf614ea383bc4f0737b8f7304a10596935b23e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    }
+    },
+    "SwiftLint": {
+        "branch": "master",
+        "description": "A tool to enforce Swift style and conventions.",
+        "homepage": "https://realm.github.io/SwiftLint",
+        "owner": "realm",
+        "repo": "SwiftLint",
+        "rev": "46777539ad43c1339a390d4d51b07fbf7b34762e",
+        "sha256": "00vrlmmlzg2xi1is8rkwnydsiifrdxk1v3dls11407v1yjl1fkww",
+        "type": "tarball",
+        "url": "https://github.com/realm/SwiftLint/archive/46777539ad43c1339a390d4d51b07fbf7b34762e.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+      }
 }
