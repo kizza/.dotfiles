@@ -51,6 +51,18 @@ fshow() {
 }
 
 # Stash (include untracked files, keep current index), interactive rebase, then unstash
+wiprebase() {
+  heading 'Wipping and rebasing...'
+  git add .
+  wip "Doing a rebase"
+  git rebase -i --autosquash master
+  heading 'Unwipping...'
+  git log -n 1 | grep -q -c "WIP" && git reset HEAD~1
+  git status
+  donebox
+}
+
+# Stash (include untracked files, keep current index), interactive rebase, then unstash
 stashrebase() {
   heading 'Stashing and rebasing...'
   git stash push -u -k -m 'Stashed for rebase' --quiet
