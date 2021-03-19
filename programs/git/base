@@ -13,6 +13,8 @@
   trustExitCode = true
 [mergetool]
   keepBackup = false
+[interactive]
+  diffFilter = diff-so-fancy --patch
 [fetch]
   prune = true
 [push]
