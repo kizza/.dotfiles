@@ -11,6 +11,14 @@ alias gdba="git fetch --prune && git branch | grep -v 'master$' >/tmp/merged-bra
 alias master="get checkout master"
 alias ir="git rebase -i master"
 
+# Fuzzy find the branch to switch to
+function branch(){
+  BRANCH=$(git branch | fzf | awk '{$1=$1;print}')
+  if [ ! -z "$BRANCH" ]; then
+    git checkout "$BRANCH"
+  fi
+}
+
 # `gc "Foo"` commits with Foo (otherwise use normally)
 function gc() {
   if [[ $# -eq 1 ]]; then
