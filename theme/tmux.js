@@ -54,7 +54,7 @@ set -g status-right-length 150
 set -g status-right "${prefix}#[fg=colour235,bg=${active}]#[fg=${lightText},bg=colour235] ${time} #[fg=colour240,bg=colour235]#[fg=${lightText},bg=colour240] ${date} #[fg=colour245,bg=colour240]#[fg=colour232,bg=colour245,bold] #S "
 
 # Window status
-set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir}#F "
+set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag, ,}"
 set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag, ,}"
 
 # Current window status
