@@ -1,1 +1,1 @@
-node ~/.dotfiles/git/scripts/copy-commit-messages.js
+node ~/.dotfiles/programs/git/scripts/copy-commit-messages.js
