@@ -5,7 +5,7 @@
     ./fonts.nix
     programs/alacritty
     programs/base16-shell.nix
-    programs/bat.nix
+    programs/bat
     programs/diff-so-fancy.nix
     programs/direnv.nix
     programs/git
