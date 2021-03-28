@@ -5,14 +5,6 @@
   excludesfile = ~/.gitignore
   editor = nvim
   pager = diff-so-fancy | less --tabs=4 -RFX
-[difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path =
-[mergetool "sourcetree"]
-  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
-[mergetool]
-  keepBackup = false
 [interactive]
   diffFilter = diff-so-fancy --patch
 [fetch]
@@ -28,5 +20,14 @@
   templateDir = /Users/keiran.oleary/.git-templates/git-secrets
 [rebase]
   autosquash = true
+[mergetool "nvim"]
+  cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+[mergetool "fugitive"]
+  cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+  trustExitTool = false
+[mergetool "vscode"]
+  cmd = VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args --wait $MERGED
 [merge]
-  tool = opendiff
+  tool = fugitive
+[mergetool]
+  keepBackup = false
