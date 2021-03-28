@@ -10,6 +10,7 @@
     programs/direnv.nix
     programs/git
     programs/karabiner
+    programs/ripgrep
     programs/swiftlint.nix
     programs/tmux
     programs/vim
@@ -26,7 +27,6 @@
       fzf
       htop
       jq
-      ripgrep
       zoxide
       solargraph
       rubocop

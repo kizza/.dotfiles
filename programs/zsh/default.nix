@@ -24,6 +24,7 @@
         ${builtins.readFile ./nvm.sh}
         ${builtins.readFile ./path.sh}
         ${builtins.readFile ./prompt.sh}
+        ${builtins.readFile ./ripgrep.sh}
         ${builtins.readFile ./theme.sh}
         ${builtins.readFile ./tmux.sh}
         ${builtins.readFile ./zoxide.sh}
