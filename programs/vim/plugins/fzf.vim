@@ -4,6 +4,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 " set rtp+=/usr/local/opt/fzf
 " let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 let g:fzf_layout = { 'down': '80%' }
+let g:fzf_preview_window = ['right:50%', 'ctrl-\']
 
 " Keyword = Purple
 " Function = Aqua
