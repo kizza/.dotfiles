@@ -21,8 +21,15 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 " Use :GFiles if git is present
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
-nnoremap <leader>gc :!gitcontext %<CR>
-nnoremap <leader>sh :execute "!linesha ".expand("%")." ".line(".")<CR>
+nnoremap <silent> <leader>gc :!gitcontext %<CR>
+nnoremap <silent> <leader>gb :execute "!linesha ".expand("%")." ".line(".")<CR>
+nnoremap <leader>gs :G<CR>
+nnoremap <leader>dp :diffput 1<CR>
+nnoremap <leader>dh :diffget 2<CR>
+nnoremap <leader>dl :diffget 4<CR>
+
+" piggy backs off hunk preview, and hunk add
+nnoremap <leader>hn :GitGutterNextHunk<CR>
 
 nnoremap <leader>tn :TestNearest<CR>
 nnoremap <leader>tf :TestFile<CR>
