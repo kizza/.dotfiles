@@ -21,8 +21,8 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 " Use :GFiles if git is present
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
-nnoremap <silent> <leader>gc :!gitcontext %<CR>
-nnoremap <silent> <leader>gb :execute "!linesha ".expand("%")." ".line(".")<CR>
+nnoremap <silent> <leader>gc :execute("silent !gitcontext ".expand("%"))<CR>
+nnoremap <silent> <leader>gb :echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))<CR>
 nnoremap <leader>gs :G<CR>
 nnoremap <leader>dp :diffput 1<CR>
 nnoremap <leader>dh :diffget 2<CR>
