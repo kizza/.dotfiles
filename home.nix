@@ -30,6 +30,7 @@
       zoxide
       solargraph
       watchman
+      watch
     ];
 
     sessionVariables = {

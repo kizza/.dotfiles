@@ -4,6 +4,7 @@ alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add"
 alias ir="git rebase -i master"
+alias pollshow="watch --color --no-title git show --color" # Show the current commit (to run beside rebases)
 alias gl="git l"
 alias gll="git log --pretty=format:\"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s\" --stat"
 alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
