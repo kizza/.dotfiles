@@ -36,6 +36,9 @@ else
   source ~/.vim/syntax/dark.vim
 endif
 
+" Highlight
+hi Visual cterm=reverse
+
 " " colorscheme gruvbox
 " " set background=dark
 " " let g:gruvbox_italicize_comments = 1
