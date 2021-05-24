@@ -48,6 +48,7 @@ nnoremap <leader>dl :diffget 4<CR>
 
 " piggy backs off hunk preview, and hunk add
 nnoremap <leader>hn :GitGutterNextHunk<CR>
+nnoremap <leader>aw :ArgWrap<CR>
 
 nnoremap <leader>tn :TestNearest<CR>
 nnoremap <leader>tf :TestFile<CR>
