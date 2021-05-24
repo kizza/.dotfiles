@@ -31,6 +31,9 @@ nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
 nnoremap <Leader>/ :noh<CR><ESC>|
 
+" Open current file in new tmux split
+nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
+
 " FZF
 " Use :GFiles if git is present
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
