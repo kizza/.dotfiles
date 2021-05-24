@@ -12,6 +12,20 @@ nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
 nnoremap <leader>x :bdelete<CR>
 
+" Quick jump to buffer index
+func! BufferFromIndex(index)
+  let l:lines = split(execute('ls'), "\n")
+  if len(l:lines) > a:index - 1
+    let l:bufnum = trim(split(split(execute('ls'), "\n")[a:index - 1], " ")[0])
+    execute("buffer " . l:bufnum)
+  else
+    echo "No buffer at position " . a:index
+  endif
+endfunc
+for i in range(0, 9)
+  execute "nnoremap <leader>" . i . " :call BufferFromIndex(" . i . ")<CR>"
+endfo
+
 " Close all other buffers
 nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
