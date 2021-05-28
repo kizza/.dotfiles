@@ -1,8 +1,8 @@
-snippet cl
+snippet cl "console.log"
 	console.log(${1})
 
-snippet def
-	def ${1}
+snippet def "def" b
+	def ${1:name}
 		${2}
 	end
 
@@ -14,3 +14,12 @@ snippet it
 		${2}
 	end
 
+snippet describe
+	describe "${1}" do
+		${2}
+	end
+
+snippet render
+	render(${1:name}Component.new) do
+		${2}
+	end
