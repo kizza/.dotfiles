@@ -24,6 +24,7 @@
     "Markdown",
     "ruby"
   ],
+  "snippets.userSnippetsDirectory": "~/.vim/snippets",
   "solargraph.checkGemVersion": false,
   "solargraph.diagnostics": false,
   "solargraph.formatting": false,
