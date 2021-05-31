@@ -15,10 +15,12 @@ Plug 'kana/vim-textobj-indent'  " Motions on similar indents of text (eg. <<ii, 
 " Plug 'jiangmiao/auto-pairs'
 
 Plug 'vim-test/vim-test'
-let test#strategy = "neovim"
+let test#strategy = "vimux"
 
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jeetsukumaran/vim-markology'
 let g:markology_enable = 0
 
 Plug 'rhysd/git-messenger.vim'
+
+Plug 'preservim/vimux'

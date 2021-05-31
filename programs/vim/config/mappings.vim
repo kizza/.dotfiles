@@ -52,7 +52,17 @@ nnoremap <leader>aw :ArgWrap<CR>
 
 nnoremap <leader>tn :TestNearest<CR>
 nnoremap <leader>tf :TestFile<CR>
-nmap <silent> <leader>rs :let @+ = "HEADLESS=false fd . " . expand("%:h") . " \| entr rspec " . expand("%")<CR>
+
+nnoremap <leader>rl :VimuxInterruptRunner <bar> VimuxRunLastCommand<CR>
+nnoremap <leader>rr :VimuxOpenRunner<CR>
+nnoremap <leader>rp :VimuxPromptCommand<CR>
+nnoremap <leader>rP :call VimuxPromptCommandThenClose()<CR>
+nnoremap <leader>rc :VimuxClearTerminalScreen<CR>
+
+function! VimuxPromptCommandThenClose() abort
+  let l:command = input("Once?: ", "", 'shellcmd')
+  VimuxRunCommand(l:command . " && exit")
+endfunction
 
 " nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
