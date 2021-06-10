@@ -15,7 +15,7 @@
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./direnv.sh}
         ${builtins.readFile ./docker.sh}
-        ${builtins.readFile ./editor.sh}
+        ${builtins.readFile ./env.sh}
         ${builtins.readFile ./fzf.sh}
         ${builtins.readFile ./git.sh}
         ${builtins.readFile ./helpers.sh}
