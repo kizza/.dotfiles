@@ -19,6 +19,8 @@ in
     file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
     file.".vim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
 
+    file.".vim/plugged/vim-textobj-directional-indent/plugin/plugin.vim".text = builtins.readFile ./plugins/vim-textobj-directional-indent.vim;
+
     file.".vimrc".text = ''
       ${builtins.readFile ./begin.vim}
 

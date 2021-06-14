@@ -12,6 +12,7 @@ Plug 'vim-scripts/ReplaceWithRegister' " (eg. griw)
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-lastpat' " Search reuslts as text objects (eg. di/)
 Plug 'kana/vim-textobj-indent'  " Motions on similar indents of text (eg. <<ii, <<iI)
+Plug '~/.vim/plugged/vim-textobj-directional-indent'
 " Plug 'jiangmiao/auto-pairs'
 
 Plug 'vim-test/vim-test'
