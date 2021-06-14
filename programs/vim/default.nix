@@ -32,6 +32,7 @@ in
       ${builtins.readFile ./plugins/nerdtree.vim}
       ${builtins.readFile ./plugins/vim-better-whitespace.vim}
       ${builtins.readFile ./plugins/vim-airline.vim}
+      ${builtins.readFile ./plugins/vim-indent-guides.vim}
       ${builtins.readFile ./plugins/vanilla.vim}
       ${builtins.readFile ./end.vim}
 
