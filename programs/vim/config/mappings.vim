@@ -4,6 +4,7 @@ noremap <leader>n :NERDTree<cr>
 noremap <leader>f :NERDTreeFind<cr>
 
 inoremap jj <Esc>
+nnoremap <leader>ig :IndentGuidesToggle<CR>
 
 " Buffer navigation
 nnoremap <C-b> :Buffers<CR>
