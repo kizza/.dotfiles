@@ -3,7 +3,7 @@
 {
   home = {
     file.".gitconfig".text = ''
-      ${builtins.readFile ./base}
+      ${builtins.readFile ./config}
       ${builtins.readFile ./alias}
       ${builtins.readFile ./colours}
     '';
