@@ -6,7 +6,6 @@
     programs/alacritty
     programs/base16-shell.nix
     programs/bat
-    programs/diff-so-fancy.nix
     programs/direnv.nix
     programs/git
     programs/karabiner
@@ -23,6 +22,7 @@
     packages = with pkgs; [
       coreutils
       entr
+      delta
       fd
       fzf
       htop

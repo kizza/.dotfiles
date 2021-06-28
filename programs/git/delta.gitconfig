@@ -1,0 +1,29 @@
+[delta]
+  features = line-numbers decorations
+  navigate = false
+  side-by-side = false
+  syntax-theme = Base16
+  true-color = true
+[delta "decorations"]
+  commit-style = bold yellow
+  file-added-label = "  Added: "
+  file-modified-label = "  Edited: "
+  file-modified-label-style = yellow
+  file-removed-label = "  Deleted: "
+  file-renamed-label = "  Renamed: "
+  file-style = bold cyan
+  hunk-header-decoration-style = 8 box
+  hunk-header-style = bold purple
+  minus-emph-style = bold red 52
+  minus-empty-line-marker-style = normal "#3f0001"
+  minus-non-emph-style = bold red
+  minus-style = bold red
+  plus-emph-style = bold green 22
+  plus-empty-line-marker-style = normal "#002800"
+  plus-non-emph-style = green "#012800"
+  plus-style = green
+  zero-style = normal
+  line-numbers-style = 8
+  line-numbers-left-style = 8
+  line-numbers-right-style = 18
+
