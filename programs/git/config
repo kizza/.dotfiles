@@ -4,9 +4,13 @@
 [core]
   excludesfile = ~/.gitignore
   editor = nvim
-  pager = diff-so-fancy | less --tabs=4 -RFX
+[pager]
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
 [interactive]
-  diffFilter = diff-so-fancy --patch
+  diffFilter = delta --color-only
 [fetch]
   prune = true
 [push]

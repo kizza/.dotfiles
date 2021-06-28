@@ -44,7 +44,7 @@ fshow() {
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --bind "ctrl-m:execute:
                 (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | diff-so-fancy | less -R') << 'FZF-EOF'
+                xargs -I % sh -c 'git show % | delta --paging never | less -R') << 'FZF-EOF'
                 {}
 FZF-EOF"
 }
