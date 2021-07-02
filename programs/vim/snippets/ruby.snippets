@@ -19,7 +19,18 @@ snippet describe
 		${2}
 	end
 
+snippet let
+	let(:${1}) { ${2} }
+
+snippet create
+	create(:${1})
+
 snippet render
 	render(${1:name}Component.new) do
 		${2}
+	end
+
+snippet styled_container
+	styled_container do
+		${1}
 	end

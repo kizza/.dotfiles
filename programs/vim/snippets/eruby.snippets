@@ -1,4 +1,12 @@
+snippet end
+	<% end %>
+
 snippet render
 	<%= render(${1:name}Component.new) do %>
 		${2}
+	<% end %>
+
+snippet styled_container
+	<%= styled_container do %>
+		${1}
 	<% end %>
