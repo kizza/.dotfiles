@@ -65,6 +65,10 @@ function! VimuxPromptCommandThenClose() abort
   VimuxRunCommand(l:command . " && exit")
 endfunction
 
+" Simple erb openers (I hate these)
+imap <leader>{ <%
+imap <leader>} %>
+
 " nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
 " nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>

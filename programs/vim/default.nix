@@ -32,6 +32,8 @@ in
       ${builtins.readFile ./plugins/gitgutter.vim}
       ${builtins.readFile ./plugins/javascript.vim}
       ${builtins.readFile ./plugins/nerdtree.vim}
+      ${builtins.readFile ./plugins/ruby.vim}
+      ${builtins.readFile ./plugins/vim-argwrap.vim}
       ${builtins.readFile ./plugins/vim-better-whitespace.vim}
       ${builtins.readFile ./plugins/vim-airline.vim}
       ${builtins.readFile ./plugins/vim-indent-guides.vim}
