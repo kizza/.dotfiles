@@ -16,8 +16,8 @@
   hunk-header-style = bold purple
   minus-emph-style = bold red 52
   minus-empty-line-marker-style = normal "#3f0001"
-  minus-non-emph-style = bold red
-  minus-style = bold red
+  minus-non-emph-style = red
+  minus-style = red
   plus-emph-style = bold green 22
   plus-empty-line-marker-style = normal "#002800"
   plus-non-emph-style = green "#012800"
