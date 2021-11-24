@@ -24,6 +24,10 @@ function donetick {
   echo "${GREEN}${TICK} ${1:-Done}${RESET}"
 }
 
+function donearrow {
+  echo "${GREEN}${TICK} ${1:-Done}${RESET}"
+}
+
 function exitcode {
   scratch=$(mktemp /tmp/scratch.XXXXX)
   trap "rm -f $scratch" EXIT

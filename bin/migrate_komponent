@@ -1,0 +1,23 @@
+#!/bin/sh
+
+echo "Migrating $1"
+SRC="frontend/components/care/$1/"
+DEST="app/mounts/care/components/care/$1"
+
+# Copy the komponent to the view_component directory
+cp -R $SRC $DEST
+
+# Move each contained file to the root directory
+for file in $(ls $DEST/*); do
+  NEWDIR=$(dirname $(dirname $file)) # Move to parent directory
+  NEWNAME=$(basename $file | sed -E "s/^_?care_//") # Strip "care_" prefix
+  NEWNAME=$(echo $NEWNAME | sed -E "s/^$1\./$1_component\./") # Rename "foo" to "foo_component"
+
+  echo "Moving $file to $NEWDIR/$NEWNAME"
+  mv "$file" "$NEWDIR/$NEWNAME"
+done
+
+# Cleanup
+echo "Deleting original komponent"
+rm -rf $DEST
+rm -rf $SRC

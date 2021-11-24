@@ -1,5 +1,4 @@
 " hi Visual ctermbg=254
-
 hi Search ctermbg=none ctermfg=Blue cterm=underline
 hi IncSearch ctermbg=Blue ctermfg=255 cterm=underline
 

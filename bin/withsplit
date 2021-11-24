@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+tmux split-window -h -c "#{pane_current_path}"
+if [ -n "$1" ]; then
+  tmux send-keys "$1" C-m
+fi
+tmux select-pane -L

@@ -7,4 +7,4 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 
 " Yaml navigation
-Plug 'lmeijvogel/vim-yaml-helper'
+" Plug 'lmeijvogel/vim-yaml-helper'

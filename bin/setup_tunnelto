@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pushd ~/Code/fgf/
+./bin/rake dev:append_company_host $1
+popd
+
+vim ~/Code/Android/FiveGoodFriends/gradle.properties

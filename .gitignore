@@ -1,3 +1,4 @@
+*.lock
 config/secrets.sh
 result
 node_modules
