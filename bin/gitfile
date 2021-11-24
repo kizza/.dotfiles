@@ -9,5 +9,5 @@ TAIL=${ROOT/#git@github\.com:/}
 # user/repo
 SLUG=${TAIL/%\.git/}
 
-URL="https://github.com/$SLUG/tree/master/$1"
+URL="https://github.com/$SLUG/tree/master/$1#L$2"
 open $URL

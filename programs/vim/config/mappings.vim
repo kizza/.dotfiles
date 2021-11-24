@@ -77,7 +77,7 @@ nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --excl
 
 " nnoremap <silent> <leader>gc :call CustomAction()<CR>
 nnoremap <silent> <leader>gc :execute("silent !gitcontext ".expand("%"))<CR>
-nnoremap <silent> <leader>gf :execute("silent !gitfile ".expand("%"))<CR>
+nnoremap <silent> <leader>gf :execute("silent !gitfile ".expand("%")." ".line("."))<CR>
 nnoremap <silent> <leader>gb :echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))<CR>
 nnoremap <leader>gs :G<CR>
 nnoremap <leader>dp :diffput 1<CR>
