@@ -15,6 +15,7 @@ Plug '~/.vim/plugged/vim-textobj-directional-indent'
 " Plug 'jiangmiao/auto-pairs'
 
 Plug 'vim-test/vim-test'
+" let test#strategy = "neovim"
 let test#strategy = "vimux"
 
 Plug 'christoomey/vim-tmux-navigator'
@@ -24,3 +25,6 @@ let g:markology_enable = 0
 Plug 'rhysd/git-messenger.vim'
 
 Plug 'preservim/vimux'
+Plug 'thosakwe/vim-flutter'
+
+Plug 'chrisbra/Colorizer'

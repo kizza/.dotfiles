@@ -20,6 +20,10 @@ nix-shell --run "home-manager switch"
 ./update
 ```
 
+coc-snippets for vim
+- Ensure pip `sudo -H python -m ensurepip`
+- Update python's neovim `python -m pip install --user --upgrade pynvim`
+
 #### Set default shell
 ```
 sudo bash -c "echo $(which zsh) >> /etc/shells"

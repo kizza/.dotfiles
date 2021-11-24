@@ -1,7 +1,14 @@
-let mapleader=","
 let g:mapleader = ","
+" Experiemtn with space as leader
+map <Space> ,
+
+" I keep typing an uppercase W when saving (life is too short)
+command W w
+command Wq wq
+
 noremap <leader>n :NERDTree<cr>
 noremap <leader>f :NERDTreeFind<cr>
+noremap <leader>F :NERDTree <bar> NERDTreeFind<CR>
 
 inoremap jj <Esc>
 nnoremap <leader>ig :IndentGuidesToggle<CR>
@@ -35,10 +42,40 @@ nnoremap <Leader>/ :noh<CR><ESC>|
 " Open current file in new tmux split
 nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
 
+func! CustomAction()
+  let l:items = [
+    \ { 'word': 'Git Context', 'abbr': '1st', 'user_data': 'context' },
+    \ { 'word': 'Git File', 'abbr': '2nd', 'user_data': 'file' },
+    \ { 'word': 'Git Sha', 'abbr': '2nd', 'user_data': 'sha' },
+    \ ]
+
+  call actionmenu#open(
+    \ l:items,
+    \ { index, item -> CustomActionCallback(index, item) },
+    \ { 'icon': { 'character': '', 'foreground': 'yellow' } }
+    \ )
+endfunc
+
+func! CustomActionCallback(index, item)
+  if a:item['user_data'] == "context"
+    execute("silent !gitcontext ".expand("%"))
+  elseif a:item['user_data'] == "file"
+    execute("silent !gitfile ".expand("%"))
+  elseif a:item['user_data'] == "sha"
+    execute("silent !linesha ".expand("%")." ".line("."))
+    echom "Copied sha"
+  endif
+endfunc
+
+func! SinkFunction(type)
+  echo a:type
+endfunc
+
 " FZF
 " Use :GFiles if git is present
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
+" nnoremap <silent> <leader>gc :call CustomAction()<CR>
 nnoremap <silent> <leader>gc :execute("silent !gitcontext ".expand("%"))<CR>
 nnoremap <silent> <leader>gf :execute("silent !gitfile ".expand("%"))<CR>
 nnoremap <silent> <leader>gb :echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))<CR>
@@ -59,9 +96,14 @@ nnoremap <leader>rr :VimuxOpenRunner<CR>
 nnoremap <leader>rp :VimuxPromptCommand<CR>
 nnoremap <leader>rP :call VimuxPromptCommandThenClose()<CR>
 nnoremap <leader>rc :VimuxClearTerminalScreen<CR>
+" nnoremap <silent> <leader>rs :"HEADLESS=false rspec " . expand("%")<CR>
 
 function! VimuxPromptCommandThenClose() abort
-  let l:command = input("Once?: ", "", 'shellcmd')
+  if VimuxOption('VimuxCommandShell')
+    let l:command = input("Once?: ", "", 'shellcmd')
+  else
+    let l:command = input("Once?: ", "")
+  endif
   VimuxRunCommand(l:command . " && exit")
 endfunction
 
@@ -80,10 +122,17 @@ nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
 
 " nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
 
+" Searching
+
+command! -bang -nargs=* Rgg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --colors "path:fg:190,220,255" --colors "line:fg:128,128,128" --smart-case '.shellescape(<q-args>), 1, { 'options': '--color hl:123,hl+:222' }, 0)
+
 nnoremap <silent> <C-f> :
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(expand('<cword>')), 1,
-  \   fzf#vim#with_preview({'left':'90%'}))<CR>
+  \   fzf#vim#with_preview({ 'window': { 'width': 0.9, 'height': 0.7 } }))<CR>
+  " \   fzf#vim#with_preview({'left':'90%'}))<CR>
 
 " " Just use Rg for ag
 " command! -bang -nargs=* Ag
@@ -91,14 +140,14 @@ nnoremap <silent> <C-f> :
 "   \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
 "   \   fzf#vim#with_preview(), <bang>0)
 
-nmap <leader>v :tabedit $MYVIMRC<CR>
+" nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
 nmap <leader>it :tabedit %<CR>
 
 " vnoremap <C-s> d:execute 'normal i' . join(sort(split(getreg('"'))), ' ')<CR>
 
-nnoremap <silent> <Leader>d :AskVisualStudioCode<CR>
+" nnoremap <silent> <Leader>d :AskVisualStudioCode<CR>
 nnoremap <silent> <Leader>s :call ActionMenuCodeActions()<CR>
 
 " Change {} or () brackets on multiple lines
@@ -107,6 +156,7 @@ nnoremap <Leader>b{ :normal! $%s}s{
 
 " Mapping Y to yank from current cursor position till end of line
 noremap Y y$
+noremap <leader>y "+y
 
 noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"

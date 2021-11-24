@@ -32,12 +32,12 @@
 
     history = {
       ignoreDups = true;
-      share = false;
+      share = true;
     };
 
     shellAliases = {
       reload = ". ~/.config/zsh/.zshrc";
-      v = "nvim";
+      # v = "nvim";
       foo = "cat";
     };
 

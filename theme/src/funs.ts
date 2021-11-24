@@ -32,6 +32,7 @@ export const input = () => process.argv.slice(2).pop() || defaultInput;
 
 export const flags = (defaults: Record<string, any>) => {
   const pairs = chunk(process.argv.slice(2), 2);
+  console.log("pairs", pairs)
   const flags = pairs.reduce(
     (acc, pair) => assign({}, acc, { [pair[0].replace(/-/g, "")]: pair[1] }),
     {}

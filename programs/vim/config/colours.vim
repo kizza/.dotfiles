@@ -27,6 +27,9 @@ if filereadable(expand("~/.vimrc_background"))
   source ~/.vimrc_background
 endif
 
+hi Search cterm=reverse
+hi IncSearch cterm=reverse
+
 " Conditional colours
 if $BASE16_THEME =~ "light"
   set background="light"
@@ -36,7 +39,6 @@ else
   source ~/.vim/syntax/dark.vim
 endif
 
-" Highlight
 hi Visual cterm=reverse
 
 " " colorscheme gruvbox

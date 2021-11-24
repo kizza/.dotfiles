@@ -10,6 +10,7 @@
     "folder": ""
   },
   "prettier.arrowParens": "avoid",
+  "prettier.formatterPriority": -1,
   "eslint.autoFixOnSave": true,
   "snippets.priority": 140,
   "snippets.loadFromExtensions": false,

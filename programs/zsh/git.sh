@@ -2,22 +2,33 @@ alias g="git"
 alias gs="git status --branch"
 alias gd="git diff"
 alias gdc="git diff --cached"
-alias ga="git add"
+alias ga="git add -A" # -A adds deleted files by defailt also
 alias ir="git rebase -i master"
-alias pollshow="watch --color --no-title git show --color" # Show the current commit (to run beside rebases)
+alias current="git am --show-current-patch" # During a rebase, shows the current failed patch
+alias pollshow="watch --color --no-title --interval 0.5 git show --color" # Show the current commit (to run beside rebases)
 alias gl="git l"
 alias gll="git log --pretty=format:\"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s\" --stat"
 alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
 alias gdba="git fetch --prune && git branch | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
-alias master="get checkout master"
+alias master="git checkout master"
 alias ir="git rebase -i master"
 
 # Fuzzy find the branch to switch to
-function branch(){
-  BRANCH=$(git branch | fzf | awk '{$1=$1;print}')
+function branch() {
+  BRANCH=$(git branch --sort=-committerdate | fzf --height=50% --info=hidden --reverse | awk '{$1=$1;print}')
   if [ ! -z "$BRANCH" ]; then
     git checkout "$BRANCH"
   fi
+}
+
+# Open pr for the current branch
+function pr() {
+  ROOT=$(git config --get remote.origin.url)
+  TAIL=${ROOT/#git@github\.com:/}
+  SLUG=${TAIL/%\.git/}
+  BRANCH=$(git branch --show-current)
+  URL="https://github.com/$SLUG/pull/new/$BRANCH"
+  open $URL
 }
 
 # `gc "Foo"` commits with Foo (otherwise use normally)
@@ -33,7 +44,7 @@ function gaf() {
   if [ -z "$1" ]; then
     echo "Pass the fuzzy match to git add with"
   else
-    fd "$1" | xargs git add
+    fd "$1" | xargs git add -A
     git status
   fi
 }
@@ -48,6 +59,7 @@ fshow() {
                 {}
 FZF-EOF"
 }
+                # xargs -I % sh -c 'git show --color=always % | delta') << 'FZF-EOF'
 
 # Stash (include untracked files, keep current index), interactive rebase, then unstash
 wiprebase() {
@@ -59,6 +71,15 @@ wiprebase() {
   git log -n 1 | grep -q -c "WIP" && git reset HEAD~1
   git status
   donebox
+}
+
+stash() {
+  git stash push -u -m 'Stashed' --quiet
+  donetick "Stashed all"
+}
+
+unstash() {
+  git stash pop
 }
 
 # Stash (include untracked files, keep current index), interactive rebase, then unstash
@@ -96,20 +117,19 @@ fixup() {
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   if [[ "$BRANCH" = "master" ]]; then
     out=$(
-      git log HEAD~20 --graph --color=always \
-          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      git log HEAD~20 --graph --color=always  --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
           --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
   else
     out=$(
-      git log master.. --graph --color=always \
-          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      git log master.. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
-          --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
+          --preview "echo {} | cut -d ' ' -f2 | xargs git show --color" --toggle-sort=\`)
   fi
   sha=$(sed 's/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
   if [ ! -z "$sha" ]; then
     git commit --fixup "$sha"
+    donetick "Created fixup up for $sha $(git log --pretty=format:%s -1 $sha)"
   fi
 }
 

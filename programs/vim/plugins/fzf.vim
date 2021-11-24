@@ -6,6 +6,13 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 let g:fzf_layout = { 'down': '80%' }
 let g:fzf_preview_window = ['right:50%', 'ctrl-\']
 
+let g:fzf_action = {
+  \ 'ctrl-t': '!withvimsplit',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-o': '!open',
+  \ }
+
 " Keyword = Purple
 " Function = Aqua
 " Const = Red

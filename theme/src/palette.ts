@@ -1,8 +1,8 @@
 import chalk from "chalk";
-import { spawn } from "child_process";
+import {spawn} from "child_process";
 import chroma from "chroma-js";
 import getPixels from "get-pixels";
-import { uniqBy } from "lodash";
+import {uniqBy} from "lodash";
 import path from "path";
 import build from "./build";
 import {
@@ -12,14 +12,15 @@ import {
   removeColour,
   flags
 } from "./funs";
-import { Colour } from "./models";
+import {Colour} from "./models";
 
 const commands = flags({
   darken: false,
   lighten: false,
   pick: false,
   use: false,
-  random: false
+  random: false,
+  bg: false
 });
 
 const getImage = (): Promise<string> =>
@@ -81,25 +82,33 @@ const padColours = (colours: Colour[]) =>
 const randomiseColours = (colours: Colour[]) =>
   commands.random !== false ? randomiseArray(colours) : colours;
 
+const randomiseSomeColours = (colours: Colour[]) => {
+  if (commands.random === false) return colours;
+  const [red, green, ...others] = colours;
+  return [red, green, ...randomiseArray(others)]
+}
+
+const printColour = (colour: Colour) =>
+  chalk.bgHex(colour.toString())("   ")
+
 const printColours = (description = "Colours") => (colours: chroma.Color[]) => {
   console.log(description);
-  console.log(
-    colours.map(colour => chalk.bgHex(colour.toString())("   ")).join("")
-  );
+  console.log(colours.map(printColour).join(""));
   return colours;
 };
 
 const useBackground = (
   colours: Colour[]
-): { background: Colour; colours: Colour[] } => {
+): {background: Colour; colours: Colour[]} => {
   const index =
     commands.use !== false
       ? parseInt(commands.use) - 1
       : commands.pick !== false
-      ? parseInt(commands.pick) - 1
-      : 0;
+        ? parseInt(commands.pick) - 1
+        : 0;
+  const background = commands.bg ? chroma(`#${commands.bg}`) : colours[index]
   return {
-    background: colours[index],
+    background: background,
     colours:
       commands.pick !== false ? removeColour(colours, colours[index]) : colours
   };
@@ -118,10 +127,19 @@ const organiseColours = (colours: Colour[]) =>
     .then(colours => moveMatchToPosition(colours, "green", 1)); // Green
 
 const compile = (colours: Colour[], background: Colour) => {
-  let bg = background.darken(
-    parseFloat(commands.darken === false ? 1 : commands.darken)
-  );
-  const fg = chroma("#eeeeee");
+  let bg = background;
+  if (commands.darken) {
+    // let bg = background.darken(
+    //   parseFloat(commands.darken === false ? 1 : commands.darken/2)
+    // );
+    bg = background.darken(parseFloat(commands.darken))
+  }
+  console.log("commands", commands)
+  let fg = chroma("#eeeeee");
+  if (commands.random !== false) {
+    fg = randomiseColours(colours)[0].brighten(3);
+  }
+
   const base = [
     bg,
     ...colours,
@@ -138,14 +156,15 @@ getImage()
   .then(fileName => gePalette(fileName))
   .then(printColours("From file"))
   .then(_colours => {
-    const { background, colours } = useBackground(_colours);
+    const {background, colours} = useBackground(randomiseColours(_colours));
     return Promise.resolve(colours)
       .then(printColours("After background"))
       .then(padColours)
       .then(printColours("Padded"))
       .then(organiseColours)
       .then(printColours("Organised"))
-      .then(randomiseColours)
+      // .then(randomiseColours)
+      .then(randomiseSomeColours)
       .then(printColours("Randomised"))
       .then(colours => compile(colours, background));
   })
