@@ -31,6 +31,13 @@ function pr() {
   open $URL
 }
 
+# Open buildkite for the current branch
+function bk() {
+  BRANCH=$(git branch --show-current)
+  URL="https://buildkite.com/fivegoodfriends/fivegoodfriends/builds?branch=$BRANCH"
+  open $URL
+}
+
 # `gc "Foo"` commits with Foo (otherwise use normally)
 function gc() {
   if [[ $# -eq 1 ]]; then
