@@ -1,3 +1,4 @@
+if !has('gui_running')
 " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'neoclide/coc.nvim' ", {'branch': 'release', 'do': 'yarn install --frozen-lockfile'}
@@ -195,3 +196,4 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 
 let g:coc_snippet_next = '<tab>'
+end
