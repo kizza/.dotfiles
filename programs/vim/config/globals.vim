@@ -32,3 +32,12 @@ set relativenumber
 set scrolloff=3     " Keep 3 context lines above and below cursor
 
 runtime macros/matchit.vim
+
+
+if has('gui_running')
+  set guifont=SauceCodePro\ Nerd\ Font\ Mono:h18
+  set linespace=1
+  set showtabline=0
+  colorscheme base16-solarized-light
+  colorscheme base16-atelier-dune-light
+end
