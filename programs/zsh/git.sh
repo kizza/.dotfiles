@@ -56,6 +56,24 @@ function gaf() {
   fi
 }
 
+# Fuzzy find the branch to switch to
+function freset() {
+  FILES=$(git diff --cached --name-only | fzf --height=50% --info=hidden --multi)
+  if [ ! -z "$FILES" ]; then
+    if [[ $# -eq 1 ]]; then
+      echo $FILES | tr '\n' ' ' | xargs git reset -p
+    else
+      echo $FILES | xargs git reset
+    fi
+  fi
+}
+
+# # Fuzzy find the branch to switch to
+# function fresetp() {
+#   git diff --cached --name-only | fzf --height=50% --info=hidden --reverse | git reset
+# }
+
+
 fshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
