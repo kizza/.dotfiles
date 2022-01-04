@@ -10,6 +10,8 @@ in
   ];
 
   home = {
+    file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
+
     file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
     file.".vim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
 
@@ -33,6 +35,8 @@ in
       ${builtins.readFile ./plugins/vim-indent-guides.vim}
       ${builtins.readFile ./plugins/vanilla.vim}
       ${builtins.readFile ./end.vim}
+
+      ${builtins.readFile ./config/lua.vim}
 
       ${builtins.readFile ./config/colours.vim}
       ${builtins.readFile ./config/globals.vim}

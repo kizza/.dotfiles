@@ -164,6 +164,8 @@ noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . 
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+noremap <Leader>r :TSHighlightCapturesUnderCursor<CR>
+
 " " Tab navigation
 " nmap <Tab> gt
 " nmap <S-Tab> gT
