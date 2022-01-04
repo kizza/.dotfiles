@@ -10,12 +10,6 @@ in
   ];
 
   home = {
-    file.".config/nvim/init.vim".text = ''
-      set runtimepath^=~/.vim runtimepath+=~/.vim/after
-      let &packpath=&runtimepath
-      source ~/.vimrc
-    '';
-
     file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
     file.".vim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
 
@@ -52,5 +46,10 @@ in
 
   programs.neovim = {
     enable = true;
+    extraConfig = ''
+      set runtimepath^=~/.vim runtimepath+=~/.vim/after
+      let &packpath=&runtimepath
+      source ~/.vimrc
+    '';
   };
 }
