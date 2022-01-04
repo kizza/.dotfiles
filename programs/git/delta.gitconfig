@@ -3,7 +3,7 @@
   navigate = false
   side-by-side = false
   syntax-theme = Base16
-  true-color = true
+  true-color = always
 [delta "decorations"]
   commit-style = bold yellow
   file-added-label = "  Added: "
