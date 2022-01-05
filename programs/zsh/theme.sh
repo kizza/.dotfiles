@@ -9,7 +9,7 @@ function theme {
 # Set my terminal/tmux/vim theme to "light" or "dark"
 function setTheme {
   node ~/.dotfiles/theme/tmux.js
-  tmux source-file ~/.tmux.conf
+  tmux source-file ~/.tmux-theme.conf
 }
 
 alias light="base16_solarized-light && setTheme"
