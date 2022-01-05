@@ -43,6 +43,9 @@ set -g status-interval 1
 # Basic status bar colors
 set -g status-style bg=${active},fg=colour240
 
+# Primary status background
+set -g status-bg ${active}
+
 # Left side of status bar
 set -g status-left-style bg=${active}
 set -g status-left ""
