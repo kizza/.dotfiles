@@ -1,3 +1,8 @@
+hi NERDTreeCWD ctermfg=magenta
+hi NERDTreeUp ctermfg=darkgrey
+hi NERDTreeHelpTitle ctermfg=magenta
+hi NERDTreeHelpKey ctermfg=cyan
+
 ""
 "" Custom icons
 ""
