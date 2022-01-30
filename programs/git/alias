@@ -24,6 +24,7 @@
   d = diff
   discard = checkout --
   discardp = checkout -p --
+  main = checkout master
   master = checkout master
   pl = pull --rebase
   pu = push
