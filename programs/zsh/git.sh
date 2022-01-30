@@ -1,17 +1,18 @@
+alias trunk="git rev-parse --abbrev-ref origin/HEAD | sed 's/origin\///'"
 alias g="git"
 alias gs="git status --branch"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add -A" # -A adds deleted files by defailt also
-alias ir="git rebase -i master"
+alias ir="git rebase -i $(trunk)"
 alias current="git am --show-current-patch" # During a rebase, shows the current failed patch
 alias pollshow="watch --color --no-title --interval 0.5 git show --color" # Show the current commit (to run beside rebases)
 alias gl="git l"
 alias gll="git log --pretty=format:\"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s\" --stat"
-alias gdb="git fetch --prune && git branch --merged master | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
-alias gdba="git fetch --prune && git branch | grep -v 'master$' >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
-alias master="git checkout master"
-alias ir="git rebase -i master"
+alias gdb="git fetch --prune && git branch --merged $(trunk) | grep -vE '(master|main)$' >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches"
+alias gdba="git fetch --prune && git branch | grep -vE '(master|master)$' >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
+alias main="git checkout $(trunk)"
+alias master="git checkout $(trunk)"
 
 # Fuzzy find the branch to switch to
 function branch() {
@@ -91,7 +92,7 @@ wiprebase() {
   heading 'Wipping and rebasing...'
   git add .
   wip "Doing a rebase"
-  git rebase -i --autosquash master
+  git rebase -i --autosquash $(trunk)
   heading 'Unwipping...'
   git log -n 1 | grep -q -c "WIP" && git reset HEAD~1
   git status
@@ -111,7 +112,7 @@ unstash() {
 stashrebase() {
   heading 'Stashing and rebasing...'
   git stash push -u -k -m 'Stashed for rebase' --quiet
-  git rebase -i --autosquash master
+  git rebase -i --autosquash $(trunk)
   heading 'Unstashing...'
   git stash pop --quiet
   git reset --quiet
@@ -140,14 +141,14 @@ fixup() {
     return
   fi
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  if [[ "$BRANCH" = "master" ]]; then
+  if [[ "$BRANCH" = "master" || "$BRANCH" = "main" ]]; then
     out=$(
       git log HEAD~20 --graph --color=always  --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
           --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
   else
     out=$(
-      git log master.. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
+      git log $(trunk).. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
           --preview "echo {} | cut -d ' ' -f2 | xargs git show --color" --toggle-sort=\`)
   fi
