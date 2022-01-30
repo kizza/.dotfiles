@@ -2,6 +2,7 @@ hi NERDTreeCWD ctermfg=magenta
 hi NERDTreeUp ctermfg=darkgrey
 hi NERDTreeHelpTitle ctermfg=magenta
 hi NERDTreeHelpKey ctermfg=cyan
+hi NERDTreeExecFile ctermfg=magenta
 
 ""
 "" Custom icons
