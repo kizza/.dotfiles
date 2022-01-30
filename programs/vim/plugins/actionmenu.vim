@@ -1,5 +1,6 @@
 if has('nvim')
   Plug 'kizza/actionmenu.nvim'
+  Plug '~/Code/kizza/jump-from-treesitter.nvim'
 endif
 
 "

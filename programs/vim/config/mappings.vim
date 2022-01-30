@@ -13,6 +13,8 @@ noremap <leader>F :NERDTree <bar> NERDTreeFind<CR>
 inoremap jj <Esc>
 nnoremap <leader>ig :IndentGuidesToggle<CR>
 
+nmap <silent> gd :call jump_from_treesitter#jump()<CR>
+
 " Buffer navigation
 nnoremap <C-b> :Buffers<CR>
 nnoremap <leader>bb :BufExplorer<cr>
