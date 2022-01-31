@@ -1,4 +1,5 @@
 alias fat="bat"
+alias ls="exa"
 alias dotfiles="cd ~/.dotfiles"
 
 # Run cops/linters on branch files

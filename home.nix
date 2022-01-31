@@ -22,6 +22,7 @@
     packages = with pkgs; [
       coreutils
       entr
+      exa
       delta
       fd
       fzf
