@@ -35,7 +35,7 @@ function pr() {
 # Open buildkite for the current branch
 function bk() {
   BRANCH=$(git branch --show-current)
-  URL="https://buildkite.com/fivegoodfriends/fivegoodfriends/builds?branch=$BRANCH"
+  URL="https://buildkite.com/thelookoutway/lookout/builds?branch=$BRANCH"
   open $URL
 }
 
