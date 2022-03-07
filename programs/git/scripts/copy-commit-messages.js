@@ -3,9 +3,14 @@
  *
  * This script can be run as a bookmarklet within the browser (from a VSTS pull request)
  * or directly from the commandline on a particular branch.
+ *
+ * `node run programs/git/scripts/copy-commit-messages.js test`
  */
 
+const {argv0} = require("process");
+
 const IN_NODE = typeof window === "undefined";
+const TRUNK = IN_NODE && process.argv.slice(2).pop();
 const TESTING = IN_NODE && process.argv.slice(2).pop() === "test";
 
 //
@@ -13,14 +18,14 @@ const TESTING = IN_NODE && process.argv.slice(2).pop() === "test";
 //
 
 const getCommitsFromCommandline = () => {
-  const { spawn } = require("child_process");
+  const {spawn} = require("child_process");
 
   return new Promise((resolve, reject) => {
     let data = "";
     const divider = "<DIVIDER>";
     const git = spawn("git", [
       "log",
-      "master..",
+      `${TRUNK}..`,
       `--format=format:${divider}%B`
     ]);
     git.stderr.on("data", reject);
@@ -86,7 +91,7 @@ const copyToClipboardFromBrowser = message => {
   const el = document.createElement("textarea");
   el.value = message;
   el.setAttribute("readonly", "");
-  el.style = { position: "absolute", left: "-9999px" };
+  el.style = {position: "absolute", left: "-9999px"};
   document.body.appendChild(el);
   el.select();
   document.execCommand("copy");
@@ -147,37 +152,33 @@ const formatCommit = input => {
   return `${firstLine}\n\n${comments.join("\n\n")}`;
 };
 
-const formatCommits = commits =>
-  "**Commits**" +
-  bulletPoint +
-  commits
-    .reverse()
-    .map(formatCommit)
-    .join(bulletPoint);
+const formatCommits = commits => commits.length > 1
+  ? `**Commits**${bulletPoint}${commits.reverse().map(formatCommit).join(bulletPoint)}`
+  : commits.join("")
 
 const setup = () =>
   IN_NODE
     ? {
-        getCommits: getCommitsFromCommandline,
-        copyCommits: copyToClipBoardFromCommandline
-      }
+      getCommits: getCommitsFromCommandline,
+      copyCommits: copyToClipBoardFromCommandline
+    }
     : {
-        getCommits: getCommitsFromVSTS,
-        copyCommits: copyToClipboardFromBrowser
-      };
+      getCommits: getCommitsFromVSTS,
+      copyCommits: copyToClipboardFromBrowser
+    };
 
 //
 // Get, format and copy commits!
 //
 
 if (!TESTING) {
-  const { getCommits, copyCommits } = setup();
+  const {getCommits, copyCommits} = setup();
 
   getCommits()
     .then(formatCommits)
     .then(copyCommits)
     .catch(e => {
-      alert(e.message);
+      if (!IN_NODE) alert(e.message);
       console.error("There was an error copying the commits", e);
     });
 }
@@ -255,6 +256,11 @@ Then another line`),
 
 - Second`
   );
+
+  // Single commit
+  assert.equal(
+    formatCommits(["Single"]),
+    `Single`);
 };
 
 if (TESTING) {
