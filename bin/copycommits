@@ -1,1 +1,4 @@
-node ~/.dotfiles/programs/git/scripts/copy-commit-messages.js
+#!/bin/zsh
+
+TRUNK=$(trunk)
+node ~/.dotfiles/programs/git/scripts/copy-commit-messages.js $TRUNK
