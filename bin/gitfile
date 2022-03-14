@@ -12,5 +12,8 @@ SLUG=${TAIL/%\.git/}
 # main/master
 TRUNK=$(trunk)
 
-URL="https://github.com/$SLUG/tree/$TRUNK/$1#L$2"
+LINE="L$2"
+[ -n "$3" ]; LINE="L$2-L$3"
+
+URL="https://github.com/$SLUG/tree/$TRUNK/$1#$LINE"
 open $URL
