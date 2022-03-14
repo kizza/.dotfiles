@@ -12,6 +12,7 @@ pkgs.mkShell {
 
   shellHook = ''
     export NIX_PATH="nixpkgs=${sources.nixpkgs}"
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
   '';
     # export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
 }

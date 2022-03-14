@@ -11,13 +11,11 @@
     dotDir = ".config/zsh";
     enableAutosuggestions = true;
     initExtra = ''
-        ${builtins.readFile ./alias.sh}
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./direnv.sh}
         ${builtins.readFile ./docker.sh}
         ${builtins.readFile ./env.sh}
         ${builtins.readFile ./fzf.sh}
-        ${builtins.readFile ./git.sh}
         ${builtins.readFile ./helpers.sh}
         ${builtins.readFile ./keybindings.sh}
         ${builtins.readFile ./nix.sh}
@@ -28,6 +26,11 @@
         ${builtins.readFile ./theme.sh}
         ${builtins.readFile ./tmux.sh}
         ${builtins.readFile ./zoxide.sh}
+      '';
+
+    envExtra = ''
+        ${builtins.readFile ./alias.sh}
+        ${builtins.readFile ./git.sh}
       '';
 
     history = {
