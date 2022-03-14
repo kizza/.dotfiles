@@ -3,12 +3,12 @@ alias ls="exa"
 alias dotfiles="cd ~/.dotfiles"
 
 # Run cops/linters on branch files
-alias fastcop="git since-master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
-alias fasterb="git since-master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erblint"
+alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
+alias fasterb="since_master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erblint"
 alias crystalball="bundle exec crystalball"
 
 function fastspec {
-  FILES=$(git since-master | grep \._spec.rb$ | xargs ls 2>/dev/null)
+  FILES=$(since_master | grep \._spec.rb$ | xargs ls 2>/dev/null)
   heading "Running rspec with..."
   echo $FILES
   echo $FILES | xargs rspec

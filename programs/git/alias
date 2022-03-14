@@ -29,7 +29,6 @@
   pl = pull --rebase
   pu = push
   s = status
-  since-master = diff --name-only origin/master
   rollback = "!git show -s --format=%B | pbcopy && git reset HEAD~"
   unstage = reset HEAD
   unstash = stash pop
