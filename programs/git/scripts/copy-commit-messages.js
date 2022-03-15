@@ -4,7 +4,7 @@
  * This script can be run as a bookmarklet within the browser (from a VSTS pull request)
  * or directly from the commandline on a particular branch.
  *
- * `node run programs/git/scripts/copy-commit-messages.js test`
+ * `node programs/git/scripts/copy-commit-messages.js test`
  */
 
 const {argv0} = require("process");
@@ -104,7 +104,8 @@ const copyToClipboardFromBrowser = message => {
 // Format commit messages
 //
 
-const bulletPoint = "\n\n- ";
+const bulletPoint = "\n- ";
+const spacedBulletPoint = `\n${bulletPoint}`;
 
 const bulletPointsToLines = comments =>
   comments.split("\n").reduce(
@@ -127,7 +128,9 @@ const formatHighlights = input =>
     // camelCase
     .replace(/(\s)([a-z]+[A-Z]([A-Z]+|[a-z]+)[^\s]+)(\s)/g, "$1`$2`$4");
 
-const formatCommit = input => {
+const formatCommitWith = (spacing = "  ", joiner = "\n\n") => input => formatCommit(input, joiner, spacing)
+
+const formatCommit = (input, joiner = "\n\n", spacing = "  ") => {
   const message = formatHighlights(input);
 
   const lines = message
@@ -146,15 +149,15 @@ const formatCommit = input => {
   const comment = rest.join("\n");
   const hasBulletPoints = /^\s*-\s*/.test(comment);
   const comments = hasBulletPoints
-    ? bulletPointsToLines(comment).map(line => `  - ${line}`)
-    : paragraphsToLines(comment).map(line => `  ${line}`);
+    ? bulletPointsToLines(comment).map(line => `${spacing}- ${line}`)
+    : paragraphsToLines(comment).map(line => `${spacing}${line}`);
 
-  return `${firstLine}\n\n${comments.join("\n\n")}`;
+  return `${firstLine}\n\n${comments.join(joiner)}`;
 };
 
 const formatCommits = commits => commits.length > 1
-  ? `**Commits**${bulletPoint}${commits.reverse().map(formatCommit).join(bulletPoint)}`
-  : commits.join("")
+  ? `**Commits**${spacedBulletPoint}${commits.reverse().map(formatCommit).join(spacedBulletPoint)}`
+  : commits.reverse().map(formatCommitWith("", "\n")).join(bulletPoint)
 
 const setup = () =>
   IN_NODE
@@ -259,8 +262,14 @@ Then another line`),
 
   // Single commit
   assert.equal(
-    formatCommits(["Single"]),
-    `Single`);
+    formatCommits([`First line
+
+- Then a particularly long bullet pointed item that could wrap
+- Then another bullet point`]),
+    `First line
+
+- Then a particularly long bullet pointed item that could wrap
+- Then another bullet point`)
 };
 
 if (TESTING) {
