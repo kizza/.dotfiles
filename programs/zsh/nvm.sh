@@ -4,7 +4,10 @@ export NVM_DIR="$HOME/.nvm"
 
 autoload -U add-zsh-hook
 load-nvmrc() {
-  if [[ -f .nvmrc && -r .nvmrc  ]]; then
+  if [[ -f .node-version && -r .node-version  ]]; then
+    # echo "Found .node-version"
+  elif [[ -f .nvmrc && -r .nvmrc  ]]; then
+    echo "Using .nvmrc"
     nvm use
   elif [[ $(nvm version) != $(nvm version default) ]]; then
     echo "Reverting to nvm default version"
