@@ -128,9 +128,9 @@ const formatHighlights = input =>
     // camelCase
     .replace(/(\s)([a-z]+[A-Z]([A-Z]+|[a-z]+)[^\s]+)(\s)/g, "$1`$2`$4");
 
-const formatCommitWith = (spacing = "  ", joiner = "\n\n") => input => formatCommit(input, joiner, spacing)
+const formatCommitWith = (prefix, joiner) => input => formatCommit(input, prefix, joiner)
 
-const formatCommit = (input, joiner = "\n\n", spacing = "  ") => {
+const formatCommit = (input, prefix, joiner) => {
   const message = formatHighlights(input);
 
   const lines = message
@@ -149,15 +149,18 @@ const formatCommit = (input, joiner = "\n\n", spacing = "  ") => {
   const comment = rest.join("\n");
   const hasBulletPoints = /^\s*-\s*/.test(comment);
   const comments = hasBulletPoints
-    ? bulletPointsToLines(comment).map(line => `${spacing}- ${line}`)
-    : paragraphsToLines(comment).map(line => `${spacing}${line}`);
+    ? bulletPointsToLines(comment).map(line => `${prefix}- ${line}`)
+    : paragraphsToLines(comment).map(line => `${prefix}${line}`);
 
   return `${firstLine}\n\n${comments.join(joiner)}`;
 };
 
 const formatCommits = commits => commits.length > 1
-  ? `**Commits**${spacedBulletPoint}${commits.reverse().map(formatCommit).join(spacedBulletPoint)}`
-  : commits.reverse().map(formatCommitWith("", "\n")).join(bulletPoint)
+  ? commits
+    .reverse()
+    .map(formatCommitWith(" ", "\n"))
+    .join("\n\n")
+  : formatCommitWith("", "\n")(commits[0])
 
 const setup = () =>
   IN_NODE
@@ -192,80 +195,76 @@ if (!TESTING) {
 
 const test = () => {
   const assert = require("assert");
+  const format = formatCommitWith(" ", "\n")
 
   // Single line commit
-  assert.equal(formatCommit("Single line commit"), "Single line commit");
-  assert.equal(formatCommit("Single line commit\n"), "Single line commit");
+  assert.equal(format("Single line commit"), "Single line commit");
+  assert.equal(format("Single line commit\n"), "Single line commit");
 
-  // PascalCase
+  // // PascalCase
   assert.equal(
-    formatCommit("Single PascalCase commit"),
+    format("Single PascalCase commit"),
     "Single `PascalCase` commit"
   );
   assert.equal(
-    formatCommit("Single IPascalcase commit"),
+    format("Single IPascalcase commit"),
     "Single `IPascalcase` commit"
   );
   assert.equal(
-    formatCommit("Single `AlreadyPascalCase` commit"),
+    format("Single `AlreadyPascalCase` commit"),
     "Single `AlreadyPascalCase` commit"
   );
 
   // camelCase
   assert.equal(
-    formatCommit("Single camelCase commit"),
+    format("Single camelCase commit"),
     "Single `camelCase` commit"
   );
   assert.equal(
-    formatCommit("Single camelReallyCase commit"),
+    format("Single camelReallyCase commit"),
     "Single `camelReallyCase` commit"
   );
 
   // Paragraph commits
   assert.equal(
-    formatCommit(`First line
+    formatCommitWith("", "\n\n")(`First line
 
-Then one of these
-that goes on
+  Then comment on
+  multiple lines
 
-Then another line`),
+  Then another line`),
     `First line
 
-  Then one of these that goes on
+Then comment on multiple lines
 
-  Then another line`
+Then another line`
   );
 
   // Bullet point commits
   assert.equal(
-    formatCommit(`First line
+    formatCommitWith("  ", "\n")(`First line
 
- - Then bullet of these
-   that goes on
- - Then another bullet`),
+  - Then bullet on
+  multiple lines
+  - Then another bullet`),
     `First line
 
-  - Then bullet of these that goes on
-
+  - Then bullet on multiple lines
   - Then another bullet`
   );
 
   // Format commits
   assert.equal(
     formatCommits(["Second", "First"]),
-    `**Commits**
-
-- First
-
-- Second`
+    "First\n\nSecond"
   );
 
   // Single commit
   assert.equal(
     formatCommits([`First line
 
-- Then a particularly long bullet pointed item that could wrap
-- Then another bullet point`]),
+ - Then a particularly long bullet pointed item that could wrap
+ - Then another bullet point`]),
     `First line
 
 - Then a particularly long bullet pointed item that could wrap
