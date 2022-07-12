@@ -16,14 +16,13 @@ in
     file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
     file.".vim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
 
-    file.".vim/plugged/vim-textobj-directional-indent/plugin/plugin.vim".text = builtins.readFile ./plugins/vim-textobj-directional-indent.vim;
-
     file.".vimrc".text = ''
       ${builtins.readFile ./begin.vim}
 
       ${builtins.readFile ./plugins/actionmenu.vim}
       ${builtins.readFile ./plugins/ale.vim}
       ${builtins.readFile ./plugins/buffers.vim}
+      ${builtins.readFile ./plugins/dev.vim}
       ${builtins.readFile ./plugins/coc.vim}
       ${builtins.readFile ./plugins/fzf.vim}
       ${builtins.readFile ./plugins/gitgutter.vim}
@@ -35,6 +34,7 @@ in
       ${builtins.readFile ./plugins/vim-airline.vim}
       ${builtins.readFile ./plugins/vim-indent-guides.vim}
       ${builtins.readFile ./plugins/vanilla.vim}
+      ${builtins.readFile ./plugins/dev.vim}
       ${builtins.readFile ./end.vim}
 
       ${builtins.readFile ./config/lua.vim}
