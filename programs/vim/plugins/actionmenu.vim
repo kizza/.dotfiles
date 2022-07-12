@@ -1,7 +1,5 @@
 if has('nvim')
   Plug 'kizza/actionmenu.nvim'
-  let g:jump_from_treesitter_fallback = "call CocAction('jumpDefinition')"
-  Plug '~/Code/kizza/jump-from-treesitter.nvim'
 endif
 
 "
