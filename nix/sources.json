@@ -1,14 +1,26 @@
 {
+    "SwiftLint": {
+        "branch": "master",
+        "description": "A tool to enforce Swift style and conventions.",
+        "homepage": "https://realm.github.io/SwiftLint",
+        "owner": "realm",
+        "repo": "SwiftLint",
+        "rev": "c95670edd2e805a9f54afa2805a5cff7e8c797a8",
+        "sha256": "1ndajv98gdakc6vl5p64yq6zci8pff0q3pizqbz7bqaslch1cb93",
+        "type": "tarball",
+        "url": "https://github.com/realm/SwiftLint/archive/c95670edd2e805a9f54afa2805a5cff7e8c797a8.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "home-manager": {
         "branch": "master",
         "description": "Manage a user environment using Nix",
         "homepage": "https://rycee.gitlab.io/home-manager/",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "aef97988dac0541747de8bcc85c7e27726eea4af",
-        "sha256": "15id5prqlbg7jqhhjna4901rjib6vkfm0fmavvmdbnmf988gkc4m",
+        "rev": "c645cc9f82c7753450d1fa4d1bc73b64960a9d7a",
+        "sha256": "1q2mvkp75daal2y5ijjr1m0lyv14fmnvnr9hj42nmhcy9f23mi71",
         "type": "tarball",
-        "url": "https://github.com/nix-community/home-manager/archive/aef97988dac0541747de8bcc85c7e27726eea4af.tar.gz",
+        "url": "https://github.com/nix-community/home-manager/archive/c645cc9f82c7753450d1fa4d1bc73b64960a9d7a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -17,22 +29,10 @@
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "adf7f03d3bfceaba64788e1e846191025283b60d",
-        "sha256": "13586j87n8jxin940rcr0q74bfv4zbmwz02l2p923dcgksvfjxds",
+        "rev": "85deee6d6c8127d360096a5caa0aeb876b976496",
+        "sha256": "01b1wjmwyl3n15mvk2i1bfb3zjx4yc6wac3274gbvi8h43a1wk5q",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/adf7f03d3bfceaba64788e1e846191025283b60d.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/85deee6d6c8127d360096a5caa0aeb876b976496.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "SwiftLint": {
-        "branch": "master",
-        "description": "A tool to enforce Swift style and conventions.",
-        "homepage": "https://realm.github.io/SwiftLint",
-        "owner": "realm",
-        "repo": "SwiftLint",
-        "rev": "46777539ad43c1339a390d4d51b07fbf7b34762e",
-        "sha256": "00vrlmmlzg2xi1is8rkwnydsiifrdxk1v3dls11407v1yjl1fkww",
-        "type": "tarball",
-        "url": "https://github.com/realm/SwiftLint/archive/46777539ad43c1339a390d4d51b07fbf7b34762e.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-      }
+    }
 }
