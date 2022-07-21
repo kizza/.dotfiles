@@ -2,7 +2,7 @@
   features = line-numbers decorations
   navigate = false
   side-by-side = false
-  syntax-theme = Base16
+  syntax-theme = base16
   true-color = always
 [delta "decorations"]
   commit-style = bold yellow

@@ -19,6 +19,7 @@
   home = {
     username = builtins.getEnv "USER";
     homeDirectory = builtins.getEnv "HOME";
+    stateVersion = "20.09";
     packages = with pkgs; [
       coreutils
       entr
