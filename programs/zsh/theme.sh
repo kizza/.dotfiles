@@ -12,7 +12,7 @@ function setTheme {
   tmux source-file ~/.tmux-theme.conf
 }
 
-alias light="base16_solarized-light && setTheme"
+alias light="~/.dotfiles/theme/favourites/solarized-light.theme.sh && setTheme"
 alias dark="base16_gruvbox-dark-medium && setTheme"
 alias brown="base16_mocha && setTheme"
 alias mario="base16_atelier-dune-light && setTheme"
