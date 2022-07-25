@@ -10,9 +10,15 @@ const colours = dark => {
   let active = "green";
   let lightText = background;
   let darkText = active;
+  let segment1 = "colour20"
+  let segment2 = "colour8"
+  let segment3 = "colour19"
 
   if (dark) {
     lightText = "white";
+    segment1 = "colour18"
+    segment2 = "colour19"
+    segment3 = "colour20"
   }
 
   return {
@@ -23,7 +29,10 @@ const colours = dark => {
     activeTabBg: background,
     activeTabFg: darkText,
     inactiveTabBg: active,
-    inactiveTabFg: background
+    inactiveTabFg: background,
+    segment1: segment1,
+    segment2: segment2,
+    segment3: segment3,
   };
 };
 
@@ -34,7 +43,10 @@ const buildTheme = ({
   activeTabBg,
   activeTabFg,
   inactiveTabBg,
-  inactiveTabFg
+  inactiveTabFg,
+  segment1,
+  segment2,
+  segment3
 }) =>
   `
 # Status update interval
@@ -54,7 +66,7 @@ set -g status-left-length 4
 # Right side of status bar
 set -g status-right-style bg=${active},fg=colour243
 set -g status-right-length 150
-set -g status-right "${prefix}#[fg=colour235,bg=${active}]#[fg=${lightText},bg=colour235] ${time} #[fg=colour240,bg=colour235]#[fg=${lightText},bg=colour240] ${date} #[fg=colour245,bg=colour240]#[fg=colour232,bg=colour245,bold] #S "
+set -g status-right "${prefix}#[fg=${segment1},bg=${active}]#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]#[fg=colour18,bg=${segment3},bold] #S "
 
 # Window status
 set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag, ,}"
@@ -103,5 +115,6 @@ const writeTheme = contents =>
   });
 
 writeTheme(
-  buildTheme(colours(process.env.BASE16_THEME.indexOf("light") === -1))
+  buildTheme(colours(true))
+  // buildTheme(colours(process.env.BASE16_THEME.indexOf("light") === -1))
 );
