@@ -5,25 +5,26 @@
   syntax-theme = base16
   true-color = always
 [delta "decorations"]
-  commit-style = bold yellow
+  commit-style = purple
   file-added-label = "  Added: "
   file-modified-label = "  Edited: "
   file-modified-label-style = yellow
   file-removed-label = "  Deleted: "
   file-renamed-label = "  Renamed: "
-  file-style = bold cyan
+  file-style = bold yellow
+  file-decoration-style = blue ul
   hunk-header-decoration-style = 8 box
-  hunk-header-style = bold purple
-  minus-emph-style = bold red 52
-  minus-empty-line-marker-style = normal "#3f0001"
-  minus-non-emph-style = red
+  hunk-header-style = purple
+  minus-emph-style = 0 red
+  minus-empty-line-marker-style = normal 18
+  minus-non-emph-style = red 18
   minus-style = red
-  plus-emph-style = bold green 22
-  plus-empty-line-marker-style = normal "#002800"
-  plus-non-emph-style = green "#012800"
+  plus-emph-style = 0 green
+  plus-empty-line-marker-style = normal 8
+  plus-non-emph-style = green 18
   plus-style = green
   zero-style = normal
-  line-numbers-style = 8
-  line-numbers-left-style = 8
+  line-numbers-style = 19
+  line-numbers-left-style = 19
   line-numbers-right-style = 18
 
