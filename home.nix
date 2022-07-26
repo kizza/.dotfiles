@@ -4,7 +4,7 @@
   imports = [
     ./fonts.nix
     programs/alacritty
-    programs/base16-shell.nix
+    programs/base16-shell
     programs/bat
     programs/direnv.nix
     programs/git
