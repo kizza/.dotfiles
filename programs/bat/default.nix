@@ -6,9 +6,8 @@
     config = {
       theme = "my-base16";
     };
-  };
-
-  home = {
-    file.".config/bat/themes/my-base16.tmTheme".text = builtins.readFile ./my-base16.tmTheme;
+    themes = {
+      my-base16 = builtins.readFile ./themes/my-base16.tmTheme;
+    };
   };
 }
