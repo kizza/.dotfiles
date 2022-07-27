@@ -4,12 +4,11 @@ let
   plugins = pkgs.vimPlugins // pkgs.callPackage ./custom-plugins.nix {};
 in
 {
-  imports = [
-    ./snippets.nix
-    ./syntax.nix
-  ];
-
   home = {
+    file.".vim/ftplugin/".source = ./ftplugin;
+    file.".vim/snippets/".source = ./snippets;
+    file.".vim/syntax/".source = ./syntax;
+
     file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
     file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm;
 
