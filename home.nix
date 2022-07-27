@@ -21,7 +21,9 @@
     homeDirectory = builtins.getEnv "HOME";
     stateVersion = "20.09";
     packages = with pkgs; [
+      colima
       coreutils
+      docker
       entr
       exa
       delta
