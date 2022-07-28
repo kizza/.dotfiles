@@ -28,6 +28,7 @@
       delta
       fd
       fzf
+      git-secrets
       htop
       jq
       zoxide
