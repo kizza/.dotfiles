@@ -1,16 +1,4 @@
 {
-    "SwiftLint": {
-        "branch": "master",
-        "description": "A tool to enforce Swift style and conventions.",
-        "homepage": "https://realm.github.io/SwiftLint",
-        "owner": "realm",
-        "repo": "SwiftLint",
-        "rev": "c95670edd2e805a9f54afa2805a5cff7e8c797a8",
-        "sha256": "1ndajv98gdakc6vl5p64yq6zci8pff0q3pizqbz7bqaslch1cb93",
-        "type": "tarball",
-        "url": "https://github.com/realm/SwiftLint/archive/c95670edd2e805a9f54afa2805a5cff7e8c797a8.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
     "home-manager": {
         "branch": "master",
         "description": "Manage a user environment using Nix",
