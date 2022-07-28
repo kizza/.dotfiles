@@ -6,9 +6,9 @@ map <Space> ,
 command W w
 command Wq wq
 
-noremap <leader>n :NERDTree<cr>
-noremap <leader>f :NERDTreeFind<cr>
-noremap <leader>F :NERDTree <bar> NERDTreeFind<CR>
+noremap <leader>N :NERDTree<cr>
+noremap <leader>n :NERDTreeFind<cr>
+" noremap <leader>F :NERDTree <bar> NERDTreeFind<CR>
 
 inoremap jj <Esc>
 nnoremap <leader>ig :IndentGuidesToggle<CR>
@@ -21,6 +21,18 @@ nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
 nnoremap gT :bprev<CR>
 nnoremap <leader>x :bdelete<CR>
+nnoremap <silent><leader>gT :ShiftBufferLeft<CR>
+nnoremap <silent><leader>gt :ShiftBufferRight<CR>
+
+" Close all other buffers
+nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
+
+" nmap <leader>v :tabedit $MYVIMRC<CR>
+nmap cp :let @+ = expand("%")<CR>
+nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
+nmap <leader>it :tabedit %<CR>
+nmap <leader>ib :edit %<CR>
+nmap <leader>iv :vsplit %<CR>
 
 " Quick jump to buffer index
 func! BufferFromIndex(index)
@@ -36,13 +48,62 @@ for i in range(0, 9)
   execute "nnoremap <leader>" . i . " :call BufferFromIndex(" . i . ")<CR>"
 endfo
 
-" Close all other buffers
-nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
-
 nnoremap <Leader>/ :noh<CR><ESC>|
 
 " Open current file in new tmux split
 nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
+
+"
+" Searching
+"
+
+" FZF (Use :GFiles if git is present)
+nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
+
+" Add ctrl-a to Rg
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".<q-args>, 1,
+  \   fzf#vim#with_preview({ 'options': ['--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
+
+" Self reloading RG
+function! SelfReloadingFZF(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, a:query)
+  " let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'window': { 'width': 0.9, 'height': 0.7}, 'options': ['--phony', '--query', a:query, '--prompt', 'Search> ', '--bind', 'change:reload:'.reload_command, '--bind', 'ctrl-a:select-all,ctrl-d:deselect-all']}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RG call SelfReloadingFZF(<q-args>, <bang>0)
+
+nnoremap <silent> <C-f> :call SelfReloadingFZF("", 0)<CR>
+nnoremap <silent> <leader>ff :call SelfReloadingFZF("", 0)<CR>
+nnoremap <silent> <leader>fu :call SelfReloadingFZF(expand('<cword>'), 0)<CR>
+nnoremap <leader>fb :BLines<CR>
+nnoremap <leader>fh :History<CR>
+nnoremap <leader>f/ :call fzf#vim#search_history({'left': '60'})<CR>
+nnoremap <leader>f: :call fzf#vim#command_history({'left': '60'})<CR>
+
+"
+" Git navigation
+"
+command! GitContext execute("silent !gitcontext ".expand("%"))
+command! GitFile execute("silent !gitfile ".expand("%")." ".line("."))
+command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))
+
+nnoremap <silent> <leader>gs :GFiles?<CR>
+nnoremap <silent> <leader>gc :GitContext<CR>
+nnoremap <silent> <leader>gf :GitFile<CR>
+vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%")." ".line("'<")." ".line("'>"))<CR>
+nnoremap <silent> <leader>gb :GitSha<CR>
+nnoremap <leader>dp :diffput 1<CR>
+nnoremap <leader>dh :diffget 2<CR>
+nnoremap <leader>dl :diffget 4<CR>
+
+" piggy backs off hunk preview, and hunk add
+nnoremap [g :GitGutterPrevHunk<CR>
+nnoremap ]g :GitGutterNextHunk<CR>
+nnoremap <leader>hn :GitGutterNextHunk<CR>
+nnoremap <leader>hN :GitGutterPrevHunk<CR>
 
 func! CustomAction()
   let l:items = [
@@ -60,47 +121,34 @@ endfunc
 
 func! CustomActionCallback(index, item)
   if a:item['user_data'] == "context"
-    execute("silent !gitcontext ".expand("%"))
+    " execute("silent !gitcontext ".expand("%"))
+    GitContext
   elseif a:item['user_data'] == "file"
-    execute("silent !gitfile ".expand("%"))
+    GitFile
+    " execute("silent !gitfile ".expand("%"))
   elseif a:item['user_data'] == "sha"
-    execute("silent !linesha ".expand("%")." ".line("."))
-    echom "Copied sha"
+    GitSha
+    " execute("silent !linesha ".expand("%")." ".line("."))
+    " echom "Copied sha"
   endif
 endfunc
 
-func! SinkFunction(type)
-  echo a:type
-endfunc
+nnoremap <silent> <leader>G :call CustomAction()<CR>
 
-" FZF
-" Use :GFiles if git is present
-nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
-
-" nnoremap <silent> <leader>gc :call CustomAction()<CR>
-nnoremap <silent> <leader>gc :execute("silent !gitcontext ".expand("%"))<CR>
-nnoremap <silent> <leader>gf :execute("silent !gitfile ".expand("%")." ".line("."))<CR>
-vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%")." ".line("'<")." ".line("'>"))<CR>
-nnoremap <silent> <leader>gb :echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))<CR>
-nnoremap <leader>gs :G<CR>
-nnoremap <leader>dp :diffput 1<CR>
-nnoremap <leader>dh :diffget 2<CR>
-nnoremap <leader>dl :diffget 4<CR>
-
-" piggy backs off hunk preview, and hunk add
-nnoremap <leader>hn :GitGutterNextHunk<CR>
-nnoremap <leader>hN :GitGutterPrevHunk<CR>
-nnoremap <leader>aw :ArgWrap<CR>
-
+"
+" Testing (and associated vim runners)
+"
 nnoremap <leader>tn :TestNearest<CR>
 nnoremap <leader>tf :TestFile<CR>
+nnoremap <leader>th :call VimuxRunCommand("HEADLESS=false rspec ".expand("%").":".line("."))<CR>
 
+" Vimux
 nnoremap <leader>rl :VimuxInterruptRunner <bar> VimuxRunLastCommand<CR>
 nnoremap <leader>rr :VimuxOpenRunner<CR>
 nnoremap <leader>rp :VimuxPromptCommand<CR>
 nnoremap <leader>rP :call VimuxPromptCommandThenClose()<CR>
 nnoremap <leader>rc :VimuxClearTerminalScreen<CR>
-" nnoremap <silent> <leader>rs :"HEADLESS=false rspec " . expand("%")<CR>
+nnoremap <leader>rt :VimuxTogglePane<CR>
 
 function! VimuxPromptCommandThenClose() abort
   if VimuxOption('VimuxCommandShell')
@@ -111,43 +159,27 @@ function! VimuxPromptCommandThenClose() abort
   VimuxRunCommand(l:command . " && exit")
 endfunction
 
+"
+" Manipulation
+"
+
+" Join lines without any space
+nnoremap gJ Jx
+vnoremap gJ :call joinery#join_lines_without_spaces()<CR>
+
+nnoremap <leader>j :Joinery<CR>
+nnoremap <leader>aw :ArgWrap<CR>
+
 " Simple erb openers (I hate these)
 imap <leader>{ <%
 imap <leader>} %>
 
-" nnoremap <C-f> :call fzf#vim#ag('.', '--color-match "20;20"', fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
-nnoremap <leader>ch :call fzf#vim#command_history({'left': '60'})<CR>
-" nnoremap <leader>sh :call fzf#vim#search_history({'left': '60'})<CR>
-
-  " \   'rg --column --line-number --no-heading --color=always '.shellescape(<cword>), 1,
-  " \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  " \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  " \   <bang>0)
-
-" nnoremap <C-f> :call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ". shellescape(expand('<cword>')), 1, fzf#vim#with_preview({'left': '90%', 'options': ['--exact', '--query', expand('<cword>')]}))<CR>
-
-" Searching
-
-command! -bang -nargs=* Rgg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --colors "path:fg:190,220,255" --colors "line:fg:128,128,128" --smart-case '.shellescape(<q-args>), 1, { 'options': '--color hl:123,hl+:222' }, 0)
-
-nnoremap <silent> <C-f> :
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(expand('<cword>')), 1,
-  \   fzf#vim#with_preview({ 'window': { 'width': 0.9, 'height': 0.7 } }))<CR>
-  " \   fzf#vim#with_preview({'left':'90%'}))<CR>
-
-" " Just use Rg for ag
-" command! -bang -nargs=* Ag
-"   \ call fzf#vim#grep(
-"   \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-"   \   fzf#vim#with_preview(), <bang>0)
 
 " nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
 nmap <leader>it :tabedit %<CR>
+nmap <leader>ib :edit %<CR>
 nmap <leader>iv :vsplit %<CR>
 
 " vnoremap <C-s> d:execute 'normal i' . join(sort(split(getreg('"'))), ' ')<CR>
@@ -156,13 +188,15 @@ nmap <leader>iv :vsplit %<CR>
 nnoremap <silent> <Leader>s :call ActionMenuCodeActions()<CR>
 
 " Change {} or () brackets on multiple lines
-nnoremap <Leader>b( :normal! $%s)s(
-nnoremap <Leader>b{ :normal! $%s}s{
+" Commenting this out to use <leader>b for :Buffers
+" nnoremap <Leader>b( :normal! $%s)s(
+" nnoremap <Leader>b{ :normal! $%s}s{
 
 " Mapping Y to yank from current cursor position till end of line
 noremap Y y$
 noremap <leader>y "+y
 
+" Show syntax under cursor
 noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
