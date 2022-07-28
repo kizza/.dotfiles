@@ -35,6 +35,9 @@
         { key= "D";           mods= "Command|Shift";    chars= "\\x02\\x22"; }
         { key= "LBracket";    mods= "Command|Shift";    chars= "\\x02\\x70"; }
         { key= "RBracket";    mods= "Command|Shift";    chars= "\\x02\\x6e"; }
+
+        # Pass <C-S-f> to neovim (this is mapped to <leader>fu
+        { key= "F";           mods= "Control|Shift";    chars= ",fu"; }
       ];
 
       font = {
