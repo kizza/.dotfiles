@@ -10,7 +10,6 @@
     programs/git
     programs/karabiner
     programs/ripgrep
-    programs/swiftlint.nix
     programs/tmux
     programs/vim
     programs/zsh
