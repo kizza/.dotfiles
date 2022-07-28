@@ -24,6 +24,7 @@
   allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 [init]
   templateDir = ~/.git-secrets
+  defaultBranch = main
 [rebase]
   autosquash = true
 [mergetool "nvim"]
