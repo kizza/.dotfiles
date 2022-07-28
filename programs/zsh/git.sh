@@ -21,7 +21,28 @@ function gdb() {
 }
 
 function ir() {
-  git rebase -i $(trunk)
+  git rebase -i $(rebase_to)
+}
+
+function rebase_to() {
+  if git current | grep -qE "(main|master)"; then
+    echo $(sha_for_fixup_commit)~1
+  else
+    echo $(trunk)
+  fi
+}
+
+# When on a branch, rebasing to main is easy, when on main, find the relevant fixup sha
+function sha_for_fixup_commit() {
+  # Find the oldest fixup commit (within reason)
+  FIXUP=$(git log --oneline --reverse -n 20 | grep -E '^[0-9a-f]{7}\sfixup!' | head -n 1)
+  FIXUP_SHA=$(echo $FIXUP | awk '{ print $1 }')
+  FIXUP_MSG=$(echo $FIXUP | cut -d' ' -f3-)
+
+  # Find related commit
+  RELATED=$(git log --oneline --grep "$FIXUP_MSG" | grep -v "fixup" | head -n 1)
+  RELATED_SHA=$(echo $RELATED | awk '{ print $1 }')
+  echo $RELATED_SHA
 }
 
 function trunk() {
@@ -110,7 +131,7 @@ wiprebase() {
   heading 'Wipping and rebasing...'
   git add .
   wip "Doing a rebase"
-  git rebase -i --autosquash $(trunk)
+  git rebase -i --autosquash $(rebase_to)
   heading 'Unwipping...'
   git log -n 1 | grep -q -c "WIP" && git reset HEAD~1
   git status
