@@ -14,9 +14,21 @@ Plug 'kana/vim-textobj-indent'  " Motions on similar indents of text (eg. <<ii, 
 Plug '~/.vim/plugged/vim-textobj-directional-indent'
 " Plug 'jiangmiao/auto-pairs'
 
+" Expand and collapse bracket items/arguments
+Plug 'FooSoft/vim-argwrap'
+let g:argwrap_tail_comma = 1
+
+" Highlight whitespace in buffers
+Plug 'ntpeters/vim-better-whitespace'
+autocmd BufWritePre * StripWhitespace
+
+Plug 'wellle/targets.vim'
+Plug 'easymotion/vim-easymotion'
+" Plug 'dyng/ctrlsf.vim'
+
 Plug 'vim-test/vim-test'
-" let test#strategy = "neovim"
 let test#strategy = "vimux"
+let test#javascript#mocha#options = "--require ts-node/register --exit"
 
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'jeetsukumaran/vim-markology'
@@ -24,7 +36,14 @@ let g:markology_enable = 0
 
 Plug 'rhysd/git-messenger.vim'
 
+" Easily move blocks of text
+Plug 'matze/vim-move'
+vmap <C-k> <Plug>MoveBlockUp
+vmap <C-j> <Plug>MoveBlockDown
+nmap <A-j> <Plug>MoveLineDown
+nmap <A-k> <Plug>MoveLineUp
+
 Plug 'preservim/vimux'
-Plug 'thosakwe/vim-flutter'
+" Plug 'thosakwe/vim-flutter'
 
 Plug 'chrisbra/Colorizer'

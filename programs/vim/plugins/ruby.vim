@@ -11,4 +11,5 @@ Plug 'tree-sitter/tree-sitter-ruby'
 Plug 'nvim-treesitter/playground'
 
 " Yaml navigation
-" Plug 'lmeijvogel/vim-yaml-helper'
+let g:vim_yaml_helper#auto_display_path = 0
+Plug 'lmeijvogel/vim-yaml-helper'

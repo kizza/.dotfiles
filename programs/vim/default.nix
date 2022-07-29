@@ -18,27 +18,22 @@ in
 
     file.".vimrc".text = ''
       ${builtins.readFile ./begin.vim}
-
+      ${builtins.readFile ./plugins/standard.vim}
       ${builtins.readFile ./plugins/actionmenu.vim}
       ${builtins.readFile ./plugins/ale.vim}
       ${builtins.readFile ./plugins/buffers.vim}
-      ${builtins.readFile ./plugins/dev.vim}
       ${builtins.readFile ./plugins/coc.vim}
       ${builtins.readFile ./plugins/fzf.vim}
       ${builtins.readFile ./plugins/gitgutter.vim}
       ${builtins.readFile ./plugins/javascript.vim}
       ${builtins.readFile ./plugins/nerdtree.vim}
       ${builtins.readFile ./plugins/ruby.vim}
-      ${builtins.readFile ./plugins/vim-argwrap.vim}
-      ${builtins.readFile ./plugins/vim-better-whitespace.vim}
       ${builtins.readFile ./plugins/vim-airline.vim}
       ${builtins.readFile ./plugins/vim-indent-guides.vim}
-      ${builtins.readFile ./plugins/vanilla.vim}
       ${builtins.readFile ./plugins/dev.vim}
       ${builtins.readFile ./end.vim}
 
       ${builtins.readFile ./config/lua.vim}
-
       ${builtins.readFile ./config/colours.vim}
       ${builtins.readFile ./config/globals.vim}
       ${builtins.readFile ./config/mappings.vim}

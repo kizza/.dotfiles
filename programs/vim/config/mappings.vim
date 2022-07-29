@@ -1,4 +1,5 @@
 let g:mapleader = ","
+
 " Experiemtn with space as leader
 map <Space> ,
 
@@ -6,16 +7,20 @@ map <Space> ,
 command W w
 command Wq wq
 
-noremap <leader>N :NERDTree<cr>
-noremap <leader>n :NERDTreeFind<cr>
-" noremap <leader>F :NERDTree <bar> NERDTreeFind<CR>
-
 inoremap jj <Esc>
-nnoremap <leader>ig :IndentGuidesToggle<CR>
+nnoremap <Leader>/ :noh<CR><ESC>|
 
-nmap <silent> gd :call jump_from_treesitter#jump()<CR>
+" Yank from current cursor position till end of line
+noremap Y y$
+noremap <leader>y "+y
 
-" Buffer navigation
+
+"
+" Buffers
+" --------------------------------------------------------------------
+"
+noremap <leader>n :NERDTreeFind<cr>
+noremap <leader>N :NERDTree<cr>
 nnoremap <C-b> :Buffers<CR>
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap gt :bnext<CR>
@@ -27,12 +32,15 @@ nnoremap <silent><leader>gt :ShiftBufferRight<CR>
 " Close all other buffers
 nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
-" nmap <leader>v :tabedit $MYVIMRC<CR>
 nmap cp :let @+ = expand("%")<CR>
 nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
-nmap <leader>it :tabedit %<CR>
+nmap <leader>it :silent execute("!withvimsplit ". expand("%"))<CR>
 nmap <leader>ib :edit %<CR>
 nmap <leader>iv :vsplit %<CR>
+
+" Copy buffer paths
+nmap cp :let @+ = expand("%")<CR>
+nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
 
 " Quick jump to buffer index
 func! BufferFromIndex(index)
@@ -48,13 +56,15 @@ for i in range(0, 9)
   execute "nnoremap <leader>" . i . " :call BufferFromIndex(" . i . ")<CR>"
 endfo
 
-nnoremap <Leader>/ :noh<CR><ESC>|
-
 " Open current file in new tmux split
 nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
 
+nmap <silent> gd :call jump_from_treesitter#jump()<CR>
+
+
 "
 " Searching
+" --------------------------------------------------------------------
 "
 
 " FZF (Use :GFiles if git is present)
@@ -83,8 +93,10 @@ nnoremap <leader>fh :History<CR>
 nnoremap <leader>f/ :call fzf#vim#search_history({'left': '60'})<CR>
 nnoremap <leader>f: :call fzf#vim#command_history({'left': '60'})<CR>
 
+
 "
-" Git navigation
+" Git
+" --------------------------------------------------------------------
 "
 command! GitContext execute("silent !gitcontext ".expand("%"))
 command! GitFile execute("silent !gitfile ".expand("%")." ".line("."))
@@ -95,6 +107,8 @@ nnoremap <silent> <leader>gc :GitContext<CR>
 nnoremap <silent> <leader>gf :GitFile<CR>
 vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%")." ".line("'<")." ".line("'>"))<CR>
 nnoremap <silent> <leader>gb :GitSha<CR>
+
+" Mergetool
 nnoremap <leader>dp :diffput 1<CR>
 nnoremap <leader>dh :diffget 2<CR>
 nnoremap <leader>dl :diffget 4<CR>
@@ -135,8 +149,10 @@ endfunc
 
 nnoremap <silent> <leader>G :call CustomAction()<CR>
 
+
 "
-" Testing (and associated vim runners)
+" Testing
+" --------------------------------------------------------------------
 "
 nnoremap <leader>tn :TestNearest<CR>
 nnoremap <leader>tf :TestFile<CR>
@@ -159,28 +175,21 @@ function! VimuxPromptCommandThenClose() abort
   VimuxRunCommand(l:command . " && exit")
 endfunction
 
+
 "
 " Manipulation
+" --------------------------------------------------------------------
 "
+nnoremap <leader>j :Joinery<CR>
+nnoremap <leader>aw :ArgWrap<CR>
 
 " Join lines without any space
 nnoremap gJ Jx
 vnoremap gJ :call joinery#join_lines_without_spaces()<CR>
 
-nnoremap <leader>j :Joinery<CR>
-nnoremap <leader>aw :ArgWrap<CR>
-
 " Simple erb openers (I hate these)
 imap <leader>{ <%
 imap <leader>} %>
-
-
-" nmap <leader>v :tabedit $MYVIMRC<CR>
-nmap cp :let @+ = expand("%")<CR>
-nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
-nmap <leader>it :tabedit %<CR>
-nmap <leader>ib :edit %<CR>
-nmap <leader>iv :vsplit %<CR>
 
 " vnoremap <C-s> d:execute 'normal i' . join(sort(split(getreg('"'))), ' ')<CR>
 
@@ -192,10 +201,6 @@ nnoremap <silent> <Leader>s :call ActionMenuCodeActions()<CR>
 " nnoremap <Leader>b( :normal! $%s)s(
 " nnoremap <Leader>b{ :normal! $%s}s{
 
-" Mapping Y to yank from current cursor position till end of line
-noremap Y y$
-noremap <leader>y "+y
-
 " Show syntax under cursor
 noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
@@ -203,6 +208,10 @@ noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . 
 
 noremap <Leader>r :TSHighlightCapturesUnderCursor<CR>
 
+
+
+
+nnoremap <leader>ig :IndentGuidesToggle<CR>
 " " Tab navigation
 " nmap <Tab> gt
 " nmap <S-Tab> gT
@@ -212,7 +221,10 @@ noremap <Leader>r :TSHighlightCapturesUnderCursor<CR>
 " nmap n nzz
 " nmap N Nzz
 
-" Coc
+"
+" COC
+" --------------------------------------------------------------------
+"
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
