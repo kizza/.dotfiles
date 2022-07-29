@@ -10,6 +10,7 @@ in
     file.".vim/syntax/".source = ./syntax;
 
     file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
+    file.".config/nvim/parser/javascript.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-javascript}/parser";
     file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm;
 
     file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
