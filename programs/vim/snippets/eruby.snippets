@@ -10,3 +10,6 @@ snippet styled_container
 	<%= styled_container do %>
 		${1}
 	<% end %>
+
+snippet Flipper
+	<% if Flipper[${1}].enabled?(ActsAsTenant.current_tenant) %>

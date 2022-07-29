@@ -41,6 +41,15 @@ endif
 
 hi Visual cterm=reverse
 
+" Includes (shVariable)
+hi Identifier ctermfg=blue
+
+" Spelling needs black/white text
+hi SpellBad ctermfg=black
+hi SpellCap ctermfg=black
+hi SpellRare ctermfg=black
+hi SpellLocal ctermfg=black
+
 " " colorscheme gruvbox
 " " set background=dark
 " " let g:gruvbox_italicize_comments = 1
