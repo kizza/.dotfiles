@@ -48,6 +48,13 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
+# Use dircolors to populate LS_COLORS, then use with zstyle
+eval "$(dircolors -b ~/.dotfiles/programs/zsh/dircolors.sh)"
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Customise zsh-syntax-highlight options
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=yellow'
 
 # History substring search
 export HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND=bg=18,fg=green,bol
