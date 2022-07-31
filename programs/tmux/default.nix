@@ -1,5 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 
+let
+  italics = pkgs.callPackage ./italics.nix {};
+in
 {
   programs.tmux = {
     enable = true;
@@ -9,5 +12,9 @@
     newSession = true;
     plugins = [];
     terminal = "screen-256color";
+  };
+
+  home = {
+    file.".terminfo".source = italics;
   };
 }
