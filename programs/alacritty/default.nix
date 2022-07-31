@@ -11,6 +11,10 @@
   programs.alacritty = {
     enable = true;
     settings = {
+      env = {
+        TERM = "screen-256color";
+      };
+
       shell = {
         program = "zsh";
       #   args = [ "attach" ];

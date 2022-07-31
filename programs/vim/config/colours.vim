@@ -44,6 +44,8 @@ hi Visual cterm=reverse
 " Includes (shVariable)
 hi Identifier ctermfg=blue
 
+hi Comment cterm=italic
+
 " Spelling needs black/white text
 hi SpellBad ctermfg=black
 hi SpellCap ctermfg=black
