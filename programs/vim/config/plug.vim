@@ -8,3 +8,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+
+source ~/.vim/plugs.vim
+
+call plug#end()
+
+" Don't hide json quotes
+let g:vim_json_syntax_conceal = 0

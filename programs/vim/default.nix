@@ -4,25 +4,17 @@ let
   plugins = pkgs.vimPlugins // pkgs.callPackage ./plugins/sources.nix {};
 in
 {
+  imports = [
+    plugins/coc
+  ];
+
   home = {
-    file.".vim/ftplugin/".source = ./ftplugin;
-    file.".vim/snippets/".source = ./snippets;
-    file.".vim/syntax/".source = ./syntax;
-
-    file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
-    file.".config/nvim/parser/javascript.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-javascript}/parser";
-    file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm;
-
-    file.".config/nvim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
-    file.".vim/coc-settings.json".text = builtins.readFile ./misc/coc-settings.json;
-
-    file.".vimrc".text = ''
-      ${builtins.readFile ./begin.vim}
+    # <Plug>s
+    file.".vim/plugs.vim".text = ''
       ${builtins.readFile ./plugins/standard.vim}
       ${builtins.readFile ./plugins/actionmenu.vim}
       ${builtins.readFile ./plugins/ale.vim}
       ${builtins.readFile ./plugins/buffers.vim}
-      ${builtins.readFile ./plugins/coc.vim}
       ${builtins.readFile ./plugins/fzf.vim}
       ${builtins.readFile ./plugins/gitgutter.vim}
       ${builtins.readFile ./plugins/javascript.vim}
@@ -31,8 +23,11 @@ in
       ${builtins.readFile ./plugins/vim-airline.vim}
       ${builtins.readFile ./plugins/vim-indent-guides.vim}
       ${builtins.readFile ./plugins/dev.vim}
-      ${builtins.readFile ./end.vim}
+    '';
 
+    # .vimrc
+    file.".vimrc".text = ''
+      ${builtins.readFile ./config/plug.vim}
       ${builtins.readFile ./config/lua.vim}
       ${builtins.readFile ./config/colours.vim}
       ${builtins.readFile ./config/globals.vim}
@@ -42,6 +37,16 @@ in
       ${builtins.readFile ./config/undo.vim}
       ${builtins.readFile ./config/wildmenu.vim}
     '';
+
+    # Other vim files
+    file.".vim/ftplugin/".source = ./ftplugin;
+    file.".vim/snippets/".source = ./snippets;
+    file.".vim/syntax/".source = ./syntax;
+
+    # Tree-sitter config
+    file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
+    file.".config/nvim/parser/javascript.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-javascript}/parser";
+    file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm;
   };
 
   programs.neovim = {
