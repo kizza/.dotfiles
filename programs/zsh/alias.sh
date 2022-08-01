@@ -29,7 +29,5 @@ function v {
 }
 
 function fresh {
-  # cd ~/.dotfiles
-  nix-shell --run "home-manager switch"
-  # popd
+  nix-shell --run "home-manager switch" ~/.dotfiles/shell.nix
 }
