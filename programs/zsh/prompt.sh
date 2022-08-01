@@ -2,10 +2,12 @@ local icon=""
 local ret_status="%(?:%{$fg_bold[green]%}$icon:%{$fg_bold[red]%}$icon)"
 local background_job_status="%(1j:%{$fg[cyan]%} ...:)"
 local vim_prompt="%{$fg_bold[yellow]%} VIM MODE%{$reset_color%}"
+local start_italics=$'%{\x1b[3m%}'
+local end_italics=$'%{\x1b[0m%}'
 
 setopt HIST_IGNORE_ALL_DUPS
 
-PROMPT='$(nix_shell_status) ${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info)${background_job_status} '
+PROMPT='$(nix_shell_status) ${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${start_italics}$(git_prompt_info)${end_italics}${background_job_status} '
 
 ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[blue]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
