@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  plugins = pkgs.vimPlugins // pkgs.callPackage ./custom-plugins.nix {};
+  plugins = pkgs.vimPlugins // pkgs.callPackage ./plugins/sources.nix {};
 in
 {
   home = {
