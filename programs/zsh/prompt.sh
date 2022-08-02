@@ -11,8 +11,9 @@ PROMPT='$(nix_shell_status) ${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${start
 
 ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[blue]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%} %{$fg[yellow]%}✗"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{%{$fg[yellow]%} ✗"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%}"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 strip_color_codes() {
   echo $1 | sed -E "s/"$'\E'"\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g"
