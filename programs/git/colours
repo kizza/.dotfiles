@@ -9,6 +9,8 @@
   frag = magenta bold
   old = red bold
   new = green bold
+[color "decorate"]
+  remoteBranch = magenta
 [color "status"]
   added = green
   changed = yellow
