@@ -64,14 +64,5 @@
         };
       }
     ];
-
-    oh-my-zsh = {
-      enable = true;
-      # theme = "kizza";
-      plugins = [
-        # "git"
-        "vi-mode"
-      ];
-    };
   };
 }
