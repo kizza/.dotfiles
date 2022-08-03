@@ -10,6 +10,7 @@
     defaultKeymap = "viins";
     dotDir = ".config/zsh";
     enableAutosuggestions = true;
+    enableSyntaxHighlighting = true;
     initExtra = ''
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./direnv.sh}
@@ -45,15 +46,6 @@
     };
 
     plugins = [
-      {
-        name = "zsh-syntax-highlighting";
-        src = pkgs.fetchFromGitHub {
-          owner = "zsh-users";
-          repo = "zsh-syntax-highlighting";
-          rev = "1715f39a4680a27abd57fc30c98a95fdf191be45";
-          sha256 = "1kpxima0fnypl7fak4snxnf6nj36nvp1gqwpx1ailyrgxa8641j0";
-        };
-      }
       {
         name = "zsh-history-substring-search";
         src = pkgs.fetchFromGitHub {
