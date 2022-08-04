@@ -10,9 +10,17 @@ local end_italics=$'%{\x1b[0m%}'
 
 git_prompt()
 {
-  branch=$(git symbolic-ref HEAD 2> /dev/null | awk 'BEGIN{FS="/"} {print $NF}')
-  if [[ $branch != "" ]]; then
-    echo $start_italics'%F{4}  '$branch'%f'$end_italics
+  head=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+  if [ $? -eq 0 ]; then
+    if [[ $head != "HEAD" ]]; then
+      output=$head
+    else
+      rebase=$(cat $(git rev-parse --show-toplevel)/.git/rebase-merge/done | awk '{ print $1 " " substr($2,0,10) }')
+      if [[ $rebase != "" ]]; then
+        output=$rebase
+      fi
+    fi
+    echo $start_italics'%F{4}  '$output'%f'$end_italics
   fi
 }
 
