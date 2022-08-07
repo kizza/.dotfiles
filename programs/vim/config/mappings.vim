@@ -70,9 +70,13 @@ nmap <silent> gd :call jump_from_treesitter#jump()<CR>
 " FZF (Use :GFiles if git is present)
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
-" Add ctrl-a to Rg
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".<q-args>, 1,
+" Escaped ripgrep command
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1,
   \   fzf#vim#with_preview({ 'options': ['--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
+
+" Raw ripgrep command
+command! -bang -nargs=* Rgr call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".<q-args>, 1,
+  \   fzf#vim#with_preview({ 'options': ['--prompt', 'Rgr> ', '--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
 
 " Self reloading RG
 function! SelfReloadingFZF(query, fullscreen)
