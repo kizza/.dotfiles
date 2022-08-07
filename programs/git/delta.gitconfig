@@ -27,4 +27,6 @@
   line-numbers-style = 19
   line-numbers-left-style = 19
   line-numbers-right-style = 18
+  line-numbers-minus-style = red
+  line-numbers-plus-style = green
 
