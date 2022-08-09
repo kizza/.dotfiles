@@ -18,7 +18,7 @@
   home = {
     username = builtins.getEnv "USER";
     homeDirectory = builtins.getEnv "HOME";
-    stateVersion = "20.09";
+    stateVersion = "22.05";
     packages = with pkgs; [
       colima
       coreutils
