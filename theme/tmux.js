@@ -3,7 +3,7 @@ const fs = require("fs");
 const date = "#(date '+%a, %b %d')";
 const time = "#(date '+%I:%M')";
 const dir = "#{b:pane_current_path}";
-const prefix = "#{?client_prefix,#[fg=black]PREFIX,} ";
+const prefix = "#{?client_prefix,#[fg=black]PREFIX,} #{?pane_in_mode,#[fg=black]COPY ,}";
 
 const colours = dark => {
   const background = "black";
@@ -52,11 +52,11 @@ const buildTheme = ({
 # Status update interval
 set -g status-interval 1
 
-# Basic status bar colors
-set -g status-style bg=${active},fg=colour240
+# Basic status bar colors/#{
+set -g status-style bg=${inactiveTabBg},fg=colour240
 
 # Primary status background
-set -g status-bg ${active}
+set -g status-bg ${inactiveTabBg}
 
 # Left side of status bar
 set -g status-left-style bg=${active}
@@ -64,9 +64,9 @@ set -g status-left ""
 set -g status-left-length 4
 
 # Right side of status bar
-set -g status-right-style bg=${active},fg=colour243
+set -g status-right-style bg=${inactiveTabBg},fg=colour243
 set -g status-right-length 150
-set -g status-right "${prefix}#[fg=${segment1},bg=${active}]#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]#[fg=colour18,bg=${segment3},bold] #S "
+set -g status-right "${prefix}#[fg=${segment1},bg=${inactiveTabBg}]#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]#[fg=colour18,bg=${segment3},bold] #S "
 
 # Window status
 set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag, ,}"
