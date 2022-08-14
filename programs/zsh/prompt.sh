@@ -17,10 +17,10 @@ git_prompt()
     else
       rebase=$(cat $(git rev-parse --show-toplevel)/.git/rebase-merge/done | awk '{ print $1 " " substr($2,0,10) }')
       if [[ $rebase != "" ]]; then
-        output=$rebase
+        output=$(echo $rebase | tail -n1) # Could be several lines
       fi
     fi
-    echo $start_italics'%F{4}  '$output'%f'$end_italics
+    echo '%F{4}  '$start_italics$output'%f'$end_italics
   fi
 }
 
