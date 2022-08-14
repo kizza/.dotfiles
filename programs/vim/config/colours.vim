@@ -115,13 +115,13 @@ hi BufTabLineModifiedActive ctermbg=18 ctermfg=2 cterm=italic
 hi BufTabLineModifiedHidden ctermbg=19 ctermfg=7 cterm=italic
 
 " ALE
-hi ALEError ctermfg=15 ctermbg=red
-hi ALEErrorSign ctermfg=15 ctermbg=red
-hi ALEWarning ctermfg=15 ctermbg=yellow
-hi ALEWarningSign ctermfg=15 ctermbg=yellow
+hi ALEError ctermfg=black ctermbg=red
+hi ALEErrorSign ctermfg=black ctermbg=red
+hi ALEWarning ctermfg=black ctermbg=yellow
+hi ALEWarningSign ctermfg=black ctermbg=yellow
 
 " Coc
-hi CocErrorSign ctermfg=15 ctermbg=red
+hi CocErrorSign ctermfg=black ctermbg=red
 " hi CocErrorHighlight ctermfg=15 ctermbg=red
 hi CocErrorHighlight ctermfg=red ctermbg=none cterm=underline
 hi CocWarningSign ctermfg=yellow ctermbg=none
