@@ -13,5 +13,6 @@ hi IndentGuidesOdd ctermbg=18
 
 " let g:indent_guides_guide_size = 1 k
 
-" Plug 'Yggdroot/indentLine'
-" let g:indentLine_color_term = green
+Plug 'Yggdroot/indentLine'
+let g:indentLine_color_term = "19"
+let g:indentLine_char_list = [' ', '', ' ', '']
