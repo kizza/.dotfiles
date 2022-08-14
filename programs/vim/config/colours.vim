@@ -105,6 +105,15 @@ hi NERDTreeDirSlash ctermfg=grey
 hi NERDTreeFile ctermfg=20
 hi NERDTreeFlags ctermfg=8
 
+" Buftabline
+hi BufTabLineFill ctermbg=19
+hi BufTabLineCurrent ctermbg=0 ctermfg=2 cterm=bold
+hi BufTabLineActive ctermbg=18 ctermfg=2
+hi BufTabLineHidden ctermbg=19 ctermfg=7
+hi BufTabLineModifiedCurrent ctermbg=0 ctermfg=2 cterm=italic,bold
+hi BufTabLineModifiedActive ctermbg=18 ctermfg=2 cterm=italic
+hi BufTabLineModifiedHidden ctermbg=19 ctermfg=7 cterm=italic
+
 " ALE
 hi ALEError ctermfg=15 ctermbg=red
 hi ALEErrorSign ctermfg=15 ctermbg=red
