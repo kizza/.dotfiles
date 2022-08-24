@@ -3,7 +3,8 @@ alias gs="git status --branch"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add -A" # -A adds deleted files by defailt also
-alias gat="git status --untracked-files=no --porcelain | awk '{ print $2 }' | xargs git add" # git add tracked
+alias gat="git status --untracked-files=no --porcelain | awk '{ print \$2 }' | xargs git add" # git add tracked
+alias gas="git diff --cached  --name-only | xargs git add" # git add already staged
 alias current="git am --show-current-patch" # During a rebase, shows the current failed patch
 alias pollshow="watch --color --no-title --interval 0.5 git show --color" # Show the current commit (to run beside rebases)
 alias gl="git l"
