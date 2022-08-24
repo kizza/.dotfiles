@@ -4,7 +4,7 @@
 # Theme template
 
 # COLOUR00
-color00="NORMAL_BACKGROUND" # Base 00 - Black
+color00="COLOUR_00" # Base 00 - Black
 color01="COLOUR_01" # Base 08 - Red
 color02="COLOUR_02" # Base 0B - Green
 color03="COLOUR_03" # Base 0A - Yellow
@@ -13,21 +13,21 @@ color05="COLOUR_05" # Base 0E - Magenta
 color06="COLOUR_06" # Base 0C - Cyan
 color07="COLOUR_07" # Base 05 - White
 color08="COLOUR_08" # Base 03 - Bright Black
-color09="COLOUR_09" # Base 08 - Bright Red
-color10="COLOUR_10" # Base 0B - Bright Green
-color11="COLOUR_11" # Base 0A - Bright Yellow
-color12="COLOUR_12" # Base 0D - Bright Blue
-color13="COLOUR_13" # Base 0E - Bright Magenta
-color14="COLOUR_14" # Base 0C - Bright Cyan
+color09=$color01 # Base 08 - Bright Red
+color10=$color02 # Base 0B - Bright Green
+color11=$color03 # Base 0A - Bright Yellow
+color12=$color04 # Base 0D - Bright Blue
+color13=$color05 # Base 0E - Bright Magenta
+color14=$color06 # Base 0C - Bright Cyan
 color15="COLOUR_15" # Base 07 - Bright White
-color16="COLOUR_EXTRA_01" # Base 09 - Integers, booleans, constants
-color17="COLOUR_EXTRA_02" # Base 0F - Depreciated... open/close embeded language tags
-color18="LIGHTER_BACKGROUND" # Base 01
-color19="SELECTION_BACKGROUND" # Base 02
-color20="DARKER_FOREGROUND" # Base 04
-color21="LIGHTER_FOREGROUND" # Base 06
-color_foreground="NORMAL_FOREGROUND" # Base 05
-color_background="NORMAL_BACKGROUND" # Base 00
+color16="COLOUR_16" # Base 09 - Integers, booleans, constants
+color17="COLOUR_17" # Base 0F - Depreciated... open/close embeded language tags
+color18="COLOUR_18" # Base 01 (lighter background)
+color19="COLOUR_19" # Base 02 (selection background)
+color20="COLOUR_20" # Base 04 (darkder foreground)
+color21="COLOUR_21" # Base 06 (lighter foreground)
+color_foreground=$color07 # Base 05
+color_background=$color00 # Base 00
 
 if [ -n "$TMUX" ]; then
   # Tell tmux to pass the escape sequences through
