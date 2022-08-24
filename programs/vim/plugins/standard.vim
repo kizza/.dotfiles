@@ -34,6 +34,11 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'jeetsukumaran/vim-markology'
 let g:markology_enable = 0
 
+Plug 'Yggdroot/indentLine'
+let g:indentLine_fileTypeExclude = ['fzf', 'nerdtree']
+let g:indentLine_color_term = "19"
+let g:indentLine_char_list = [' ', '', ' ', '']
+
 Plug 'rhysd/git-messenger.vim'
 
 Plug 'preservim/vimux'
