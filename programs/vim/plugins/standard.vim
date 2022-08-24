@@ -36,13 +36,6 @@ let g:markology_enable = 0
 
 Plug 'rhysd/git-messenger.vim'
 
-" Easily move blocks of text
-Plug 'matze/vim-move'
-vmap <C-k> <Plug>MoveBlockUp
-vmap <C-j> <Plug>MoveBlockDown
-nmap <A-j> <Plug>MoveLineDown
-nmap <A-k> <Plug>MoveLineUp
-
 Plug 'preservim/vimux'
 " Plug 'thosakwe/vim-flutter'
 
