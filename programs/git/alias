@@ -21,15 +21,18 @@
   ch = checkout
   cm = commit
   continue = rebase --continue
+  current = branch --show-current
   d = diff
   discard = checkout --
   discardp = checkout -p --
+  files = diff-tree --no-commit-id --name-only -r
+  fixup = commit --fixup
   main = checkout master
   master = checkout master
   pl = pull --rebase
   pu = push
-  s = status
   rollback = "!git show -s --format=%B | pbcopy && git reset HEAD~"
+  s = status
   unstage = reset HEAD
   unstash = stash pop
   wipe = reset --hard HEAD
