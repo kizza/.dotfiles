@@ -1,6 +1,3 @@
-  " ensure_installed = "maintained",
-if has('nvim')
-lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
@@ -14,8 +11,6 @@ require'nvim-treesitter.configs'.setup {
     }
   },
   indent = {
-    enable = true
+    enable = false
   }
 }
-EOF
-end
