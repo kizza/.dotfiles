@@ -2,6 +2,14 @@
 
 let
   plugins = pkgs.vimPlugins // pkgs.callPackage ./plugins/sources.nix {};
+  # # Lua plugins
+  lua_plugins = ''
+    if has('nvim')
+    lua <<EOF
+    ${builtins.readFile ./plugins/treesitter.lua}
+    EOF
+    end
+  '';
 in
 {
   imports = [
@@ -28,7 +36,7 @@ in
     # .vimrc
     file.".vimrc".text = ''
       ${builtins.readFile ./config/plug.vim}
-      ${builtins.readFile ./config/lua.vim}
+      ${lua_plugins}
       ${builtins.readFile ./config/colours.vim}
       ${builtins.readFile ./config/globals.vim}
       ${builtins.readFile ./config/mappings.vim}
