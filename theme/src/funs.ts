@@ -1,7 +1,7 @@
 import chroma from "chroma-js";
-import { Colour } from "./models";
+import {Colour} from "./models";
 
-const { assign } = Object;
+const {assign, keys} = Object;
 
 const defaultInput = `{
   "name": "",
@@ -34,7 +34,7 @@ export const flags = (defaults: Record<string, any>) => {
   const pairs = chunk(process.argv.slice(2), 2);
   console.log("pairs", pairs)
   const flags = pairs.reduce(
-    (acc, pair) => assign({}, acc, { [pair[0].replace(/-/g, "")]: pair[1] }),
+    (acc, pair) => assign({}, acc, {[pair[0].replace(/-/g, "")]: pair[1]}),
     {}
   );
   return assign(defaults, flags);
@@ -72,18 +72,32 @@ export const randomiseArray = (array: any[]) => {
   return output;
 };
 
+export const mapKeys = (
+  record: Record<string, string>,
+  fn: (key: string) => string,
+): Record<string, string> => keys(record).reduce((acc, key) =>
+  assign({}, acc, {[fn(key)]: record[key]}), {}
+)
+
+export const mapValues = (
+  record: Record<string, string>,
+  fn: (key: string) => string,
+): Record<string, string> => keys(record).reduce((acc, key) =>
+  assign({}, acc, {[key]: fn(record[key])}), {}
+)
+
 export const colourClosestTo = (colours: Colour[], match: string) =>
   colours.reduce(
-    (acc: { best: Colour | undefined; distance: number }, colour) => {
+    (acc: {best: Colour | undefined; distance: number}, colour) => {
       // const distance = chroma.distance(
       //   colour.toString(),
       //   match.toString(),
       //   "rgb"
       // );
       const distance = chroma.deltaE(colour.toString(), match.toString(), 1, 3);
-      return distance < acc.distance ? { best: colour, distance } : acc;
+      return distance < acc.distance ? {best: colour, distance} : acc;
     },
-    { best: undefined, distance: 1000 }
+    {best: undefined, distance: 1000}
   ).best;
 
 export const removeColour = (colours: Colour[], strip: Colour) =>
