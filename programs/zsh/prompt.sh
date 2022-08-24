@@ -59,12 +59,25 @@ zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
 #
+# Most of this is set via home-manager (except this one)
+# --------------------------------------------------------------------
+setopt HIST_IGNORE_ALL_DUPS
+
+#
+# Tab menu completion
+# --------------------------------------------------------------------
+zstyle ':completion:*' menu select
+
+#
 # Extension colours
 # --------------------------------------------------------------------
 
 # Use dircolors to populate LS_COLORS, then use with zstyle
 eval "$(dircolors -b ~/.dotfiles/programs/zsh/dircolors.sh)"
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Pass in ls-colors, then the "tab menu highlight"
+# (38;5;?; is foreground, 48;5;?; is background)
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} "ma=38;5;0;48;5;5;1"
 
 # Customise zsh-syntax-highlight options
 typeset -A ZSH_HIGHLIGHT_STYLES
