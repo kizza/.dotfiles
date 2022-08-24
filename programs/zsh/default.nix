@@ -35,12 +35,15 @@
       '';
 
     history = {
+      expireDuplicatesFirst = true;
       ignoreDups = true;
+      ignoreSpace = true;
       share = true;
     };
 
     shellAliases = {
       reload = ". ~/.config/zsh/.zshrc";
+      ls = "ls --color";
       # v = "nvim";
       foo = "cat";
     };
