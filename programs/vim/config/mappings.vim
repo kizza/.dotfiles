@@ -118,10 +118,9 @@ nnoremap <leader>dh :diffget 2<CR>
 nnoremap <leader>dl :diffget 4<CR>
 
 " piggy backs off hunk preview, and hunk add
-nnoremap [g :GitGutterPrevHunk<CR>
-nnoremap ]g :GitGutterNextHunk<CR>
-nnoremap <leader>hn :GitGutterNextHunk<CR>
-nnoremap <leader>hN :GitGutterPrevHunk<CR>
+nnoremap [h :GitGutterPrevHunk<CR>
+nnoremap ]h :GitGutterNextHunk<CR>
+nnoremap <silent> <leader>fs :execute("silent !git add %")<CR>
 
 func! CustomAction()
   let l:items = [
