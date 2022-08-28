@@ -33,6 +33,8 @@
   pu = push
   rollback = "!git show -s --format=%B | pbcopy && git reset HEAD~"
   s = status
+  staged = diff --cached  --name-only
+  tracked = "!git status --untracked-files=no --porcelain | awk '{ print $2 }'"
   unstage = reset HEAD
   unstash = stash pop
   wipe = reset --hard HEAD
