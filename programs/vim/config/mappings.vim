@@ -194,6 +194,9 @@ vnoremap gJ :call joinery#join_lines_without_spaces()<CR>
 imap <leader>{ <%
 imap <leader>} %>
 
+nnoremap [a :ALEPreviousWrap<CR>
+nnoremap ]a :ALENextWrap<CR>
+
 " vnoremap <C-s> d:execute 'normal i' . join(sort(split(getreg('"'))), ' ')<CR>
 
 " nnoremap <silent> <Leader>d :AskVisualStudioCode<CR>
@@ -205,9 +208,9 @@ nnoremap <silent> <Leader>s :call ActionMenuCodeActions()<CR>
 " nnoremap <Leader>b{ :normal! $%s}s{
 
 " Show syntax under cursor
-noremap <Leader>r :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-      \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+" noremap <Leader>R :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+"       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+"       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 noremap <Leader>r :TSHighlightCapturesUnderCursor<CR>
 
