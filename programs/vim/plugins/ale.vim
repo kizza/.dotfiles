@@ -5,14 +5,26 @@ let g:ale_fixers = {
   \'elm': ['format'],
   \'ruby': ['rubocop'],
   \}
+
+let g:ale_linters = {
+  \'ruby': ['rubocop', 'solargraph'],
+  \}
+" let g:ale_ruby_rubocop_executable = "rubocop --server"
+let g:ale_ruby_rubocop_options = "--server"
+
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 1
-let g:ale_sign_error = '!'
+" let g:ale_sign_error = ''
+" let g:ale_sign_warning = ' '
+let g:ale_sign_error = ' '
+let g:ale_sign_warning = ' '
 let g:ale_sign_info = 'I'
 let g:ale_linters_explicit = 1
 
 let g:ale_sign_priority = 11
 let g:gitgutter_sign_priority=9
+
+let g:airline#extensions#ale#enabled = 1
 
 " let g:ale_ruby_rubocop_executable = 'bundle'
 

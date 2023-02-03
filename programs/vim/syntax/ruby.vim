@@ -8,7 +8,7 @@ hi rubyClass ctermfg=magenta
 
 hi erubyDelimeter ctermfg=magenta
 
-hi TSKeyword ctermfg=brown
+hi TSKeyword ctermfg=17
 hi TSSymbol ctermfg=green
 hi TSParameter ctermfg=lightgrey
 hi TSFunction ctermfg=blue

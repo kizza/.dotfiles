@@ -45,6 +45,7 @@ hi Visual cterm=reverse
 hi Identifier ctermfg=blue
 
 hi Comment cterm=italic
+hi String ctermfg=yellow
 
 " Spelling needs black/white text
 hi SpellBad ctermfg=black
@@ -90,6 +91,9 @@ hi Comment ctermfg=8
 hi StatusLine ctermfg=darkgrey ctermbg=black
 hi WildMenu cterm=bold ctermfg=18 ctermbg=20
 
+" Quick fix line numbers
+" hi LineNr ctermfg=magenta
+
 " Marks
 hi MarkologyHLo ctermfg=grey ctermbg=18
 
@@ -103,6 +107,9 @@ hi fzf3 ctermfg=lightgrey ctermbg=black
 hi NERDTreeDirSlash ctermfg=grey
 hi NERDTreeFile ctermfg=20
 hi NERDTreeFlags ctermfg=8
+
+" Easymotion
+hi EasyMotionTarget ctermfg=lightcyan cterm=bold
 
 " Buftabline
 hi BufTabLineFill ctermbg=19
@@ -127,3 +134,5 @@ hi CocWarningSign ctermfg=yellow ctermbg=none
 hi CocWarningHighlight ctermfg=yellow ctermbg=none cterm=underline
 hi CocInfoSign ctermfg=yellow ctermbg=none
 hi CocInfoHighlight ctermfg=yellow ctermbg=none cterm=underline
+
+hi FgCocErrorFloatBgCocFloating ctermfg=21 cterm=italic

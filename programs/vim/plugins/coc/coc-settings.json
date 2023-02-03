@@ -1,4 +1,5 @@
 {
+  "codeLens.enable": false,
   "diagnostic.errorSign": "!",
   "diagnostic.warningSign": "!",
   "diagnostic.infoSign": "i",
@@ -10,7 +11,8 @@
     "folder": ""
   },
   "prettier.arrowParens": "avoid",
-  "prettier.formatterPriority": -1,
+  "prettier.formatterPriority": 1,
+  "prettier.requireConfig": true,
   "eslint.autoFixOnSave": true,
   "snippets.priority": 140,
   "snippets.loadFromExtensions": false,

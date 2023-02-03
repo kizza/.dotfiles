@@ -26,6 +26,8 @@ set autoindent
 set mouse=a
 set updatetime=100 " Update faster (used for gitgutter)
 
+autocmd Filetype markdown setlocal expandtab tabstop=2 shiftwidth=2
+
 " Navigation
 set number          " Show line numbers
 set relativenumber

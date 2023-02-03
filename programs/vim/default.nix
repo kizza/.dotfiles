@@ -33,9 +33,9 @@ in
     '';
 
     # .vimrc
+      # ${lua_plugins}
     file.".vimrc".text = ''
       ${builtins.readFile ./config/plug.vim}
-      ${lua_plugins}
       ${builtins.readFile ./config/colours.vim}
       ${builtins.readFile ./config/globals.vim}
       ${builtins.readFile ./config/mappings.vim}
@@ -58,6 +58,9 @@ in
 
   programs.neovim = {
     enable = true;
+    # plugins = (with pkgs.vimPlugins; [
+    #   pkgs.nvim-treesitter-full
+    # ]);
     extraConfig = ''
       set runtimepath^=~/.vim runtimepath+=~/.vim/after
       let &packpath=&runtimepath
