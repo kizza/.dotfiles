@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  theme=~/.config/base16-shell/scripts/base16-$BASE16_THEME.sh
+else
+  theme=~/.dotfiles/theme/favourites/$1.theme.sh
+fi;
+
+if [ -f $theme ]; then
+  # get the color declarations in said theme, assumes there is a block of text that starts with color00= and ends with new line
+  colors=$(awk '/^color00=/,/^$/ {print}' $theme \
+    | sed 's/#.*//' \
+    | sed 's/\$//' \
+    | sed 's/\///g' \
+    | sed 's/"//g' \
+  )
+  yarn tweak "$colors"
+else
+  printf "No theme file %s found\n" $theme
+fi;

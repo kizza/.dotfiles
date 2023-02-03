@@ -46,6 +46,7 @@ export const saveTheme = (hex: Record<string, string>) => {
   const colours = mapValues(hex, formatColour)
 
   fs.readFile("templates/shell.template.sh", "utf8", (_, buffer) => {
+    console.log('saving', colours)
     const theme = keys(colours).reduce(
       (acc, key) => acc.replace(new RegExp(key, "g"), colours[key]),
       buffer

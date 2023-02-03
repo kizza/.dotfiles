@@ -41,6 +41,8 @@ in
       ".config/base16-shell".source = base16;
       ".vim/colors/base16-solarized-lighter.vim".text = builtins.readFile ./themes/base16-solarized-lighter.vim;
       ".vim/colors/base16-atelier-dune-lighter.vim".text = builtins.readFile ./themes/base16-atelier-dune-lighter.vim;
+      ".vim/colors/base16-gruvbox-dark-medium-custom.vim".text = builtins.readFile ./themes/base16-gruvbox-dark-medium-custom.vim;
+      ".vim/colors/base16-joker.vim".text = builtins.readFile ./themes/base16-joker.vim;
     };
   };
 }
