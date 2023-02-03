@@ -1,18 +1,18 @@
 #!/bin/sh
 # base16-shell (https://github.com/chriskempson/base16-shell)
 # Base16 Shell template by Chris Kempson (http://chriskempson.com)
-# Atelier Dune Light scheme by Bram de Haan (http://atelierbramdehaan.nl)
+# Theme template
 
-color00="fe/fb/ec" # Base 00 - Black
-color01="d7/37/37" # Base 08 - Red
-color02="60/ac/39" # Base 0B - Green
-color03="ae/95/13" # Base 0A - Yellow
-color04="66/84/e1" # Base 0D - Blue
-color05="b8/54/d4" # Base 0E - Magenta
-color06="1f/ad/83" # Base 0C - Cyan
-# color07="6e/6b/5e" # Base 05 - White
-color07="5e/5b/4e" # Base 05 - White
-color08="99/95/80" # Base 03 - Bright Black
+# COLOUR00
+color00="16/22/50" # Base 00 - Black
+color01="dd/38/22" # Base 08 - Red
+color02="1f/82/6a" # Base 0B - Green
+color03="fb/ae/26" # Base 0A - Yellow
+color04="51/75/eb" # Base 0D - Blue
+color05="b5/05/75" # Base 0E - Magenta
+color06="01/bd/c5" # Base 0C - Cyan
+color07="e6/eb/fc" # Base 05 - White
+color08="4e/5b/8a" # Base 03 - Bright Black
 color09=$color01 # Base 08 - Bright Red
 color10=$color02 # Base 0B - Bright Green
 color11=$color03 # Base 0A - Bright Yellow
@@ -20,15 +20,14 @@ color12=$color04 # Base 0D - Bright Blue
 color13=$color05 # Base 0E - Bright Magenta
 color14=$color06 # Base 0C - Bright Cyan
 color15="20/20/1d" # Base 07 - Bright White
-color16="b6/56/11" # Base 09
-color17="ba/5b/00" # Base 0F
-color18="e8/e4/cf" # Base 01
-# color19="a6/a2/8c" # Base 02
-color19="c6/c2/ac" # Base 02
-color20="7d/7a/68" # Base 04
-color21="29/28/24" # Base 06
-color_foreground="6e/6b/5e" # Base 05
-color_background="fe/fb/ec" # Base 00
+color16="b6/56/11" # Base 09 - Integers, booleans, constants
+color17="d9/77/90" # Base 0F - Depreciated... open/close embeded language tags
+color18="1b/2b/66" # Base 01 (lighter background)
+color19="33/35/70" # Base 02 (selection background)
+color20="be/be/d1" # Base 04 (darkder foreground)
+color21="00/00/00" # Base 06 (lighter foreground)
+color_foreground=$color07 # Base 05
+color_background=$color00 # Base 00
 
 if [ -n "$TMUX" ]; then
   # Tell tmux to pass the escape sequences through
@@ -80,13 +79,13 @@ put_template 21 $color21
 # foreground / background / cursor color
 if [ -n "$ITERM_SESSION_ID" ]; then
   # iTerm2 proprietary escape codes
-  put_template_custom Pg 6e6b5e # foreground
-  put_template_custom Ph fefbec # background
-  put_template_custom Pi 6e6b5e # bold color
-  put_template_custom Pj a6a28c # selection color
-  put_template_custom Pk 6e6b5e # selected text color
-  put_template_custom Pl 6e6b5e # cursor
-  put_template_custom Pm fefbec # cursor text
+  put_template_custom Pg 586e75 # foreground
+  put_template_custom Ph fdf6e3 # background
+  put_template_custom Pi 586e75 # bold color
+  put_template_custom Pj 93a1a1 # selection color
+  put_template_custom Pk 586e75 # selected text color
+  put_template_custom Pl 586e75 # cursor
+  put_template_custom Pm fdf6e3 # cursor text
 else
   put_template_var 10 $color_foreground
   if [ "$BASE16_SHELL_SET_BACKGROUND" != false ]; then
@@ -126,4 +125,3 @@ unset color20
 unset color21
 unset color_foreground
 unset color_background
-

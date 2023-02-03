@@ -30,6 +30,8 @@ const colours = dark => {
     activeTabFg: darkText,
     inactiveTabBg: active,
     inactiveTabFg: background,
+    // inactiveTabBg: "color18",
+    // inactiveTabFg: "color20",
     segment1: segment1,
     segment2: segment2,
     segment3: segment3,
