@@ -158,7 +158,7 @@ const formatCommit = (input, prefix, joiner) => {
 const formatCommits = commits => commits.length > 1
   ? commits
     .reverse()
-    .map(formatCommitWith(" ", "\n"))
+    .map(formatCommitWith("- ", "\n"))
     .join("\n\n")
   : formatCommitWith("", "\n")(commits[0])
 
