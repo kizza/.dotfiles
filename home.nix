@@ -31,6 +31,7 @@
       git-secrets
       htop
       jq
+      overmind
       zoxide
       solargraph
       tree-sitter
