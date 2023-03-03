@@ -15,6 +15,10 @@ function fastspec {
   echo $FILES | xargs rspec
 }
 
+function set_colour {
+  printf '\033Ptmux;\033\033]4;%d;rgb:%s\033\033\\\033\\' $@;
+}
+
 function code { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
 
 # Fuzzy find directory files with "v" otherwise open "v ."
