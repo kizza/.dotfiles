@@ -35,7 +35,6 @@
       zoxide
       solargraph
       tree-sitter
-      watchman
       watch
     ];
 
