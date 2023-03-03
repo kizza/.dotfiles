@@ -1,6 +1,7 @@
 alias fat="bat"
 alias ls="exa"
 alias dotfiles="cd ~/.dotfiles"
+alias capture_unicode="xxd -psd"
 
 # Run cops/linters on branch files
 alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
