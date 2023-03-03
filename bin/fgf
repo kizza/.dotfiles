@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
+cd ~/Code/fgf
 tmux rename-session "FGF"
 
 # Ensure services are running
-if [ ! "$(docker ps | grep fgf_postgres)" ]; then
-  cd ~/Code/fgf
-  script/services start
-  popd
+if [ ! "$(colima list | grep Running)" ]; then
+  heading "Starting colima..."
+  colima start --cpu 1 --memory 2 --disk 20
+  donetick "Colima started"
+fi
+
+if [ ! "$(docker ps | grep fgf-postgres)" ]; then
+  heading "Starting docker..."
+  docker compose up -d
+  donetick "Docker started"
 fi
 
 # Backend
