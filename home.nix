@@ -21,6 +21,7 @@
     homeDirectory = builtins.getEnv "HOME";
     stateVersion = "22.05";
     packages = with pkgs; [
+      cargo
       colima
       coreutils
       docker
