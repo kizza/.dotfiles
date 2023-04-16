@@ -3,6 +3,27 @@ return {
     "chriskempson/base16-vim",
     lazy = false,
   },
+  {,
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    opts = {
+      input = {
+        win_options = {
+          winblend = 0,
+        },
+        override = function(conf)
+          if vim.api.nvim_win_get_width(0) <= 40 then
+            conf.width = 50
+          end
+          return conf
+        end
+      },
+      select = {
+        enabled = true,
+        backend = { "telescope" },
+      }
+    }
+  },
   {
     "nvim-tree/nvim-web-devicons",
     opts = {

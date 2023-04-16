@@ -99,11 +99,18 @@ return {
         vim.keymap.set('n', 'mc',
           function()
             local file_src = lib.get_node_at_cursor()['absolute_path']
-            local file_dest = vim.fn.input("Copy to: ", file_src, "file")
-            local dir = vim.fn.fnamemodify(file_dest, ":h") -- Create any parent dirs as required
-            vim.fn.system { 'mkdir', '-p', dir }
-            vim.fn.system { 'cp', '-R', file_src, file_dest } -- Copy the file
-            print("Copied to " .. file_dest)
+            vim.ui.input(
+              { prompt = 'Copy to: ', default = file_src },
+              function(input)
+                if (input == nil) then return end
+                if (input == file_src) then return print("Same path, ignoring") end
+
+                local dir = vim.fn.fnamemodify(input, ":h") -- Create any parent dirs as required
+                vim.fn.system { 'mkdir', '-p', dir }
+                vim.fn.system { 'cp', '-R', file_src, input } -- Copy the file
+                print("Copied to " .. input)
+              end
+            )
           end,
           opts('Copy file to')
         )
@@ -111,11 +118,18 @@ return {
         vim.keymap.set('n', 'mm',
           function()
             local file_src = lib.get_node_at_cursor()['absolute_path']
-            local file_dest = vim.fn.input("Move to: ", file_src, "file")
-            local dir = vim.fn.fnamemodify(file_dest, ":h") -- Create any parent dirs as required
-            vim.fn.system { 'mkdir', '-p', dir }
-            vim.fn.system { 'mv', file_src, file_dest } -- Copy the file
-            print("Moved to " .. file_dest)
+            vim.ui.input(
+              { prompt = 'Move to: ', default = file_src },
+              function(input)
+                if (input == nil) then return end
+                if (input == file_src) then return print("Same path, ignoring") end
+
+                local dir = vim.fn.fnamemodify(input, ":h") -- Create any parent dirs as required
+                vim.fn.system { 'mkdir', '-p', dir }
+                vim.fn.system { 'mv', file_src, file_dest } -- Copy the file
+                print("Moved to " .. file_dest)
+              end
+            )
           end,
           opts('Move file to')
         )
