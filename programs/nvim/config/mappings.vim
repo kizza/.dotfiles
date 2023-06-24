@@ -20,6 +20,23 @@ noremap <leader>y "+y
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
 
+
+"
+" Windows
+" --------------------------------------------------------------------
+func! HalfWindow()
+  let l:width = float2nr(&columns * 0.3)
+  execute("vertical resize ". l:width)
+endfunc
+
+func! DoubleWindow()
+  let l:width = float2nr(&columns * 0.7)
+  execute("vertical resize ". l:width)
+endfunc
+
+noremap <C-w>j :call HalfWindow()<CR>
+noremap <C-w>k :call DoubleWindow()<CR>
+
 "
 " Buffers
 " --------------------------------------------------------------------
