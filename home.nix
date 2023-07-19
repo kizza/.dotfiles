@@ -38,6 +38,7 @@
       solargraph
       tree-sitter
       watch
+      yarn
     ];
 
     sessionVariables = {
