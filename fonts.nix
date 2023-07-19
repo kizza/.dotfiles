@@ -1,13 +1,9 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    modules/fira-fonts.nix
-    modules/nerd-fonts.nix
-    modules/powerline-fonts.nix
-  ];
+  fonts.fontconfig.enable = true;
 
-  fira-fonts.enable = true;
-  nerd-fonts.enable = true;
-  powerline-fonts.enable = true;
+  home.packages = [
+    (pkgs.nerdfonts.override { fonts = [ "FiraCode" "SourceCodePro" ]; })
+  ];
 }
