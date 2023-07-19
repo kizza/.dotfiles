@@ -1,1 +1,1 @@
-osascript -e "display notification \"$2\" with title \"$1\""
+osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
