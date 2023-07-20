@@ -30,3 +30,4 @@ hi TSCustomMethod ctermfg=none
 " vim-rails doesn't fine views with .html.erb without extenging its default
 " extensions
 setlocal suffixesadd+=.html.erb
+setlocal suffixesadd+=.turbo_stream.erb
