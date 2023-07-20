@@ -1,6 +1,6 @@
 export COMPOSE_HTTP_TIMEOUT=60000
 
-alias dc="docker-compose"
+alias dc="docker compose"
 
 stopcontainers() {
   docker stop $(docker ps -a -q)
