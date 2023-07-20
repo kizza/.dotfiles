@@ -17,7 +17,6 @@
         ${builtins.readFile ./docker.sh}
         ${builtins.readFile ./env.sh}
         ${builtins.readFile ./fzf.sh}
-        ${builtins.readFile ./helpers.sh}
         ${builtins.readFile ./keybindings.sh}
         ${builtins.readFile ./nix.sh}
         ${builtins.readFile ./nvm.sh}
@@ -32,6 +31,7 @@
     envExtra = ''
         ${builtins.readFile ./alias.sh}
         ${builtins.readFile ./git.sh}
+        ${builtins.readFile ./helpers.sh}
       '';
 
     history = {
