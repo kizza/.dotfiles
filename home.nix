@@ -9,6 +9,7 @@
     programs/direnv.nix
     programs/git
     programs/karabiner
+    programs/macvim
     programs/nvim
     programs/ripgrep
     programs/tmux
