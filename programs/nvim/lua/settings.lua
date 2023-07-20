@@ -53,9 +53,6 @@ if vim.fn.has("nvim-0.9.0") == 1 then
   opt.shortmess:append { C = true }
 end
 
--- Matches do..end blocks in ruby
-vim.cmd("runtime macros/matchit.vim")
-
 -- Disable backup. No swap files.
 opt.backup = false
 opt.wb = false
