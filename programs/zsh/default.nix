@@ -13,6 +13,7 @@
     enableSyntaxHighlighting = true;
     initExtra = ''
         ${builtins.readFile ./base-16.sh}
+        ${builtins.readFile ./brew.sh}
         ${builtins.readFile ./direnv.sh}
         ${builtins.readFile ./docker.sh}
         ${builtins.readFile ./env.sh}
