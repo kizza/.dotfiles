@@ -54,10 +54,10 @@ hi @symbol ctermfg=green
 hi @operator ctermfg=16
 " hi @function ctermfg=15
 " hi @function.call ctermfg=magenta
-hi @keyword.function ctermfg=brown
-hi @keyword.return ctermfg=brown cterm=italic
+hi @keyword.function ctermfg=17
+hi @keyword.return ctermfg=17 cterm=italic
 hi @constant.builtin cterm=italic ctermfg=cyan
 hi @variable.builtin cterm=italic
 hi @punctuation.bracket ctermfg=magenta
-hi @punctuation.special ctermfg=brown
+hi @punctuation.special ctermfg=17
 " hi @punctuation.delimiter ctermfg=magenta
