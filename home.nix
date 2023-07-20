@@ -12,7 +12,7 @@
     programs/nvim
     programs/ripgrep
     programs/tmux
-    programs/vim
+    # programs/vim 
     programs/zsh
   ];
 
