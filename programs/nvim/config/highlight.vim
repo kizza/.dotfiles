@@ -12,6 +12,11 @@ hi SpellCap ctermfg=black
 hi SpellRare ctermfg=black
 hi SpellLocal ctermfg=black
 
+hi NormalFloat ctermbg=none
+hi FloatTitle ctermfg=magenta
+hi FloatBorder ctermfg=19
+hi FloatTransparent ctermbg=none
+
 " Light
 " hi Pmenu ctermbg=19
 " hi PmenuSbar ctermbg=18
