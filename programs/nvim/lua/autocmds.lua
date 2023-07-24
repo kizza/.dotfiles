@@ -10,6 +10,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Dynamic colour columns
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = augroup("color_column"),
+  callback = function()
+    vim.fn.matchadd('ColorColumn', '\\(\\%80v\\|\\%100v\\)', 100)
+  end,
+})
+
 -- Trim whitespace on save
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("trim_trailing_whitespace"),
