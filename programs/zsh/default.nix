@@ -10,7 +10,9 @@
     defaultKeymap = "viins";
     dotDir = ".config/zsh";
     enableAutosuggestions = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting = {
+      enable = true;
+    };
     initExtra = ''
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./brew.sh}
