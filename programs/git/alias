@@ -31,6 +31,7 @@
   master = checkout master
   pl = pull --rebase
   pu = push
+  reabse = rebase
   rollback = "!git show -s --format=%B | pbcopy && git reset HEAD~"
   s = status
   staged = diff --cached  --name-only
