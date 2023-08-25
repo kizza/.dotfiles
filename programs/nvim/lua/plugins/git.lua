@@ -1,5 +1,20 @@
 return {
   {
+    "sindrets/diffview.nvim",
+    cmd = {"DiffviewOpen"},
+    config = function()
+      local actions = require("diffview.actions")
+      require("diffview").setup({
+        keymaps = {
+          view = {
+            { "n", "[h", actions.prev_conflict, { desc = "In the merge-tool: jump to the previous conflict" } },
+            { "n", "]h", actions.next_conflict, { desc = "In the merge-tool: jump to the next conflict" } },
+          }
+        }
+      })
+    end
+  },
+  {
     "tpope/vim-fugitive",
     cmd = { "G" },
   },
