@@ -32,9 +32,12 @@
 [mergetool "fugitive"]
   cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
   trustExitTool = false
+[mergetool "diffview"]
+  cmd = nvim -f -c \"DiffviewOpen\" \"$MERGED\"
+  trustExitTool = false
 [mergetool "vscode"]
   cmd = VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args --wait $MERGED
 [merge]
-  tool = fugitive
+  tool = diffview
 [mergetool]
   keepBackup = false
