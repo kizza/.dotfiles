@@ -125,13 +125,13 @@ command! -nargs=* -bang RG call SelfReloadingFZF(<q-args>, <bang>0)
 " --------------------------------------------------------------------
 "
 command! GitContext execute("silent !gitcontext ".expand("%"))
-command! GitFile execute("silent !gitfile ".expand("%")." ".line("."))
+command! GitFile execute("silent !gitfile ".expand("%:.")." ".line("."))
 command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))
 
 nnoremap <silent> <leader>gs :GFiles?<CR>
 nnoremap <silent> <leader>gc :GitContext<CR>
 nnoremap <silent> <leader>gf :GitFile<CR>
-vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%")." ".line("'<")." ".line("'>"))<CR>
+vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%:.")." ".line("'<")." ".line("'>"))<CR>
 nnoremap <silent> <leader>gb :GitSha<CR>
 
 " Mergetool
