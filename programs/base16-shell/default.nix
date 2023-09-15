@@ -12,8 +12,8 @@ let
         owner = "chriskempson";
         name = pname;
         repo = "base16-shell";
-        rev = "ae84047d378700bfdbabf0886c1fb5bb1033620f";
-        sha256 = "150sqmpi5f4bh4phnmjc3r1m15vhfcxrhbj36922lgqvw23bxb6j";
+        rev = "588691ba71b47e75793ed9edfcfaa058326a6f41";
+        sha256 = "X89FsG9QICDw3jZvOCB/KsPBVOLUeE7xN3VCtf0DD3E=";
       })
       ./themes
     ];
