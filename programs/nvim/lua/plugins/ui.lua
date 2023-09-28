@@ -44,17 +44,28 @@ return {
       "nvim-treesitter/nvim-treesitter"
     },
     opts = {
-      space_char_blankline = " ",
-      show_current_context = true,
-      show_current_context_start = false,
+      indent = {
+        char = "│",
+        highlight = {
+          "IndentBlanklineCharSkip",
+          "IndentBlanklineChar",
+        }
+      },
+      scope = {
+        show_start = false,
+        show_end = false,
+        highlight = {
+          "IndentBlanklineContextChar",
+        }
+      }
     },
     config = function(_, opts)
-      require("indent_blankline").setup(opts)
       vim.cmd[[
         hi IndentBlanklineChar ctermfg=18
-        hi IndentBlanklineContextStart cterm=underline
+        hi IndentBlanklineCharSkip ctermfg=0
         hi IndentBlanklineContextChar ctermfg=8
       ]]
+      require("ibl").setup(opts)
     end
   },
   {
