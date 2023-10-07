@@ -45,8 +45,8 @@ noremap <C-w>k :call DoubleWindow()<CR>
 " noremap <leader>N :NERDTree<cr>
 nnoremap <C-b> :Buffers<CR>
 nnoremap <leader>bb :BufExplorer<cr>
-nnoremap gt :bnext<CR>
-nnoremap gT :bprev<CR>
+nnoremap <silent> gt :bnext<CR>
+nnoremap <silent> gT :bprev<CR>
 nnoremap <leader>x :bdelete<CR>
 " nnoremap <silent><leader>gT :ShiftBufferLeft<CR>
 " nnoremap <silent><leader>gt :ShiftBufferRight<CR>
