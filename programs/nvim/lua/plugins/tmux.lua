@@ -14,6 +14,9 @@ return {
       { "<leader>rP", "<cmd>call VimuxPromptCommandThenClose()<cr>" },
       { "<leader>rc", "<cmd>VimuxClearTerminalScreen<cr>" },
       { "<leader>rt", "<cmd>VimuxTogglePane<cr>" },
-    }
+    },
+    init = function()
+      vim.g.VimuxPromptString  = "Run: "
+    end
   },
 }
