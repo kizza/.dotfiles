@@ -3,12 +3,16 @@ let g:mapleader = ","
 " Experiemtn with space as leader
 map <Space> ,
 
+" Center in-and-out motions
+" noremap <C-o> <C-o>zz
+" noremap <C-i> <C-i>zz
+
 " I keep typing an uppercase W when saving (life is too short)
-command W w
-command Wq wq
+command! W w
+command! Wq wq
 
 inoremap jj <Esc>
-nnoremap <Leader>/ :noh<CR><ESC>|
+nnoremap <silent><Leader>/ :noh<CR>:call minimap#vim#ClearColorSearch()<CR><ESC>|
 
 nnoremap <Leader>l :Lazy<CR>
 
@@ -17,8 +21,8 @@ noremap Y y$
 noremap <leader>y "+y
 
 
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
+" nnoremap <C-d> <C-d>zz
+" nnoremap <C-u> <C-u>zz
 
 
 "
@@ -43,26 +47,26 @@ noremap <C-w>k :call DoubleWindow()<CR>
 "
 " noremap <leader>n :NERDTreeFind<cr>
 " noremap <leader>N :NERDTree<cr>
-nnoremap <C-b> :Buffers<CR>
+" nnoremap <C-b> :Buffers<CR>
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap <silent> gt :bnext<CR>
 nnoremap <silent> gT :bprev<CR>
-nnoremap <leader>x :bdelete<CR>
+nnoremap <silent> <leader>x :bdelete<CR>
 " nnoremap <silent><leader>gT :ShiftBufferLeft<CR>
 " nnoremap <silent><leader>gt :ShiftBufferRight<CR>
 
 " Close all other buffers
-nnoremap <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
+nnoremap <silent> <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
-nmap cp :let @+ = expand("%")<CR>
-nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
-nmap <leader>it :silent execute("!withvimsplit ". expand("%"))<CR>
-nmap <leader>ib :edit %<CR>
-nmap <leader>iv :vsplit %<CR>
+" Open current file in new tmux split
+" nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
+nmap <silent> <leader>it :silent execute("!withvimsplit ". expand("%"))<CR>
+nmap <silent> <leader>ib :edit %<CR>
+nmap <silent> <leader>iv :vsplit %<CR>
 
 " Copy buffer paths
-nmap cp :let @+ = expand("%")<CR>
-nmap cP :let @+ = expand("%") . ":" . line(".")<CR>
+nmap <silent> cp :let @+ = expand("%")<CR>
+nmap <silent> cP :let @+ = expand("%") . ":" . line(".")<CR>
 
 " Quick jump to buffer index
 func! BufferFromIndex(index)
@@ -78,11 +82,33 @@ for i in range(0, 9)
   execute "nnoremap <leader>" . i . " :call BufferFromIndex(" . i . ")<CR>"
 endfo
 
-" Open current file in new tmux split
-nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
+" z fold index shortcuts
+for i in range(0, 9)
+  execute "nnoremap <leader>z" . i . " :set foldlevel=". i . "<CR>"
+endfo
 
 " nmap <silent> gd :call jump_from_treesitter#jump()<CR>
 
+
+" Conver do..end blocks to {} and back
+function! ToggleBlockSyntax()
+  let has_arguments = match(getline("."), '|\S\+|') >= 0
+  let has_do_block = match(getline("."), ' do') >= 0
+
+  let @q = ""
+  if has_do_block
+    let @q = "%%%ciw}ciw{v%J%"
+  else
+    if has_arguments
+      let @q = "$%sdoEw\<BS>$\<BS>end%"
+    else
+      let @q = "$%sdo$\<BS>end%"
+    end
+  endif
+
+  call feedkeys("@q")
+endfunction
+noremap <leader>ab :call ToggleBlockSyntax()<CR>
 
 "
 " Searching
@@ -190,9 +216,9 @@ nnoremap <silent> <leader>G :call CustomAction()<CR>
 
 function! VimuxPromptCommandThenClose() abort
   if VimuxOption('VimuxCommandShell')
-    let l:command = input("Once?: ", "", 'shellcmd')
+    let l:command = input("Run once: ", "", 'shellcmd')
   else
-    let l:command = input("Once?: ", "")
+    let l:command = input("Run once: ", "")
   endif
   VimuxRunCommand(l:command . " && exit")
 endfunction
@@ -231,7 +257,7 @@ noremap <Leader>rG :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-" noremap <Leader>r :TSHighlightCapturesUnderCursor<CR>
+noremap <Leader>rg :TSHighlightCapturesUnderCursor<CR>
 
 
 

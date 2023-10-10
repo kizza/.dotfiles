@@ -13,7 +13,7 @@
     programs/nvim
     programs/ripgrep
     programs/tmux
-    # programs/vim 
+    # programs/vim
     programs/zsh
   ];
 
@@ -22,6 +22,7 @@
     homeDirectory = builtins.getEnv "HOME";
     stateVersion = "22.05";
     packages = with pkgs; [
+      btop
       cargo
       colima
       coreutils
@@ -32,6 +33,7 @@
       fd
       fzf
       git-secrets
+      go
       htop
       jq
       overmind

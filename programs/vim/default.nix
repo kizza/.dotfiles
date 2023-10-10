@@ -2,14 +2,6 @@
 
 let
   plugins = pkgs.vimPlugins // pkgs.callPackage ./plugins/sources.nix {};
-  # # Lua plugins
-  lua_plugins = ''
-    if has('nvim')
-    lua <<EOF
-    ${builtins.readFile ./plugins/treesitter.lua}
-    EOF
-    end
-  '';
 in
 {
   imports = [
@@ -50,21 +42,21 @@ in
     file.".vim/snippets/".source = ./snippets;
     file.".vim/syntax/".source = ./syntax;
 
-    # Tree-sitter config
-    file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser";
-    file.".config/nvim/parser/javascript.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-javascript}/parser";
-    file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm;
+    /* # Tree-sitter config */
+    /* file.".config/nvim/parser/ruby.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-ruby}/parser"; */
+    /* file.".config/nvim/parser/javascript.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-javascript}/parser"; */
+    /* file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ./after/queries/ruby/highlights.scm; */
   };
 
-  programs.neovim = {
+  programs.vim = {
     enable = true;
     # plugins = (with pkgs.vimPlugins; [
     #   pkgs.nvim-treesitter-full
     # ]);
-    extraConfig = ''
-      set runtimepath^=~/.vim runtimepath+=~/.vim/after
-      let &packpath=&runtimepath
-      source ~/.vimrc
-    '';
+    /* extraConfig = '' */
+    /*   set runtimepath^=~/.vim runtimepath+=~/.vim/after */
+    /*   let &packpath=&runtimepath */
+    /*   source ~/.vimrc */
+    /* ''; */
   };
 }

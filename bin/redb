@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+BACKUP_ID=$(ls tmp/db | tail -n 1 | sed 's/.dump//') JOBS=2 rails db:anon:load && notify "Restored" "Database has been restored"

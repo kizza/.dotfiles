@@ -23,6 +23,9 @@ return {
     keys = {
       { "<leader>gm", "<cmd>GitMessenger<cr>", desc = "Open git messenger" },
     },
+    init = function()
+      vim.g.git_messenger_always_into_popup = 1
+    end
   },
   {
     "airblade/vim-gitgutter",

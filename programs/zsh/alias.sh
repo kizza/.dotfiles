@@ -16,6 +16,7 @@ function fastspec {
 }
 
 function set_colour {
+  # COLOUR=$(echo "$2" | sed 's/../&\//g;s/.$//')
   printf '\033Ptmux;\033\033]4;%d;rgb:%s\033\033\\\033\\' $@;
 }
 
@@ -34,5 +35,5 @@ function v {
 }
 
 function fresh {
-  nix-shell --run "home-manager switch" ~/.dotfiles/shell.nix
+  nix-shell --run "home-manager switch" ~/.dotfiles/shell.nix && notify "Fresh/!" "Your dotfiles are now fresh"
 }

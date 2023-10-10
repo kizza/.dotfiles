@@ -5,6 +5,7 @@
   #   file.".config/oh-my-zsh/themes/kizza.zsh-theme".text = builtins.readFile ./kizza.zsh-theme;
   # };
 
+        # ${builtins.readFile ./base-16.sh}
   programs.zsh = {
     enable = true;
     defaultKeymap = "viins";

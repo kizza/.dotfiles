@@ -12,7 +12,7 @@ hi SpellCap ctermfg=black
 hi SpellRare ctermfg=black
 hi SpellLocal ctermfg=black
 
-hi NormalFloat ctermbg=none
+hi NormalFloat ctermbg=18
 hi FloatTitle ctermfg=magenta
 hi FloatBorder ctermfg=19
 hi FloatTransparent ctermbg=none

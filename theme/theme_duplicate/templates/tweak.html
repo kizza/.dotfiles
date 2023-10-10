@@ -1,0 +1,151 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>{styles}</style>
+    <style>
+    body {
+      font-size: 17px;
+      font-family: "SauceCodePro Nerd Font";
+      background: ${colours["color00"]};
+      color: ${colours["color07"]};
+    }
+    input {
+      background: ${colours["color00"]};
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <script>
+    Coloris({
+      el: ".coloris",
+      themeMode: "dark",
+      alpha: false
+    });
+
+    const findStyleRule = selector => [...document.styleSheets[0].cssRules].find(
+      rule => rule.selectorText == `.${selector}`
+    )
+
+    const updateColour = (name, value) => {
+      findStyleRule(`text-${name}`).style.color = value;
+      findStyleRule(`bg-${name}`).style.background = value;
+    }
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+      document.querySelectorAll("[class*=color]").forEach(element =>{
+        element.title = [...element.classList].join(", ")
+      })
+
+      //document.querySelectorAll("input[type=color]").forEach(input =>
+      document.addEventListener("input", (e) => {
+        console.log(e.target.name, e.target.value)
+        updateColour(e.target.name, e.target.value)
+      })
+      //)
+    });
+    </script>
+  </head>
+  <body class="bg-color00 text-color07 leading-relaxed">
+    <!-- Tabline -->
+    <div class="flex bg-color19 text-color07">
+      <div class="px-2">1 tweak.sh </div>
+      <div class="px-2 bg-color00 text-color02 italic font-bold">2 tweak.html </div>
+    </div>
+
+    <!-- Editor -->
+    <div class="flex">
+      <div class="pl-6 pr-2 bg-color18 text-color08">
+        1<br />
+        2<br />
+        3<br />
+        4<br />
+        5<br />
+      </div>
+      <div class="flex-grow px-2">
+        <span class="text-color04">include</span> <span class="text-color03">ViewComponentExtras<span class="text-color16">::</span>Styled<span class="text-color16">::</span>Container</span>
+        <span class="text-color03">INPUT_ATTRIBUTES</span> <span class="text-04">=</span> %i[<span class="text-color16">autofocus</span>]<br />
+        <br />
+
+        <div class="italic font-thin text-color08">// A comment that's useful and readable</div>
+        <div>
+          <span class="text-color03">const</span>&nbsp;asStyle = (<span class="text-color02">name</span>:
+          <span class="text-color05">string</span>,
+          <span class="text-color02">value</span>:
+          <span class="text-color05">string</span>)
+          <span class="text-color04">=></span><br />&nbsp;
+          <span class="text-color03">`Color</span>
+          <span class="text-color06">${</span>name<span class="text-color06">}</span>
+          <span class="text-color03">with</span>
+          <span class="text-color06">${</span>value<span class="text-color06">}</span><span class="text-color03">`</span>
+        </div>
+        <br />
+        <div>
+          <div class="bg-color18"><span class="text-color17">def</span> <span class="text-color04">initialize</span>(<br /></div>
+          &nbsp;&nbsp;form<span class="text-color03"></span><span class="text-color02">:</span><span class="text-color05">,</span><br />
+          &nbsp;&nbsp;method<span class="text-color03"></span><span class="text-color02">:</span><span class="text-color05">,</span><br />
+          &nbsp;&nbsp;value<span class="text-color03"></span><span class="text-color02">:</span> <span class="text-color16">nil</span><span class="text-color05">,</span><br />
+          &nbsp;&nbsp;label<span class="text-color03"></span><span class="text-color02">:</span> <span class="text-color16">nil</span><span class="text-color05">,</span><br />
+          &nbsp;&nbsp;<span class="text-color04">**</span>attributes<br />
+          )<br />
+          &nbsp;&nbsp;<span class="text-color06">@form</span> <span class="text-color05">=</span> form<br />
+          &nbsp;&nbsp;<span class="text-color06">@method</span> <span class="text-color05">=</span> method<br />
+          &nbsp;&nbsp;<span class="text-color06">@value</span> <span class="text-color05">=</span> value<br />
+          &nbsp;&nbsp;<span class="text-color06">@label</span> <span class="text-color05">=</span> label<br />
+          &nbsp;&nbsp;<span class="text-color06">@form</span><span class="text-color05">.</span><span class="text-color04">object</span><span class="text-color05">.</span><span class="text-color04">errors</span><span class="text-color05">.</span><span class="text-color04">key?</span</span</span</span>(<span class="text-color06">@method</span>)<br />
+          <span class="text-color17">end</span>
+        </div>
+        <br />
+        <div>
+          <span class="text-color03">export const</span> moveMatchToPosition <span class="text-color04">=</span> (<br />
+          &nbsp;&nbsp;<span class="text-color02">colours</span>: <span class="text-color05">Colour</span><span class="text-color04">[]</span><span class="text-color08">,</span><br />
+          &nbsp;&nbsp;<span class="text-color02">match</span>: <span class="text-color05">string</span><span class="text-color08">,</span><br />
+          &nbsp;&nbsp;<span class="text-color02">position</span>: <span class="text-color05">number</span><span class="text-color08">,</span><br />
+          ) <span class="text-color04">=> {</span><br />
+          &nbsp;&nbsp;<span class="text-color03">const</span> best <span class="text-color04">= colourClosestTo</span>(colours, match)<span class="text-color17">!</span><span class="text-color08">;</span><br />
+          &nbsp;&nbsp;<span class="text-color03">const</span> filtered <span class="text-color04">= removeColour</span>(colours, best)<span class="text-color08">;</span><br />
+          &nbsp;&nbsp;<span class="text-color04">return insertColour</span>(filtered<span class="text-color08">,</span> best<span class="text-color08">,</span> position)<span class="text-color08">;</span><br />
+          <span class="text-color04">}</span><span class="text-color08">;</span>
+        </div>
+      </div>
+      <div class="p-4 text-right">
+        <form action="/" method="post">
+          {inputs}
+          <p>
+            <button type="butmit" class="p-2 hover:underline">Update</button>
+            <a href="/" class="p-2 hover:underline">Reset</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Vim prompt -->
+    <div class="flex bg-color18">
+      <span class="bg-color04 text-color00 font-bold px-2">NORMAL </span>
+      <span class="bg-color19 text-color07 px-2">path/to/file </span>
+      <span class="text-color07 px-2">templates/tweak.html</span>
+    </div>
+
+    <br />
+
+    <!-- Terminal prompt -->
+    <div>
+      <span class="text-color02"></span>
+      <span class="text-color06">theme</span>
+      <span class="text-color04 italic font-black"> master</span>
+      <span class="text-color03">gi</span><span class="text-color08">it clean -fd</span>
+    </div>
+
+    <br />
+
+    <!-- Tmux prompt -->
+    <div class="flex bg-color02 text-color00">
+      <span class="px-2">1: overmind-wrapp fgf</span>
+      <span class="px-2">2: nvim fgf</span>
+      <span class="px-2 bg-color00 text-color02">3:nvim theme</span>
+      <span class="px-2 flex-grow">4: final</span>
+      <span class="px-2 bg-color18 text-color07">01:33</span>
+      <span class="px-2 bg-color19 text-color07 px-2">Mon, Aug 15</span>
+      <span class="px-2 bg-color20 text-color00 px-2 font-bold">TMUX</span>
+    </div>
+  </body>
+</html>

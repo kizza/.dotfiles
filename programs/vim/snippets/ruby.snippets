@@ -1,13 +1,35 @@
-snippet cl "console.log"
-	console.log(${1})
+snippet module
+	module ${1}
+		${2}
+	end
+
+snippet class
+	class ${1}
+		${2}
+	end
 
 snippet def "def" b
 	def ${1:name}
 		${2}
 	end
 
+snippet if
+	if ${1}
+		${2}
+	end
+
+snippet ifelse
+	if ${1}
+		${2}
+	else
+		${3}
+	end
+
 snippet import
 	import ${1} from '${2}'
+
+snippet binding.pry
+	binding.pry
 
 snippet it
 	it "${1}" do
@@ -16,6 +38,11 @@ snippet it
 
 snippet describe
 	describe "${1}" do
+		${2}
+	end
+
+snippet context
+	context "${1}" do
 		${2}
 	end
 
@@ -37,3 +64,6 @@ snippet styled_container
 
 snippet Flipper
 	Flipper[${1}].enabled?(ActsAsTenant.current_tenant)
+
+snippet ActsAsTenant
+	ActsAsTenant.current_tenant.${1}

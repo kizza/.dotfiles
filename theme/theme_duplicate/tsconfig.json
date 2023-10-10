@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "watch": true,
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "outDir": "built",
+    "sourceMap": false,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/test/*.ts"]
+}
