@@ -27,7 +27,7 @@
       coreutils
       docker
       entr
-      exa
+      eza
       delta
       fd
       fzf
