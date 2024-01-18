@@ -1,5 +1,5 @@
 alias fat="bat"
-alias ls="exa"
+alias ls="eza"
 alias dotfiles="cd ~/.dotfiles"
 alias capture_unicode="xxd -psd"
 
