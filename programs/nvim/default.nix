@@ -14,6 +14,9 @@
     file.".config/nvim/snippets/".source = ../vim/snippets;
     file.".config/nvim/syntax/".source = ../vim/syntax;
 
+    # LSP config
+    file.".config/solargraph/config.yml".text = builtins.readFile ./lua/plugins/lsp/solargraph.yaml;
+
     # Tree-sitter config
     file.".config/nvim/parser/ruby.so".source = "${pkgs.vimPlugins.nvim-treesitter.builtGrammars.tree-sitter-ruby}/parser";
     file.".config/nvim/parser/javascript.so".source = "${pkgs.vimPlugins.nvim-treesitter.builtGrammars.tree-sitter-javascript}/parser";
