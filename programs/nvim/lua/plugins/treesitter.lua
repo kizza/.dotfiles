@@ -15,7 +15,7 @@ return {
           ["custom.method"] = "TSCustomMethod",
         },
       },
-      indent = { enable = true, disable = { "python" } },
+      indent = { enable = true, disable = { "python", "ruby" } },
       context_commentstring = { enable = true, enable_autocmd = false },
       matchup = { -- integrate with vim-matchup
         enable = true,
@@ -24,8 +24,8 @@ return {
         "bash",
         "c",
         "embedded_template",
-        "help",
         "html",
+        "git_rebase",
         "javascript",
         "json",
         "lua",
@@ -40,6 +40,7 @@ return {
         "tsx",
         "typescript",
         "vim",
+        "vimdoc",
         "yaml",
       },
       incremental_selection = {
@@ -47,7 +48,24 @@ return {
       },
     },
     config = function(_, opts)
+      -- require("nvim-treesitter.install").compilers = { 'clang++'}
       require("nvim-treesitter.configs").setup(opts)
+
+      local opt = vim.opt
+      opt.foldlevel = 20
+      opt.foldmethod = "expr"
+      opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+      -- Include eruby as embedded_template
+      -- local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+      -- parser_config.embedded_template = {
+      --   -- install_info = {
+      --   --   url = 'https://github.com/tree-sitter/tree-sitter-embedded-template',
+      --   --   files =  { 'src/parser.c' },
+      --   --   requires_generate_from_grammar  = true,
+      --   -- },
+      --   used_by = {'eruby'}
+      -- }
     end,
   },
 }

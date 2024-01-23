@@ -17,6 +17,10 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
   -- install = { colorscheme = { "tokyonight" } },
+  dev = {
+    path = "~/Code/kizza",
+    fallback = false, -- Fallback to git when local plugin doesn't exist
+  },
   checker = { enabled = true },
   change_detection = { notify = false },
   performance = {
