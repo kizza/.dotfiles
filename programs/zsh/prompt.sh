@@ -8,6 +8,9 @@ local background_job_prompt="%(1j:%F{6} …%f:)"
 local start_italics=$'%{\x1b[3m%}'
 local end_italics=$'%{\x1b[0m%}'
 
+local user="%F{5}%n@%m:%f"
+[[ "$HOST" =~ "MacBook" ]] && user=""
+
 git_prompt()
 {
   head=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
@@ -31,7 +34,7 @@ nix_prompt () {
 }
 
 setopt prompt_subst
-PROMPT='$(nix_prompt)${ret_status} %F{6}%c%f$(git_prompt)${background_job_prompt} '
+PROMPT='$(nix_prompt)${ret_status} ${user}%F{6}%c%f$(git_prompt)${background_job_prompt} '
 
 #
 # Vim mode
