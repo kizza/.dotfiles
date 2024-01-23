@@ -1,7 +1,7 @@
 return {
   {
     "sindrets/diffview.nvim",
-    cmd = {"DiffviewOpen"},
+    cmd = { "DiffviewOpen" },
     config = function()
       local actions = require("diffview.actions")
       require("diffview").setup({
@@ -23,16 +23,20 @@ return {
     keys = {
       { "<leader>gm", "<cmd>GitMessenger<cr>", desc = "Open git messenger" },
     },
+    init = function()
+      vim.g.git_messenger_always_into_popup = 1
+    end
   },
   {
     "airblade/vim-gitgutter",
+    -- enabled = false,
     event = "VeryLazy",
     keys = {
       { "<leader>hp", "<cmd>GitGutterPreviewHunk<cr>", desc = "Preview hunk" },
-      { "<leader>hs", "<cmd>GitGutterStageHunk<cr>", desc = "Stage hunk" },
-      { "<leader>hu", "<cmd>GitGutterUndoHunk<cr>", desc = "Undo hunk" },
-      { "[h", "<cmd>GitGutterPrevHunk<cr>", desc = "Previous git hunk" },
-      { "]h", "<cmd>GitGutterNextHunk<cr>", desc = "Next git hunk" },
+      { "<leader>hs", "<cmd>GitGutterStageHunk<cr>",   desc = "Stage hunk" },
+      { "<leader>hu", "<cmd>GitGutterUndoHunk<cr>",    desc = "Undo hunk" },
+      { "[h",         "<cmd>GitGutterPrevHunk<cr>",    desc = "Previous git hunk" },
+      { "]h",         "<cmd>GitGutterNextHunk<cr>",    desc = "Next git hunk" },
     },
     init = function()
       vim.g.gitgutter_realtime = 1

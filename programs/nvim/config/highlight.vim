@@ -12,7 +12,7 @@ hi SpellCap ctermfg=black
 hi SpellRare ctermfg=black
 hi SpellLocal ctermfg=black
 
-hi NormalFloat ctermbg=none
+hi NormalFloat ctermbg=18
 hi FloatTitle ctermfg=magenta
 hi FloatBorder ctermfg=19
 hi FloatTransparent ctermbg=none
@@ -51,6 +51,7 @@ call matchadd('ColorColumn', '\(\%80v\|\%100v\)', 100)  " Show +80 as coloured
 hi @label ctermfg=cyan
 hi @type cterm=italic ctermfg=yellow
 hi @symbol ctermfg=green
+hi link @string.special.symbol @symbol " Treesitter encodes @symbol as @string.special.symbol
 hi @operator ctermfg=16
 " hi @function ctermfg=15
 " hi @function.call ctermfg=magenta
