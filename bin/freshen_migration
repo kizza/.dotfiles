@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# Function to generate the current timestamp in the format YYYYMMDDHHMMSS
+generate_current_timestamp() {
+  date -u +"%Y%m%d%H%M%S"
+}
+
+# Function to extract the migration name from a file name
+extract_migration_name() {
+  echo "$1" | cut -d_ -f2-
+}
+
+# Function to update the timestamp in a migration file name
+update_migration_timestamp() {
+  echo "Updated migration file name to: $new_migration_name"
+}
+
+# Check if a file name was provided as an argument
+FILE="$1"
+if [ -z "$FILE" ]; then
+  FILE="db/migrate/$(ls db/migrate | tail -n10 | tac | fzf --height=50% --info=hidden --prompt="Choose migration: ")"
+fi
+
+if [ -z "$FILE" ]; then
+  echo "No migration file"
+  exit 1
+fi
+
+# Check if the file path matches the regex pattern "db/*/". If not, exit.
+if [[ ! "$FILE" =~ ^db/[^/]+/[0-9]{14}_.+\.rb$ ]]; then
+  echo "File path does not match the pattern 'db/*/{timestamp}_{name}.rb'."
+  exit 1
+fi
+
+# Construct the new file path
+file_directory=$(dirname "$FILE") # Get the directory of the current file
+file_name=$(basename "$FILE") # Extract the filename from the current file path
+timestamp_prefix="${file_name:0:14}" # Extract the timestamp prefix from the filename (assuming a 14-character prefix)
+current_timestamp=$(date +"%Y%m%d%H%M%S") # Get the current timestamp in the format %Y%m%d%H%M%S
+new_file_name="${file_name/$timestamp_prefix/$current_timestamp}" # Replace the timestamp prefix with the current timestamp in the filename
+new_file_path="$file_directory/$new_file_name" # Construct the new file path
+mv "$FILE" "$new_file_path" # Rename the file
+
+if [ $? -eq 0 ]; then
+  echo "$FILE"
+  echo "freshened to"
+  echo "$new_file_path"
+else
+  echo "Hmmm. Somethign went wrong"
+  exit 1
+fi
