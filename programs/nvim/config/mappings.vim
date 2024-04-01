@@ -115,6 +115,9 @@ noremap <leader>ab :call ToggleBlockSyntax()<CR>
 " --------------------------------------------------------------------
 "
 
+" Custom nui wrapper
+nnoremap <silent><leader>pp :lua require("scripts/find_in_files").find_in_files()<CR>
+
 " FZF (Use :GFiles if git is present)
 " nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
