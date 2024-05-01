@@ -42,6 +42,7 @@
 
         # Pass <C-S-f> to neovim (this is mapped to <leader>fu
         { key= "F";           mods= "Control|Shift";    chars= ",fu"; }
+        { key= "F";           mods= "Command|Shift";    chars= ",pp"; }
       ];
 
       font = {

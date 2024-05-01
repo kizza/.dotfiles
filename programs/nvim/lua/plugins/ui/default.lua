@@ -1,5 +1,8 @@
 return {
   {
+    "MunifTanjim/nui.nvim"
+  },
+  {
     "kevinhwang91/nvim-ufo",
     enabled = true,
     dependencies = {
