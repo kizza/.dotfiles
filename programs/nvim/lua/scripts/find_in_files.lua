@@ -9,14 +9,14 @@ function M.build_input(on_submit)
     position = "50%",
     size = { width = 60 },
     border = {
-      style = "single",
+      style = "rounded",
       text = {
-        top = "Find in files",
+        top = " Find in files ",
         top_align = "center",
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:NoiceCmdlinePopupBorder",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
     },
   }, {
     prompt = "  ",
@@ -45,7 +45,8 @@ function M.find_in_files()
   -- mount/open the component
   local input = M.build_input(on_submit)
   input:mount()
-  vim.cmd [[highlight MySpecialChar ctermfg=cyan]]
+  local colours = require("colours")
+  colours.hi("MySpecialChar", { fg = colours.cyan })
   vim.cmd [[syn match MySpecialChar ""]]
 
   -- Toggle mode with <Tab>
