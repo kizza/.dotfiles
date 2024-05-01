@@ -25,11 +25,6 @@ return {
     end
   },
   {
-    "ThePrimeagen/vim-be-good",
-    event = "VeryLazy",
-    enabled = false,
-  },
-  {
     "kizza/vim-reorder-buffers",
     keys = {
       { "<leader>gT", "<cmd>ShiftBufferLeft<cr>", desc = "Shift buffers left" },
