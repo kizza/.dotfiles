@@ -40,12 +40,4 @@ return {
       vim.g.argwrap_tail_comma = 1
     end
   },
-  {
-    "ggandor/leap.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    config = function()
-      require('leap').add_default_mappings()
-    end
-  }
 }
