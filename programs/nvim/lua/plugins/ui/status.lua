@@ -9,24 +9,35 @@ local M = {
   }
 }
 
-function M.config(_, opts)
-  local theme = require'lualine.themes.auto'
-  -- local theme = require'lualine.themes.base16'
-  theme.normal  = { a = { fg = 0, bg = 12, gui = "bold" }, b = {}, c = {} }
-  theme.insert  = { a = { fg = 0, bg = 10, gui = "bold" }, b = {}, c = {} }
-  theme.visual  = { a = { fg = 0, bg = 11, gui = "bold" }, b = {}, c = {} }
-  theme.command = { a = { fg = 2, bg = 0, gui = "bold" }, b = {}, c = {} }
-  theme.replace = { a = { fg = 0, bg = 13, gui = "bold" }, b = {}, c = {} }
+function M.build_theme()
+  local theme    = require 'lualine.themes.auto'
+  -- local theme    = require 'lualine.themes.base16'
+  local c        = require("colours").get
+
+  -- theme.normal   = { a = { fg = 0, bg = 12, gui = "bold" }, b = {}, c = {} }
+  theme.normal   = { a = { fg = c(0), bg = c(12), gui = "bold" }, b = {}, c = {} }
+  theme.insert   = { a = { fg = c(0), bg = c(10), gui = "bold" }, b = {}, c = {} }
+  theme.visual   = { a = { fg = c(0), bg = c(11), gui = "bold" }, b = {}, c = {} }
+  theme.command  = { a = { fg = c(2), bg = c(0), gui = "bold" }, b = {}, c = {} }
+  theme.replace  = { a = { fg = c(0), bg = c(13), gui = "bold" }, b = {}, c = {} }
   theme.terminal = theme.insert
   theme.inactive = theme.normal
 
   local modes = { "normal", "insert", "visual", "command", "replace" }
   for _, mode in pairs(modes) do
-    theme[mode]["b"] = { fg = 7, bg = 19 } -- Branch
-    theme[mode]["c"] = { fg = 7, bg = 18, gui = "italic" } -- File
-    theme[mode]["x"] = { fg = 20, bg = 18, gui = "" } -- Meta
+    theme[mode]["b"] = { fg = c(7), bg = c(19) }                 -- Branch
+    theme[mode]["c"] = { fg = c(7), bg = c(18), gui = "italic" } -- File
+    theme[mode]["x"] = { fg = c(20), bg = c(18), gui = "" }      -- Meta
   end
 
+  return theme
+end
+
+function M.refresh()
+  require("lualine.highlight").create_highlight_groups(M.build_theme())
+end
+
+function M.config(_, opts)
   local filename_section = {
     'filename',
     path = 1,
@@ -40,7 +51,7 @@ function M.config(_, opts)
 
   require("lualine").setup {
     options = {
-      theme = theme,
+      theme = M.build_theme(),
       disabled_filetypes = {
         statusline = { "fzf", "minimap" },
       },

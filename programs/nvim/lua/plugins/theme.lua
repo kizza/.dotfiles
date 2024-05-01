@@ -1,43 +1,28 @@
 return {
-  -- {
-  --   "RRethy/nvim-base16",
-  --   enabled = false,
-  --   lazy = false,
-  --   priority = 101,
-  --   -- init = function()
-  --   --   vim.opt.termguicolors = true -- True color support
-  --   -- end,
-  --   config = function()
-  --     vim.cmd[[
-  --       " Conditional colours
-  --       " Load base 16 theme from terminal
-  --       " if filereadable(expand("~/.vimrc_background"))
-  --       "   let base16colorspace=256
-  --       "   source ~/.vimrc_background
-  --       " endif
-  --       colorscheme base16-gruvbox-dark-medium
-
-  --       " Load highlights
-  --       source ~/.config/nvim/config/highlight.vim
-  --     ]]
-  --   end
-  -- },
   {
-    "chriskempson/base16-vim",
+    "tinted-theming/base16-vim",
+    dependencies = { "RRethy/nvim-base16" },
     lazy = false,
-    priority = 101,
+    enabled = true,
+    priority = 1000,
     config = function()
-      vim.cmd[[
-        " Conditional colours
-        " Load base 16 theme from terminal
-        if filereadable(expand("~/.vimrc_background"))
-          let base16colorspace=256
-          source ~/.vimrc_background
-        endif
+      require("base16-colorscheme").with_config({ telescope = false })
+      vim.opt.termguicolors = true
+      vim.g.base16_colorspace = 256
 
-        " Load highlights
-        source ~/.config/nvim/config/highlight.vim
-      ]]
+      -- Load base16 studio theme from environment
+      local base16_studio_path = "~/base16-studio"
+      local theme_file = vim.fn.expand(base16_studio_path .. "/themes/vim/" .. os.getenv("BASE16_THEME") .. ".nvim")
+      if vim.fn.filereadable(theme_file) then
+        vim.fn.execute("source " .. theme_file)
+        require("highlights").setup()
+      end
+
+      -- Toggle cterm/gui (to allow previewing themes from terminal)
+      vim.api.nvim_create_user_command("ToggleGUI", function()
+        vim.opt.termguicolors = not vim.opt.termguicolors:get()
+        require("plugins.ui.status").refresh()
+      end, {})
     end
   },
 }

@@ -22,20 +22,20 @@ function M.config(_, opts)
 end
 
 function M.highlight()
-  vim.cmd[[
-    highlight NotifyINFOIcon ctermfg=cyan
-    highlight NotifyDEBUGIcon ctermfg=magenta
-    highlight NotifyWARNIcon ctermfg=yellow
-    highlight NotifyERRORIcon ctermfg=red
-    highlight NotifyTRACEIcon ctermfg=17
-  ]]
+  local colours = require("colours")
+  local hi = colours.hi
+  hi("NotifyINFOIcon", { fg = colours.cyan })
+  hi("NotifyDEBUGIcon", { fg = colours.magenta })
+  hi("NotifyWARNIcon", { fg = colours.yellow })
+  hi("NotifyERRORIcon", { fg = colours.red })
+  hi("NotifyTRACEIcon", { fg = 17 })
 
-  for _, level in pairs({"INFO", "DEBUG", "WARN", "ERROR", "TRACE"}) do
-    vim.cmd("highlight clear Notify"..level.."Border")
-    vim.cmd("highlight link Notify"..level.."Border Notify"..level.."Icon")
+  for _, level in pairs({ "INFO", "DEBUG", "WARN", "ERROR", "TRACE" }) do
+    vim.cmd("highlight clear Notify" .. level .. "Border")
+    vim.cmd("highlight link Notify" .. level .. "Border Notify" .. level .. "Icon")
 
-    vim.cmd("highlight clear Notify"..level.."Title")
-    vim.cmd("highlight link Notify"..level.."Title Notify"..level.."Icon")
+    vim.cmd("highlight clear Notify" .. level .. "Title")
+    vim.cmd("highlight link Notify" .. level .. "Title Notify" .. level .. "Icon")
   end
 end
 

@@ -1,7 +1,6 @@
 return {
   -- { "sheerun/vim-polyglot", event = "BufRead" }
-  { "chrisbra/Colorizer", event = "VeryLazy" },
-  { 'folke/tokyonight.nvim', event = "VeryLazy" },
+  { "chrisbra/Colorizer",     event = "VeryLazy" },
   -- { 'jiangmiao/auto-pairs', event = "VeryLazy" },
   { 'mg979/vim-visual-multi', event = "VeryLazy" },
   -- Vim plugin for automatically highlighting other uses of the word under the cursor
@@ -17,9 +16,8 @@ return {
     },
     config = function(_, opts)
       require("illuminate").configure(opts)
-      vim.cmd[[
-        hi IlluminatedWordText ctermbg=18 cterm=underline
-      ]]
+      local hi = require("colours").hi
+      hi("IlluminatedWordText", { bg = 18, underline = true })
     end
   },
   -- match-up is a plugin that lets you highlight, navigate, and operate on sets of matching text

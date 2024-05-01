@@ -1,47 +1,83 @@
-local M = {}
+local M              = {}
+local base16_colours = require('base16-colorscheme').colors;
 
-M.highlight = setmetatable({}, {
-  __newindex = function(_, hlgroup, args)
-  if ('string' == type(args)) then
-    vim.cmd(('hi! link %s %s'):format(hlgroup, args))
-    return
+-- M.colour_names = { black = 0, red = 1, green = 2, yellow = 3, blue = 4, magenta = 5, cyan = 6, white = 7 }
+M.black              = 0
+M.red                = 1
+M.green              = 2
+M.yellow             = 3
+M.blue               = 4
+M.magenta            = 5
+M.cyan               = 6
+M.white              = 7
+M.colour_names       = { 0, 1, 2, 3, 4, 5, 6, 7 }
+
+local function cterm_to_base16(i)
+  local mapping = {
+    [0] = "00",
+    [1] = "08",
+    [2] = "0B",
+    [3] = "0A",
+    [4] = "0D",
+    [5] = "0E",
+    [6] = "0C",
+    [7] = "05",
+    [8] =
+    "03",
+    [9] = "08",
+    [10] = "0B",
+    [11] = "0A",
+    [12] = "0D",
+    [13] = "0E",
+    [14] = "0C",
+    [15] = "07",
+    [16] = "09",
+    [17] =
+    "0F",
+    [18] = "01",
+    [19] = "02",
+    [20] = "04",
+    [21] = "06"
+  }
+  return mapping[i]
+end
+
+function M.get(i)
+  if vim.opt.termguicolors:get() == false then return i end
+
+  local base16_value = cterm_to_base16(i)
+  if not base16_value then return nil end
+
+  return base16_colours["base" .. base16_value]
+  -- return "#" .. os.getenv("BASE16_COLOR_" .. cterm_to_base16(i) .. "_HEX")
+end
+
+function M.debug(group_name)
+  local hl_group = vim.api.nvim_get_hl_by_name(group_name, true)
+
+  -- Extract the foreground and background colors
+  if hl_group.foreground then hl_group.foreground = string.format("#%06x", hl_group.foreground) end
+  if hl_group.background then hl_group.background = string.format("#%06x", hl_group.background) end
+
+  print(vim.inspect(hl_group))
+end
+
+-- Wrapper for nvim_set_hl, applies cterm colours as provided
+-- but applies the gui colour (via base16)
+function M.hi(group, opts)
+  local palette = opts
+
+  if opts.fg then
+    palette.ctermfg = opts.fg
+    palette.fg = M.get(opts.fg)
   end
-})
 
-return {
-  base00 = '#282828',
-  base08 = '#fb4934',
-  base0B = '#b8bb26',
-  base0A = '#fabd2f',
-  base0D = '#83a598',
-  base0E = '#d3869b',
-  base0C = '#8ec07c',
-  base05 = '#d5c4a1', -- white
-  base03 = '#665c54', -- bright black
-  base07 = '#fbf1c7', -- bright white
-  base09 = '#fe8019', -- extra shades
-  base0F = '#d65d0e',
-  base01 = '#3c3836', -- dark shades
-  base02 = '#504945',
-  base04 = '#bdae93', -- light shades
-  base06 = '#ebdbb2',
-}
+  if opts.bg then
+    palette.ctermbg = opts.bg
+    palette.bg = M.get(opts.bg)
+  end
 
-local black = vim.g.terminal_color_0
-local red = vim.g.terminal_color_1
-local green = vim.g.terminal_color_2
-local yellow = vim.g.terminal_color_3
-local blue= vim.g.terminal_color_4
-local magenta = vim.g.terminal_color_5
-local cyan = vim.g.terminal_color_6
-local white = vim.g.terminal_color_7
-local brightblack = vim.g.terminal_color_8
+  vim.api.nvim_set_hl(0, group, palette)
+end
 
-vim.g.terminal_color_8  = M.colors.base03
-vim.g.terminal_color_9  = M.colors.base08
-vim.g.terminal_color_10 = M.colors.base0B
-vim.g.terminal_color_11 = M.colors.base0A
-vim.g.terminal_color_12 = M.colors.base0D
-vim.g.terminal_color_13 = M.colors.base0E
-vim.g.terminal_color_14 = M.colors.base0C
-vim.g.terminal_color_15 = M.colors.base07
+return M
