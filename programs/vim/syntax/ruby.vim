@@ -31,3 +31,15 @@ hi TSCustomMethod ctermfg=none
 " extensions
 setlocal suffixesadd+=.html.erb
 setlocal suffixesadd+=.turbo_stream.erb
+
+lua << EOF
+  local colours = require("colours")
+  local hi = colours.hi
+  local cyan = colours.cyan
+  local magenta = colours.magenta
+  local blue = colours.blue
+
+  hi("@custom.class.called.methods", { italic = true })
+  hi("@custom.class.called.conditional", {fg = blue, italic = true})
+EOF
+  " hi @custom.class.called.conditional.symbol cterm=italic ctermfg=blue

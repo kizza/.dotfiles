@@ -139,7 +139,7 @@ return {
       nav = {
         win_opts = {
           cursorline = true,
-          winblend = 0,
+          winblend = vim.opt.pumblend:get(),
         },
       },
       close_on_select = true,

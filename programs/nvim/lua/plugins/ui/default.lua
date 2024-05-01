@@ -71,7 +71,7 @@ return {
       input = {
         enabled = true,
         win_options = {
-          winblend = 0,
+          winblend = vim.opt.pumblend:get(),
           winhighlight = "NormalFloat:FloatInput",
         },
         override = function(conf)
@@ -95,21 +95,48 @@ return {
     enabled = false,
     event = "VeryLazy",
     opts = {
-      text = {spinner = "dots", done = "✔", commenced = "", completed = ""}
+      text = { spinner = "dots", done = "✔", commenced = "", completed = "" }
     }
   },
   {
     "nvim-tree/nvim-web-devicons",
-    opts = {
-      override = {
-        rb = {
-          icon = "",
-          color = "#701516",
-          cterm_color = "124",
-          name = "Rb",
+    opts = function()
+      local colours = require("colours")
+      return {
+        override = {
+          ["rb"] = {
+            icon = "",
+            color = colours.get(colours.red),
+            cterm_color = colours.red,
+            name = "Rb",
+          },
+          ["erb"] = {
+            icon = "",
+            color = colours.get(colours.yellow),
+            cterm_color = colours.yellow,
+            name = "Erb",
+          },
+          ["sass"] = {
+            icon = "",
+            color = colours.get(colours.magenta),
+            cterm_color = colours.magenta,
+            name = "Sass",
+          },
+          ["yaml"] = {
+            icon = "󰦨",
+            color = colours.get(colours.blue),
+            cterm_color = colours.blue,
+            name = "Yaml",
+          },
+          ["yml"] = {
+            icon = "󰦨",
+            color = colours.get(colours.blue),
+            cterm_color = colours.blue,
+            name = "Yml",
+          },
         }
       }
-    }
+    end
   },
   {
     "lukas-reineke/indent-blankline.nvim",

@@ -78,13 +78,14 @@ return {
         hi link NoiceCmdlinePopupTitleSearch FloatTitle
         hi link NoiceCmdlinePopupBorderSearch FloatBorder
         hi link NoiceConfirmBorder FloatBorder
-
-        hi clear NoiceConfirm
-        hi NoiceFormatConfirmDefault ctermfg=0 ctermbg=magenta cterm=bold
-
-        hi NoiceCmdlineIcon ctermbg=0 ctermfg=cyan
         hi link NoiceCmdlineIconSearch NoiceCmdlineIcon
+        hi clear NoiceConfirm
       ]]
+
+      local colours = require("colours")
+      local hi = colours.hi
+      hi("NoiceFormatConfirmDefault", { fg = 0, bg = colours.magenta, bold = true })
+      hi("NoiceCmdlineIcon", { fg = colours.cyan, bg = 0 })
     end,
   }
 }
