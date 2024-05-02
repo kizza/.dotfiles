@@ -8,7 +8,7 @@ local M = {
   event = "VimEnter",
   keys = {
     { "<leader>n", "<cmd>NvimTreeFindFileToggle<cr>", desc = "Find within tree" },
-    { "<leader>N", "<cmd>NvimTreeFocus<cr>", desc = "Open tree" },
+    { "<leader>N", "<cmd>NvimTreeFocus<cr>",          desc = "Open tree" },
   },
 }
 
@@ -24,7 +24,7 @@ function M.opts()
     },
     filters = { dotfiles = false },
     on_attach = function(bufnr)
-      local api = require'nvim-tree.api'
+      local api = require 'nvim-tree.api'
       local function opts(desc)
         return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
       end
@@ -51,7 +51,7 @@ function M.opts()
               if (input == nil) then return end
               if (input == file_src) then return print("Same path, ignoring") end
 
-              local dir = vim.fn.fnamemodify(input, ":h") -- Create any parent dirs as required
+              local dir = vim.fn.fnamemodify(input, ":h")   -- Create any parent dirs as required
               vim.fn.system { 'mkdir', '-p', dir }
               vim.fn.system { 'cp', '-R', file_src, input } -- Copy the file
               print("Copied to " .. input)
@@ -72,7 +72,7 @@ function M.opts()
 
               local dir = vim.fn.fnamemodify(input, ":h") -- Create any parent dirs as required
               vim.fn.system { 'mkdir', '-p', dir }
-              vim.fn.system { 'mv', file_src, input } -- Copy the file
+              vim.fn.system { 'mv', file_src, input }     -- Copy the file
               print("Moved to " .. input)
             end
           )
@@ -136,7 +136,7 @@ function M.open_at_start()
     buf = 0,
   }
   local no_name = data.file == "" and vim.bo[data.buf].buftype == "" -- buffer is a [No Name]
-  local directory = vim.fn.isdirectory(data.file) == 1 -- buffer is a directory
+  local directory = vim.fn.isdirectory(data.file) == 1               -- buffer is a directory
   if not no_name and not directory then
     return
   end

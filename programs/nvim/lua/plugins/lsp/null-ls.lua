@@ -6,7 +6,7 @@ return {
     local builtins = require("null-ls.builtins")
 
     local use_bundler = function(options, custom_diagnostic_config)
-      diagnostic_config = custom_diagnostic_config or vim.diagnostic.config()
+      local diagnostic_config = custom_diagnostic_config or vim.diagnostic.config()
       return {
         command = "bundle",
         args = vim.list_extend({ "exec", options.command }, options.args), -- prefix args with "exec {command}"

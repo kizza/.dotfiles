@@ -49,7 +49,7 @@ return {
       },
       routes = {
         {
-          -- Don't show buffer write message (requires "written"s howing via shortmess config)
+          -- Don't show buffer write message (requires "written" showing via shortmess config)
           filter = { event = "msg_show", kind = "", find = "written" },
           opts = { skip = true },
         },
