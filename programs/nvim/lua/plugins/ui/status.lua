@@ -23,7 +23,7 @@ function M.build_theme()
   theme.terminal = theme.insert
   theme.inactive = theme.normal
 
-  local modes = { "normal", "insert", "visual", "command", "replace" }
+  local modes    = { "normal", "insert", "visual", "command", "replace" }
   for _, mode in pairs(modes) do
     theme[mode]["b"] = { fg = c(7), bg = c(19) }                 -- Branch
     theme[mode]["c"] = { fg = c(7), bg = c(18), gui = "italic" } -- File
@@ -42,11 +42,11 @@ function M.config(_, opts)
     'filename',
     path = 1,
     shorting_target = 40,
-    symbols = {modified = '', readonly = '', unnamed = '[No Name]', newfile = '[New]'}
+    symbols = { modified = '', readonly = '', unnamed = '[No Name]', newfile = '[New]' }
   }
 
   local line_location_section = function()
-    return vim.fn.line(".").."/"..vim.fn.line("$")
+    return vim.fn.line(".") .. "/" .. vim.fn.line("$")
   end
 
   require("lualine").setup {
@@ -58,10 +58,10 @@ function M.config(_, opts)
       extensions = { "nvim-tree" },
     },
     sections = {
-      lualine_a = {'mode'},
-      lualine_b = {'branch', 'diagnostics'}, -- 'diff',
-      lualine_c = {filename_section},
-      lualine_x = {{'filetype', colored = true }},
+      lualine_a = { 'mode' },
+      lualine_b = { 'branch', 'diagnostics' }, -- 'diff',
+      lualine_c = { filename_section },
+      lualine_x = { { 'filetype', colored = true } },
       lualine_y = {
         -- {
         --   'lsp_progress',
@@ -87,15 +87,15 @@ function M.config(_, opts)
         --   timer = { progress_enddelay = 500, spinner = 1000, lsp_client_name_enddelay = 1000 },
         --   spinner_symbols = { '🌑 ', '🌒 ', '🌓 ', '🌔 ', '🌕 ', '🌖 ', '🌗 ', '🌘 ' },
         -- },
-        {'progress'}
+        { 'progress' }
       },
-      lualine_z = {line_location_section}
+      lualine_z = { line_location_section }
     },
     inactive_sections = {
       lualine_a = {},
       lualine_b = {},
-      lualine_c = {filename_section},
-      lualine_x = {line_location_section},
+      lualine_c = { filename_section },
+      lualine_x = { line_location_section },
       lualine_y = {},
       lualine_z = {}
     },

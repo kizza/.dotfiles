@@ -12,7 +12,7 @@ local M = {
     "dhruvasagar/vim-testify"
   },
   keys = {
-    {"<C-w>=", "<C-w>=:call minimap#vim#MinimapResize()<CR>", desc = "Equalise windows"}
+    { "<C-w>=", "<C-w>=:call minimap#vim#MinimapResize()<CR>", desc = "Equalise windows" }
   },
 }
 
@@ -24,9 +24,9 @@ function M.init()
   vim.g.minimap_git_strategy = "gitgutter"
   vim.g.minimap_width = 8
   vim.g.minimap_search_color_priority = 130
-  vim.g.minimap_block_filetypes = {'diff', 'fugitive', 'fzf', 'telescope', 'gitrebase', 'gitcommit', 'NvimTree'}
-  vim.g.minimap_block_buftypes = {'nofile', 'nowrite', 'quickfix', 'terminal', 'help', 'prompt', 'NvimTree'}
-  vim.g.minimap_close_filetypes = {'startify', 'netrw', 'NvimTree'}
+  vim.g.minimap_block_filetypes = { 'diff', 'fugitive', 'fzf', 'telescope', 'gitrebase', 'gitcommit', 'NvimTree' }
+  vim.g.minimap_block_buftypes = { 'nofile', 'nowrite', 'quickfix', 'terminal', 'help', 'prompt', 'NvimTree' }
+  vim.g.minimap_close_filetypes = { 'startify', 'netrw', 'NvimTree' }
   vim.g.minimap_background_processing = 0
   -- vim.g.minimap_cursor_color = 'Minimap'
 
@@ -34,10 +34,10 @@ function M.init()
 end
 
 M.opts = {
-  stages = 'slide', -- for non termgui
+  stages = 'slide',                       -- for non termgui
   background_colour = 'NotifyBackground', -- for non termgui
   render = 'wrapped-compact',
-  level = 2, -- DEBUG=1, INFO=2, WARN=3, ERROR=4
+  level = 2,                              -- DEBUG=1, INFO=2, WARN=3, ERROR=4
   top_down = false,
   minimum_width = 30,
   max_width = 100,
@@ -49,7 +49,7 @@ function M.config(_, opts)
 end
 
 function M.highlight()
-  vim.cmd[[
+  vim.cmd [[
     hi minimapCursor ctermfg=green ctermbg=19
     hi minimapRange ctermfg=blue ctermbg=18
 
@@ -61,10 +61,10 @@ function M.highlight()
     autocmd CmdlineLeave * if getcmdtype() =~# '[?/]' | call timer_start(0, {-> execute("call minimap#vim#UpdateColorSearch(getcmdline())")})
     autocmd VimResized * call minimap#vim#MinimapResize()
   ]]
-    -- " Manually highlight search
-    -- " autocmd CmdlineLeave * if getcmdtype() =~# '[?/]' | call timer_start(0, {-> execute("call minimap#vim#UpdateColorSearch(getcmdline())")})
-    -- " nnoremap * * :call minimap#vim#UpdateColorSearch(@/)<CR>
-    -- " nnoremap # # :call minimap#vim#UpdateColorSearch(@/)<CR>
+  -- " Manually highlight search
+  -- " autocmd CmdlineLeave * if getcmdtype() =~# '[?/]' | call timer_start(0, {-> execute("call minimap#vim#UpdateColorSearch(getcmdline())")})
+  -- " nnoremap * * :call minimap#vim#UpdateColorSearch(@/)<CR>
+  -- " nnoremap # # :call minimap#vim#UpdateColorSearch(@/)<CR>
 end
 
 return M

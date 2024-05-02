@@ -5,8 +5,8 @@ local M = {
 }
 
 M.opts = {
-  stages = 'slide', -- for non termgui
-  background_colour = 'NotifyBackground', -- for non termgui
+  -- stages = 'slide', -- for non termgui
+  -- background_colour = 'NotifyBackground', -- for non termgui
   render = 'wrapped-compact',
   level = 2, -- DEBUG=1, INFO=2, WARN=3, ERROR=4
   top_down = false,

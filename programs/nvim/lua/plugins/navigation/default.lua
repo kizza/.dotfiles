@@ -67,7 +67,7 @@ return {
     -- A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    keys = { "<leader>dt", "<cmd>TroubleToggle<cr>", desc = "Toggle trouble" },
+    keys = { { "<leader>dt", "<cmd>TroubleToggle<cr>", desc = "Toggle trouble" } },
   },
   {
     "chentoast/marks.nvim",
