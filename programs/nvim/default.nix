@@ -1,6 +1,14 @@
 { pkgs, ... }:
 
 {
+  # Use latest neovim
+  # https://github.com/nix-community/neovim-nightly-overlay
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
+    }))
+  ];
+
   home = {
     # Lua config
     file.".config/nvim/lua" = { source = ./lua; recursive = true; };
