@@ -27,6 +27,7 @@ function M.setup()
   hi("FloatTitle", { fg = magenta })
   hi("FloatBorder", { fg = 19 })
   hi("FloatTransparent", { bg = nil })
+  hi("WinSeparator", { link = "VertSplit" }) -- as per neovim .10
 
   hi("Pmenu", { bg = 18 })
   hi("PmenuSel", { bg = 19 })
