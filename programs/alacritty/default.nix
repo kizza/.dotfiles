@@ -21,7 +21,7 @@
       };
 
       window = {
-        decorations = "transparent";
+        decorations = "Transparent";
         startup_mode = "Maximized";
         padding = {
           x = 2;
@@ -31,19 +31,21 @@
       };
 
       # Custom keybindings (iTerm2 inspired)
-      key_bindings = [
-        { key= "K";           mods= "Command";          chars= "\\x02\\x6b"; }
-        { key= "T";           mods= "Command";          chars= "\\x02\\x63"; }
-        { key= "W";           mods= "Command";          chars= "\\x02\\x78"; }
-        { key= "D";           mods= "Command";          chars= "\\x02\\x25"; }
-        { key= "D";           mods= "Command|Shift";    chars= "\\x02\\x22"; }
-        { key= "LBracket";    mods= "Command|Shift";    chars= "\\x02\\x70"; }
-        { key= "RBracket";    mods= "Command|Shift";    chars= "\\x02\\x6e"; }
+      keyboard = {
+        bindings = [
+          { key= "K"; mods= "Command";       chars= "\\u0002\\u006b"; } # Ctrl + b, k
+          { key= "T"; mods= "Command";       chars= "\\u0002\\u0063"; } # Ctrl + b, c
+          { key= "W"; mods= "Command";       chars= "\\u0002\\u0078"; } # Ctrl + b, x
+          { key= "D"; mods= "Command";       chars= "\\u0002\\u0025"; } # Ctrl + b, %
+          { key= "D"; mods= "Command|Shift"; chars= "\\u0002\\u0022"; } # Ctrl + b, "
+          { key= "{"; mods= "Command|Shift"; chars= "\\u0002\\u0070"; } # Ctrl + b, p
+          { key= "}"; mods= "Command|Shift"; chars= "\\u0002\\u006E"; } # Ctrl + b, n
 
-        # Pass <C-S-f> to neovim (this is mapped to <leader>fu
-        { key= "F";           mods= "Control|Shift";    chars= ",fu"; }
-        { key= "F";           mods= "Command|Shift";    chars= ",pp"; }
-      ];
+          # Pass <C-S-f> to neovim (this is mapped to <leader>fu
+          { key= "F"; mods= "Control|Shift"; chars= ",fu"; }
+          { key= "F"; mods= "Command|Shift"; chars= ",pp"; }
+        ];
+      };
 
       font = {
         size = 18;
