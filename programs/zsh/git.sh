@@ -114,16 +114,20 @@ function freset() {
 #   git diff --cached --name-only | fzf --height=50% --info=hidden --reverse | git reset
 # }
 
-
+# See https://gist.github.com/junegunn/f4fca918e937e6bf5bad
 fshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show % | delta --paging never | less -R') << 'FZF-EOF'
+  fzf --ansi --no-sort --reverse --tiebreak=index \
+      --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-w:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show -w % | delta --paging never | less -R') << 'FZF-EOF'
                 {}
-FZF-EOF"
+                FZF-EOF" \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show % | delta --paging never | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF"
 }
                 # xargs -I % sh -c 'git show --color=always % | delta') << 'FZF-EOF'
 
