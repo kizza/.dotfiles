@@ -3,10 +3,10 @@ local M = {
   -- "wfxr/minimap.vim",
   "kizza/minimap.vim",
   branch = "live-minimap",
-  -- enabled = false,
+  enabled = false,
   -- dev = true,
-  -- dir = "~/Code/kizza/minimap.vim",
-  build = ":!cargo install --locked code-minimap",
+  dir = "~/Code/kizza/minimap.vim",
+  build = ":!cargo install --locked --version 0.6.4 code-minimap",
   event = { "BufEnter", "BufReadPost", "BufNewFile" },
   dependencies = {
     "dhruvasagar/vim-testify"

@@ -5,6 +5,11 @@ return {
     config = function()
       local actions = require("diffview.actions")
       require("diffview").setup({
+        view = {
+          merge_tool = {
+            layout = "diff1_plain"
+          }
+        },
         keymaps = {
           view = {
             { "n", "[h", actions.prev_conflict, { desc = "In the merge-tool: jump to the previous conflict" } },

@@ -144,31 +144,43 @@ function M.open_at_start()
     vim.cmd.cd(data.file)
   end
   vim.cmd("NvimTreeOpen")
+  vim.cmd("NvimTreeRefresh")
+  -- require("nvim-tree.api").tree.open()
 end
 
 function M.highlight()
-  vim.cmd[[
-    " -- NvimTree
-    " NvimTreeNormal = { fg = c.fg_sidebar, bg = c.bg_sidebar },
-    " NvimTreeWinSeparator = {
-    "   fg = options.styles.sidebars == "transparent" and c.border or c.bg_sidebar,
-    "   bg = c.bg_sidebar,
-    " },
-    " NvimTreeNormalNC = { fg = c.fg_sidebar, bg = c.bg_sidebar },
-    hi NvimTreeRootFolder ctermfg=magenta
-    "hi NvimTreeFolderIcon ctermfg=magenta
-    hi NvimTreeOpenedFolderIcon ctermfg=magenta
-    hi NvimTreeFileDirty ctermfg=yellow
-    " NvimTreeGitDirty = { fg = c.git.change },
-    " NvimTreeGitNew = { fg = c.git.add },
-    " NvimTreeGitDeleted = { fg = c.git.delete },
-    " NvimTreeOpenedFile = { bg = c.bg_highlight },
-    " NvimTreeSpecialFile = { fg = c.purple, underline = true },
-    " NvimTreeIndentMarker = { fg = c.fg_gutter },
-    " NvimTreeImageFile = { fg = c.fg_sidebar },
-    hi NvimTreeSymlink cterm=italic
-    hi NvimTreeExecFile cterm=italic ctermfg=yellow
-  ]]
+  local colours = require("colours")
+  local hi = colours.hi
+  local magenta = colours.magenta
+  local yellow = colours.yellow
+  hi("NvimTreeRootFolder", { fg = magenta })
+  hi("NvimTreeOpenedFolderIcon", { fg = magenta })
+  hi("NvimTreeFileDirty", { fg = yellow })
+  hi("NvimTreeSymlink", { italic = true })
+  hi("NvimTreeExecFile", { fg = yellow, italic = true })
+
+  -- vim.cmd[[
+  --   " -- NvimTree
+  --   " NvimTreeNormal = { fg = c.fg_sidebar, bg = c.bg_sidebar },
+  --   " NvimTreeWinSeparator = {
+  --   "   fg = options.styles.sidebars == "transparent" and c.border or c.bg_sidebar,
+  --   "   bg = c.bg_sidebar,
+  --   " },
+  --   " NvimTreeNormalNC = { fg = c.fg_sidebar, bg = c.bg_sidebar },
+  --   hi NvimTreeRootFolder ctermfg=magenta
+  --   "hi NvimTreeFolderIcon ctermfg=magenta
+  --   hi NvimTreeOpenedFolderIcon ctermfg=magenta
+  --   hi NvimTreeFileDirty ctermfg=yellow
+  --   " NvimTreeGitDirty = { fg = c.git.change },
+  --   " NvimTreeGitNew = { fg = c.git.add },
+  --   " NvimTreeGitDeleted = { fg = c.git.delete },
+  --   " NvimTreeOpenedFile = { bg = c.bg_highlight },
+  --   " NvimTreeSpecialFile = { fg = c.purple, underline = true },
+  --   " NvimTreeIndentMarker = { fg = c.fg_gutter },
+  --   " NvimTreeImageFile = { fg = c.fg_sidebar },
+  --   hi NvimTreeSymlink cterm=italic
+  --   hi NvimTreeExecFile cterm=italic ctermfg=yellow
+  -- ]]
 end
 
 return M

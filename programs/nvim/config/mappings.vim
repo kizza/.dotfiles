@@ -12,7 +12,8 @@ command! W w
 command! Wq wq
 
 inoremap jj <Esc>
-nnoremap <silent><Leader>/ :noh<CR>:call minimap#vim#ClearColorSearch()<CR><ESC>|
+" nnoremap <silent><Leader>/ :noh<CR>:call minimap#vim#ClearColorSearch()<CR><ESC>|
+nnoremap <silent><Leader>/ :noh<CR>:MinimapClearSearch<CR><ESC>|
 
 nnoremap <Leader>l :Lazy<CR>
 
@@ -52,6 +53,7 @@ nnoremap <leader>bb :BufExplorer<cr>
 nnoremap <silent> gt :bnext<CR>
 nnoremap <silent> gT :bprev<CR>
 nnoremap <silent> <leader>x :bdelete<CR>
+" nnoremap <leader>x :silent! bprevious<CR>:silent! bdelete #<CR>
 " nnoremap <silent><leader>gT :ShiftBufferLeft<CR>
 " nnoremap <silent><leader>gt :ShiftBufferRight<CR>
 
@@ -117,6 +119,7 @@ noremap <leader>ab :call ToggleBlockSyntax()<CR>
 
 " Custom nui wrapper
 nnoremap <silent><leader>pp :lua require("scripts/find_in_files").find_in_files()<CR>
+" nnoremap <silent><leader>pp :lua require("funs").find_in_files()<CR>
 
 " FZF (Use :GFiles if git is present)
 " nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
@@ -129,7 +132,7 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 command! -bang -nargs=* Rgr call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".<q-args>, 1,
   \   fzf#vim#with_preview({ 'options': ['--prompt', 'Rgr> ', '--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
 
-" Self reloading RG
+" Self reloading RG (supersede by telescope "Live grep"?)
 function! SelfReloadingFZF(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
   let initial_command = printf(command_fmt, a:query)
@@ -260,10 +263,8 @@ noremap <Leader>rG :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") .
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-noremap <Leader>rg :TSHighlightCapturesUnderCursor<CR>
-
-
-
+" Handles by lazy loader?
+" noremap <Leader>rg :TSHighlightCapturesUnderCursor<CR>
 
 nnoremap <leader>ig :IndentGuidesToggle<CR>
 " " Tab navigation

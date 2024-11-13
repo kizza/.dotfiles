@@ -331,21 +331,43 @@ function M.config(_, opts)
 end
 
 function M.highlight()
-  vim.cmd [[
-    highlight CmpItemAbbrMatch ctermfg=magenta
-    highlight CmpItemAbbrMatchFuzzy ctermfg=cyan
-    highlight CmpItemMenu cterm=italic ctermfg=8
+  -- vim.cmd [[
+  --   highlight CmpItemAbbrMatch ctermfg=magenta
+  --   highlight CmpItemAbbrMatchFuzzy ctermfg=cyan
+  --   highlight CmpItemMenu cterm=italic ctermfg=8
 
-    highlight CmpItemKindClass ctermfg=16
-    highlight CmpItemKindMethod ctermfg=blue
-    highlight CmpItemKindModule ctermfg=magenta
-    highlight CmpItemKindSnippet ctermfg=yellow
+  --   highlight CmpItemKindClass ctermfg=16
+  --   highlight CmpItemKindMethod ctermfg=blue
+  --   highlight CmpItemKindModule ctermfg=magenta
+  --   highlight CmpItemKindSnippet ctermfg=yellow
 
-    highlight CmpItemMenuLSP ctermfg=cyan
-    highlight CmpItemMenuRgLSP ctermfg=yellow
-    highlight CmpItemMenuSnippet ctermfg=magenta
-    highlight CmpItemMenuTabnine ctermfg=magenta
-  ]]
+  --   highlight CmpItemMenuLSP ctermfg=cyan
+  --   highlight CmpItemMenuRgLSP ctermfg=yellow
+  --   highlight CmpItemMenuSnippet ctermfg=magenta
+  --   highlight CmpItemMenuTabnine ctermfg=magenta
+  -- ]]
+  local colours = require("colours")
+  local hi = colours.hi
+  local magenta = colours.magenta
+  local cyan = colours.cyan
+  local blue = colours.blue
+  local yellow = colours.yellow
+
+  hi("CmpItemAbbr", { bg = nil })
+  hi("CmpItemAbbrMatch", { fg = magenta })
+  hi("CmpItemAbbrMatchFuzzy", { fg = cyan })
+  hi("CmpItemMenu", { fg = 8, italic = true })
+
+  hi("CmpItemKindClass", { fg = 16 })
+  hi("CmpItemKindMethod", { fg = blue })
+  hi("CmpItemKindModule", { fg = magenta })
+  hi("CmpItemKindSnippet", { fg = yellow })
+  hi("CmpItemKindVariable", { fg = cyan })
+
+  hi("CmpItemMenuLSP", { fg = cyan })
+  hi("CmpItemMenuRgLSP", { fg = yellow })
+  hi("CmpItemMenuSnippet", { fg = magenta })
+  hi("CmpItemMenuTabnine", { fg = magenta })
 end
 
 return M

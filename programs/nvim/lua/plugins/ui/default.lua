@@ -164,11 +164,15 @@ return {
       }
     },
     config = function(_, opts)
-      vim.cmd[[
-        hi IndentBlanklineChar ctermfg=18
-        hi IndentBlanklineCharSkip ctermfg=0
-        hi IndentBlanklineContextChar ctermfg=8
-      ]]
+      local hi = require("colours").hi
+      hi("IndentBlanklineChar", { fg = 18 })
+      hi("IndentBlanklineCharSkip", { fg = 0 })
+      hi("IndentBlanklineContextChar", { fg = 8 })
+      -- vim.cmd [[
+      --   hi IndentBlanklineChar ctermfg=18
+      --   hi IndentBlanklineCharSkip ctermfg=0
+      --   hi IndentBlanklineContextChar ctermfg=8
+      -- ]]
       require("ibl").setup(opts)
     end
   },

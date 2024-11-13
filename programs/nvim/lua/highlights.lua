@@ -11,7 +11,8 @@ function M.setup()
   hi("WildMenu", { fg = 18, bg = 20, bold = true })
   hi("Search", { fg = 5, underline = true })
   hi("IncSearch", { fg = 0, bg = 5, underline = true })
-  hi("LineNr", { fg = 19 })
+  hi("LineNr", { fg = 8 })
+  hi("NonText", { link = "LineNr" })
   -- hi("ErrorMsg", { fg = cyan, bg = magenta })
   -- hi("MsgArea", { fg = cyan, bg = magenta })
   hi("NvimInternalError", { fg = 1, bg = black })
@@ -31,6 +32,7 @@ function M.setup()
 
   hi("Pmenu", { bg = 18 })
   hi("PmenuSel", { bg = 19 })
+  -- hi("PmenuSel", { bg = 19, fg = 2, bold = true })
   hi("PmenuSbar", { bg = 18 })
   hi("PmenuThumb", { bg = 18 })
 
@@ -51,7 +53,7 @@ function M.setup()
   hi("DiagnosticUnderlineInfo", { fg = cyan, bg = 18 })
   hi("DiagnosticUnderlineHint", { fg = green, bg = 18 })
 
-  hi("DiffChange", { fg = blue })
+  hi("DiffChange", { fg = magenta })
 
 
   hi("htmlStartTag", { link = "Function" })
@@ -81,6 +83,9 @@ function M.setup()
   hi("@punctuation.bracket", { fg = magenta })
   hi("@punctuation.special", { fg = 17 })
   hi("@punctuation.delimiter", { fg = magenta })
+
+  -- Typescript
+  hi("@tag", { fg = 5 })
 end
 
 return M

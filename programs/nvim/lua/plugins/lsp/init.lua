@@ -2,8 +2,10 @@ local M = {
   "neovim/nvim-lspconfig",
   lazy = false,
   dependencies = {
-    { import = "plugins.lsp.null-ls" },
+    { import = "plugins.lsp.nvim-lint" },
+    { import = "plugins.lsp.conform" },
     { import = "plugins.lsp.mason" },
+    -- { import = "plugins.lsp.null-ls" },
     -- { import = "plugins.lsp.ale" },
   }
 }
@@ -19,6 +21,9 @@ end
 function M.set_diagnostic_bindings()
   vim.api.nvim_set_keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>',
     { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<leader>di',
+    '<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>',
+    { noremap = true, silent = true })
   vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('n', '<leader>da', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true })
@@ -27,7 +32,7 @@ function M.set_diagnostic_bindings()
 end
 
 function M.set_diagnostic_autocmds()
-  lsp_autocmds = vim.api.nvim_create_augroup("my_lsp", { clear = true })
+  local lsp_autocmds = vim.api.nvim_create_augroup("my_lsp", { clear = true })
 
   vim.api.nvim_create_autocmd("CursorHold", {
     group = lsp_autocmds,
@@ -68,11 +73,11 @@ function M.format_asynchronously(bufnr)
 
       if res then
         local client = vim.lsp.get_client_by_id(ctx.client_id)
-        if client.name == "tsserver" then
+        if client.name == "ts_ls" then
           return
         end
 
-        print(vim.inspect(client))
+        -- print(vim.inspect(client))
         vim.lsp.util.apply_text_edits(res, bufnr, client and client.offset_encoding or "utf-16")
         vim.api.nvim_buf_call(bufnr, function()
           vim.cmd("silent noautocmd update")
@@ -83,29 +88,29 @@ function M.format_asynchronously(bufnr)
 end
 
 function M.on_attach(client, bufnr)
-  print("Attached " .. client.name)
-  if client.name ~= "tsserver" and client.server_capabilities.documentFormattingProvider then
-    print("󰄬 Formatting with " .. client.name)
-    vim.api.nvim_buf_create_user_command(
-      bufnr,
-      'Format',
-      function(input) vim.lsp.buf.format { id = client.id, async = true } end, -- async required in ruby it seems
-      -- function(input) vim.lsp.buf.format {id = client.id, async = input.bang} end,
-      { bang = true, range = true, desc = 'Format using lsp' }
-    )
+  -- print("Attached " .. client.name)
+  -- if client.name ~= "tsserver" and client.server_capabilities.documentFormattingProvider then
+  --   -- print("󰄬 Formatting with " .. client.name)
+  --   vim.api.nvim_buf_create_user_command(
+  --     bufnr,
+  --     'Format',
+  --     function(input) vim.lsp.buf.format { id = client.id, async = true } end, -- async required in ruby it seems
+  --     -- function(input) vim.lsp.buf.format {id = client.id, async = input.bang} end,
+  --     { bang = true, range = true, desc = 'Format using lsp' }
+  --   )
 
-    vim.keymap.set({ 'n', 'x' }, '<leader>df', '<cmd>Format!<cr>', { buffer = bufnr })
+  --   vim.keymap.set({ 'n', 'x' }, '<leader>df', '<cmd>Format!<cr>', { buffer = bufnr })
 
-    local augroup = vim.api.nvim_create_augroup("LspFormat", {})
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        M.format_asynchronously(bufnr)
-      end,
-    })
-  end
+  --   local augroup = vim.api.nvim_create_augroup("LspFormat", {})
+  --   vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+  --   vim.api.nvim_create_autocmd("BufWritePost", {
+  --     group = augroup,
+  --     buffer = bufnr,
+  --     callback = function()
+  --       M.format_asynchronously(bufnr)
+  --     end,
+  --   })
+  -- end
 end
 
 function M.format_publish_diagnostics(err, result, ctx, config)
@@ -115,6 +120,7 @@ function M.format_publish_diagnostics(err, result, ctx, config)
   end
 
   if result and result.diagnostics then
+    -- print(vim.inspect(result))
     for _, diagnostic in ipairs(result.diagnostics) do
       if diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Error then
         diagnostic.severity = vim.lsp.protocol.DiagnosticSeverity.Information
@@ -157,12 +163,36 @@ function M.start_servers()
     },
   }
 
+  local runtime_path = vim.split(package.path, ';')
+  table.insert(runtime_path, 'lua/?.lua')
+  table.insert(runtime_path, 'lua/?/init.lua')
+
   lspconfig.lua_ls.setup {
-    on_attach = M.on_attach,
+    on_attach = function(client, bufnr)
+      client.server_capabilities.semanticTokensProvider = nil -- Remove flash of unstyled content
+      M.on_attach(client, bufnr)
+    end,
     settings = {
       Lua = {
+        -- Disable telemetry
+        telemetry = { enable = false },
+        runtime = {
+          -- Tell the language server which version of Lua you're using
+          -- (most likely LuaJIT in the case of Neovim)
+          version = 'LuaJIT',
+          path = runtime_path,
+        },
         diagnostics = {
-          globals = { "vim" }
+          globals = { "vim" },
+          unusedLocalExclude = { "_*" },
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            -- Make the server aware of Neovim runtime files
+            vim.fn.expand('$VIMRUNTIME/lua'),
+            vim.fn.stdpath('config') .. '/lua'
+          }
         }
       }
     }
@@ -179,8 +209,12 @@ function M.start_servers()
 
   -- lspconfig.tailwindcss.setup { on_attach = M.on_attach }
 
-  lspconfig.tsserver.setup {
-    on_attach = M.on_attach,
+  lspconfig.ts_ls.setup {
+    on_attach = function(client, bufnr)
+      -- I don't like this one formatting
+      client.server_capabilities.documentFormattingProvider = false
+      M.on_attach(client, bufnr)
+    end,
     commands = {
       OrganiseImports = {
         function()
@@ -196,7 +230,43 @@ function M.start_servers()
     flags = {
       debounce_text_changes = 3000,
     },
+    init_options = {
+      preferences = {
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+        importModuleSpecifierPreference = "non-relative",
+      },
+    }
   }
+end
+
+function M.has_lsp_formatter()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  if #clients == 0 then return false end
+
+  for _, client in ipairs(clients) do
+    if client.server_capabilities.documentFormattingProvider then
+      print(client.name .. " supports formatting")
+      return true
+    end
+  end
+end
+
+function M.format()
+  if M.has_lsp_formatter() then
+    -- vim.lsp.buf.format { id = client.id, async = true }
+    vim.lsp.buf.format { async = true }
+    -- vim.notify("Formatted via lsp")
+  else
+    require("conform").format()
+    -- vim.notify("Formatted via confirm")
+  end
 end
 
 function M.config()
@@ -204,6 +274,14 @@ function M.config()
   M.set_diagnostic_signs()
   M.set_diagnostic_bindings()
   -- M.set_diagnostic_autocmds()
+
+  vim.api.nvim_create_user_command(
+    "Format",
+    M.format,
+    { bang = true, range = true, desc = 'Format using lsp' }
+  )
+
+  vim.keymap.set({ 'n', 'x' }, '<leader>df', '<cmd>Format<cr>')
 
   vim.diagnostic.config({
     virtual_text = false,
