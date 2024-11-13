@@ -9,7 +9,9 @@
     enable = true;
     defaultKeymap = "viins";
     dotDir = ".config/zsh";
-    enableAutosuggestions = true;
+    autosuggestion = {
+      enable = true;
+    };
     syntaxHighlighting = {
       enable = true;
     };
