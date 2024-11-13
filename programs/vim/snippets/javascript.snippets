@@ -1,14 +1,7 @@
-snippet foo "emitter properties" b
-private readonly ${1} = new Emitter<$2>()
-public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
-endsnippet
-
-snippet cl "console.log" b
-console.log(${1})
-endsnippet
+snippet cl "console.log"
+  console.log(${1})
 
 snippet describe
-describe('${1}', () => {
-	${2}
-})
-endsnippet
+  describe('${1}', () => {
+    ${2}
+  })
