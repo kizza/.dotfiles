@@ -2,6 +2,19 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("my_" .. name, { clear = true })
 end
 
+-- -- Syntax highlighting
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  group = augroup("eruby_syntax"),
+  pattern = "*.erb",
+  command = [[ set syntax=eruby ]],
+})
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  group = augroup("ruby_syntax"),
+  pattern = "*.rb",
+  command = [[ set syntax=ruby ]],
+})
+
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
@@ -11,7 +24,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Dynamic colour columns
-vim.api.nvim_create_autocmd("TextYankPost", {
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   group = augroup("color_column"),
   callback = function()
     vim.fn.matchadd('ColorColumn', '\\(\\%80v\\|\\%100v\\)', 100)
@@ -49,10 +62,13 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
   pattern = {
+    "aerial-nav",
     "checkhealth",
     "help",
     "man",
     "fugitive",
+    "query",         -- InspectTree query
+    "DiffviewFiles", -- InspectTree query
     "fugitiveblame",
     "qf",
     "tsplayground",

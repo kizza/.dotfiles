@@ -81,10 +81,13 @@ function M.config(_, opts)
   vim.keymap.set('n', '<leader>fl', builtin.current_buffer_fuzzy_find, {})
   vim.keymap.set('n', '<C-b>', builtin.buffers, {})
   vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
+  vim.keymap.set('n', '<leader>ft', builtin.treesitter, {})
   vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
   vim.keymap.set('n', '<leader>fm', builtin.marks, {})
   vim.keymap.set('n', '<leader>fc', builtin.git_commits, {})
-  vim.keymap.set('n', '<leader>fu', function() builtin.live_grep { default_text = vim.fn.expand('<cword>') } end, {})
+  vim.keymap.set('n', '<leader>fu', builtin.grep_string, {})
+  -- vim.keymap.set('n', '<leader>fu', function() builtin.live_grep { default_text = vim.fn.expand('<cword>') } end, {})
+  -- vim.keymap.set('n', '<leader>fu', function() vim.cmd("Rg " .. vim.fn.expand('<cword>')) end, {})
   vim.keymap.set('n', '<C-p>',
     function()
       local opts = { show_untracked = true }
@@ -107,11 +110,17 @@ function M.highlight()
     hi clear TelescopeBorder
     hi link TelescopeTitle FloatTitle
     hi link TelescopeBorder FloatBorder
-    hi TelescopePromptPrefix ctermfg=cyan cterm=bold
-    hi TelescopeSelectionCaret ctermfg=magenta cterm=bold
-    hi TelescopeMultiIcon ctermfg=green cterm=bold
-    hi TelescopeMultiSelection ctermfg=green
   ]]
+  -- hi TelescopePromptPrefix ctermfg=cyan cterm=bold
+  -- hi TelescopeSelectionCaret ctermfg=magenta ctermbg=19 cterm=bold
+  -- hi TelescopeMultiIcon ctermfg=green cterm=bold
+  -- hi TelescopeMultiSelection ctermfg=green
+  local colours = require("colours")
+  local hi = colours.hi
+  hi("TelescopePromptPrefix", { fg = colours.cyan, bold = true })
+  hi("TelescopeSelectionCaret", { fg = colours.magenta, bg = 19, bold = true })
+  hi("TelescopeMultiIcon", { fg = colours.green, bold = true })
+  hi("TelescopeMultiSelection", { fg = colours.green })
 end
 
 return M

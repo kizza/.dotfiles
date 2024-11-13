@@ -23,7 +23,7 @@ return {
       ensure_installed = {
         "bash",
         "c",
-        "embedded_template",
+        -- "embedded_template",
         "html",
         "git_rebase",
         "javascript",
@@ -37,6 +37,7 @@ return {
         "python",
         "query",
         "regex",
+        "ruby", -- seems to work again
         "tsx",
         "typescript",
         "vim",
@@ -48,7 +49,7 @@ return {
       },
     },
     config = function(_, opts)
-      -- require("nvim-treesitter.install").compilers = { 'clang++'}
+      -- require("nvim-treesitter.install").compilers = { 'clang' }
       require("nvim-treesitter.configs").setup(opts)
 
       local opt = vim.opt

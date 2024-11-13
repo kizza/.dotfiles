@@ -2,7 +2,21 @@ return {
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      modes = {
+        search = {
+          enabled = true,
+        },
+      },
+    },
+    config = function(_, opts)
+      require("flash").setup(opts)
+
+      local hi = require("colours").hi
+      -- hi("FlashLabel", { bg = 0, fg = 3 })
+      vim.cmd("hi FlashLabel guifg=#FF2FCF guibg=black")
+      hi("FlashCursor", { link = "FlashLabel" })
+    end,
     keys = {
       -- {
       --   "s",
@@ -66,7 +80,7 @@ return {
   {
     -- A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
     keys = { { "<leader>dt", "<cmd>TroubleToggle<cr>", desc = "Toggle trouble" } },
   },
   {
@@ -85,12 +99,15 @@ return {
     config = function()
       require("marks").setup {}
       vim.cmd [[hi MarkSignHL ctermfg=17]]
+
+      local hi = require("colours").hi
+      hi("MarkSignHL", { fg = 3 })
     end
   },
   {
     -- A code outline window for skimming and quick navigation
     "stevearc/aerial.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
     keys = {
       { "<leader>at", "<cmd>AerialToggle<cr>",  desc = "Toggle aerial" },
       { "<leader>an", "<cmd>AerialNavOpen<cr>", desc = "Aerial Nav Open" },
@@ -136,6 +153,11 @@ return {
         vim.keymap.set('n', '[a', '<cmd>AerialPrev<cr>', { buffer = bufnr })
         vim.keymap.set('n', ']a', '<cmd>AerialNext<cr>', { buffer = bufnr })
       end,
+      layout = {
+        max_width = { 80, 0.3 },
+        -- width = 80
+        min_width = { 40, 0.2 }
+      },
       nav = {
         win_opts = {
           cursorline = true,
@@ -150,7 +172,8 @@ return {
     "junegunn/fzf",
     enabled = true,
     dependencies = {
-      "junegunn/fzf.vim"
+      "junegunn/fzf.vim",
+      'nvim-telescope/telescope.nvim', -- for highlight groups (TelescopeSelection)
     },
     build = ":call fzf#install()",
     event = "VeryLazy",
@@ -165,22 +188,28 @@ return {
       }
 
       -- Keyword = Purple,  Function = Aqua,  Const = Red,  Type = Green
-      vim.g.fzf_colors = {
-        fg = { "fg", "Normal" },
-        bg = { "bg", "Normal" },
-        hl = { "fg", "Function" },
-        ["hl+"] = { "fg", "Variable" },
-        ["fg+"] = { "fg", "CursorLine", "CursorColumn", "Normal" },
-        ["bg+"] = { "bg", "CursorLine", "CursorColumn" },
-        info = { "fg", "Keyword" },
-        border = { "fg", "LineNr" },
-        prompt = { "fg", "Function" },
-        pointer = { "fg", "Function" },
-        marker = { "fg", "Label" },
-        spinner = { "fg", "Label" },
-        header = { "fg", "Comment" }
-      }
-
+      -- vim.cmd [[
+      --   hi FzfPrompt ctermfg=magenta
+      --   hi FzfPointer ctermfg=green
+      -- ]]
+      -- vim.g.fzf_colors = {
+      --   fg = { "fg", "Normal" },
+      --   bg = { "bg", "Normal" },
+      --   hl = { "fg", "Function" },
+      --   ["hl+"] = { "fg", "Variable" },
+      --   ["fg+"] = { "fg", "CursorLine", "CursorColumn", "Normal" },
+      --   ["bg+"] = { "bg", "TelescopeSelection", "CursorLine", "CursorColumn" },
+      --   info = { "fg", "Keyword" },
+      --   border = { "fg", "TelescopeBorder", "LineNr" },
+      --   prompt = { "fg", "FzfPrompt" },
+      --   pointer = { "fg", "FzfPointer" }, -- Then chevron > for selection
+      --   marker = { "fg", "FzfMarker" }, -- Then chevron > when ticked
+      --   spinner = { "fg", "Label" },
+      --   header = { "fg", "Comment" }
+      -- }
+    end,
+    config = function()
+      -- The lower line segments (reset when colorscheme is set)
       vim.cmd [[
         hi fzf1 ctermfg=lightgrey ctermbg=black
         hi fzf2 ctermfg=lightgrey ctermbg=black
@@ -199,15 +228,23 @@ return {
       vim.g.buftabline_numbers = 2 -- idx of buffer
       vim.g.buftabline_modified_char = ""
 
-      vim.cmd [[
-        hi BufTabLineFill ctermbg=19
-        hi BufTabLineCurrent ctermbg=0 ctermfg=2 cterm=bold
-        hi BufTabLineActive ctermbg=18 ctermfg=2
-        hi BufTabLineHidden ctermbg=19 ctermfg=7
-        hi BufTabLineModifiedCurrent ctermbg=0 ctermfg=2 cterm=italic,bold
-        hi BufTabLineModifiedActive ctermbg=18 ctermfg=2 cterm=italic
-        hi BufTabLineModifiedHidden ctermbg=19 ctermfg=7 cterm=italic
-      ]]
+      local hi = require("colours").hi
+      hi("BufTabLineFill", { bg = 19 })
+      hi("BufTabLineCurrent", { fg = 2, bg = 0, bold = true })
+      hi("BufTabLineActive", { fg = 2, bg = 18 })
+      hi("BufTabLineHidden", { fg = 7, bg = 19 })
+      hi("BufTabLineModifiedCurrent", { fg = 2, bg = 0, italic = true, bold = true })
+      hi("BufTabLineModifiedActive", { fg = 2, bg = 18, italic = true })
+      hi("BufTabLineModifiedHidden", { fg = 7, bg = 19, italic = true })
+      -- vim.cmd [[
+      --   hi BufTabLineFill ctermbg=19
+      --   hi BufTabLineCurrent ctermbg=0 ctermfg=2 cterm=bold
+      --   hi BufTabLineActive ctermbg=18 ctermfg=2
+      --   hi BufTabLineHidden ctermbg=19 ctermfg=7
+      --   hi BufTabLineModifiedCurrent ctermbg=0 ctermfg=2 cterm=italic,bold
+      --   hi BufTabLineModifiedActive ctermbg=18 ctermfg=2 cterm=italic
+      --   hi BufTabLineModifiedHidden ctermbg=19 ctermfg=7 cterm=italic
+      -- ]]
     end
   },
   {

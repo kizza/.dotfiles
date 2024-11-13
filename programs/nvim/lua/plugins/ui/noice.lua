@@ -35,7 +35,7 @@ return {
       },
 
       messages = {
-        enabled = true,
+        enabled = false,
         view_search = false, -- don't show search count messages
       },
 
@@ -51,6 +51,16 @@ return {
         {
           -- Don't show buffer write message (requires "written" showing via shortmess config)
           filter = { event = "msg_show", kind = "", find = "written" },
+          opts = { skip = true },
+        },
+        {
+          -- Don't show "not found" for search
+          filter = { event = "msg_show", find = "E486" },
+          opts = { skip = true },
+        },
+        {
+          -- Don't show "yanked" messages
+          filter = { event = "msg_show", find = "yanked" },
           opts = { skip = true },
         },
         {

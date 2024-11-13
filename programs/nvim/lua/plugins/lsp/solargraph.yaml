@@ -10,4 +10,4 @@ domains: []
 reporters:
 - rubocop
 - require_not_found
-max_files: 6000
+max_files: 8000

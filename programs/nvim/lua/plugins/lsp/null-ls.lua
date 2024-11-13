@@ -1,6 +1,7 @@
 return {
   -- Null ls (treat things as if they were LSP)
   "nvimtools/none-ls.nvim",
+  enabled = false,
   event = "VeryLazy",
   config = function(_, opts)
     local builtins = require("null-ls.builtins")
@@ -14,6 +15,8 @@ return {
       }
     end
 
+    local rubocop = require("lsp.null-ls.rubocop")
+
     -- lua print(vim.inspect(require("null-ls.builtins").formatting.rubycop))
     require 'null-ls'.setup {
       debounce = 1000,
@@ -24,7 +27,9 @@ return {
       update_in_insert = false,
       on_attach = require 'plugins.lsp'.on_attach,
       sources = {
-        builtins.diagnostics.rubocop.with(use_bundler(builtins.diagnostics.rubocop._opts)),
+        -- rubocop.with(use_bundler(rubocop._opts)),
+        builtins.diagnostics.rubocop,
+        -- builtins.diagnostics.rubocop.with(use_bundler(builtins.diagnostics.rubocop._opts)),
         builtins.formatting.rubocop.with(use_bundler(builtins.formatting.rubocop._opts)),
         builtins.diagnostics.erb_lint.with(use_bundler(builtins.diagnostics.erb_lint._opts, { virtual_text = true })),
         -- builtins.formatting.erb_lint.with(use_bundler(builtins.formatting.erb_lint._opts)),
