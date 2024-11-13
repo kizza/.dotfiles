@@ -6,12 +6,15 @@ hi rubyControl ctermfg=brown
 hi rubyDefine ctermfg=brown
 hi rubyClass ctermfg=magenta
 
+hi rubyTestMacro ctermfg=magenta " describe, context
+hi rubyAssertion cterm=italic ctermfg=cyan " expect
+
 hi erubyDelimeter ctermfg=magenta
 
 hi TSKeyword ctermfg=17
 hi TSSymbol ctermfg=green
 hi TSParameter ctermfg=lightgrey
-hi TSFunction ctermfg=blue
+" hi TSFunction ctermfg=blue
 hi TSLabel ctermfg=cyan
 hi TSOperator ctermfg=magenta
 hi TSType ctermfg=yellow
@@ -26,6 +29,14 @@ hi TSCustomKeywordParameterValue ctermfg=lightgrey
 hi TSCustomClassMethodInvocation ctermfg=magenta
 hi TSCustomMethod ctermfg=none
 
+hi @function ctermfg=white
+hi @function.call ctermfg=blue
+
+hi @custom.class.called.methods cterm=italic
+hi @custom.class.called.conditional cterm=italic ctermfg=blue
+hi @custom.class.called.conditional.symbol cterm=italic ctermfg=blue
+
+hi @variable.builtin ctermfg=magenta " self
 
 " vim-rails doesn't fine views with .html.erb without extenging its default
 " extensions

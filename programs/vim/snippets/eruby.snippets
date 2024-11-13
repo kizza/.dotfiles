@@ -1,6 +1,18 @@
 snippet end
 	<% end %>
 
+snippet if
+	<% if ${1} %>
+		${2}
+	<% end %>
+
+snippet ifelse
+	<% if ${1} %>
+		${2}
+	<% else %>
+		${3}
+	<% end %>
+
 snippet render
 	<%= render(${1:name}Component.new) do %>
 		${2}
@@ -13,3 +25,6 @@ snippet styled_container
 
 snippet Flipper
 	<% if Flipper[${1}].enabled?(ActsAsTenant.current_tenant) %>
+
+snippet ActsAsTenant
+	ActsAsTenant.current_tenant.${1}

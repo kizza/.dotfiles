@@ -10,7 +10,8 @@ let g:ale_linters = {
   \'ruby': ['rubocop', 'solargraph'],
   \}
 " let g:ale_ruby_rubocop_executable = "rubocop --server"
-let g:ale_ruby_rubocop_options = "--server"
+" let g:ale_ruby_rubocop_options = "--server"
+let g:ale_ruby_rubocop_executable = 'bundle'
 
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 1

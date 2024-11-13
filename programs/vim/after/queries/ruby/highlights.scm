@@ -24,6 +24,23 @@
 ; The :: between symbols (TSType)
 (scope_resolution) @boolean
 
+; The class level methods (before_actoin or layout)
+(class
+  (body_statement
+    (call
+      (identifier) @custom.class.called.methods)))
+
+; Conditionals within class level methods (validates :foo, *if:* :somthing
+(call
+  (argument_list
+    (pair
+      (hash_key_symbol) @custom.class.called.conditional
+        (#any-of? @custom.class.called.conditional "if" "unless")
+          (":") @custom.class.called.conditional.symbol
+      )
+  )
+)
+
 ; ; The methods called directly on a class
 ; (class (call
 ;     method: (identifier) @custom.class.method.invocation))
