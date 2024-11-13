@@ -37,6 +37,7 @@
         ${builtins.readFile ./alias.sh}
         ${builtins.readFile ./git.sh}
         ${builtins.readFile ./helpers.sh}
+        ${builtins.readFile ./rails.sh}
       '';
 
     history = {
