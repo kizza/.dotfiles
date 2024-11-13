@@ -10,4 +10,5 @@
 #
 screen-256color|screen with 256 colors and italic,
         sitm=\E[3m, ritm=\E[23m,
+        smulx=\E[4\:%p1%dm,
         use=screen-256color,
