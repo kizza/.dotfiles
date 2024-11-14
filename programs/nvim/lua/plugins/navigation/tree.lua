@@ -40,11 +40,9 @@ function M.opts()
       )
 
       -- Move and copy
-      local lib = require("nvim-tree.lib")
-      -- Copy
       vim.keymap.set('n', 'mc',
         function()
-          local file_src = lib.get_node_at_cursor()['absolute_path']
+          local file_src = api.tree.get_node_under_cursor()['absolute_path']
           vim.ui.input(
             { prompt = 'Copy to: ', default = file_src },
             function(input)
@@ -63,7 +61,7 @@ function M.opts()
       -- Move
       vim.keymap.set('n', 'mm',
         function()
-          local file_src = lib.get_node_at_cursor()['absolute_path']
+          local file_src = api.tree.get_node_under_cursor()['absolute_path']
           vim.ui.input(
             { prompt = 'Move to: ', default = file_src },
             function(input)
@@ -82,7 +80,7 @@ function M.opts()
       -- Open in tmux
       vim.keymap.set('n', '<C-t>',
         function()
-          local path = lib.get_node_at_cursor()['absolute_path']
+          local path = api.tree.get_node_under_cursor()['absolute_path']
           vim.fn.execute("silent !withsplit 'v " .. path .. "'")
         end,
         opts('Open in tmux')
