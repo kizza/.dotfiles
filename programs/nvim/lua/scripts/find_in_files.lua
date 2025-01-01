@@ -64,7 +64,9 @@ function M.find_in_files()
       local regex_escape_chars = ("[]()"):gsub(".", "%%" .. "%0") -- Escapes each char, for substitution below eg. %[%]%(%)
       value = value:gsub("([" .. regex_escape_chars .. "])", "\\%1")
     end
-    vim.cmd("Rg " .. value)
+    local command = "Rg " .. value
+    vim.fn.histadd("cmd", command) -- Add to command history
+    vim.cmd(command)               -- Execute the command
   end
 
   -- mount/open the component
