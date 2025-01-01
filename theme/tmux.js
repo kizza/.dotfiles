@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const date = "#(date '+%a, %b %d')";
-const time = "#(date '+%I:%M')";
+const time = "#(date '+%-I:%M')";
 const dir = "#{b:pane_current_path}";
 const prefix = "#{?client_prefix,#[fg=black]PREFIX,} #{?pane_in_mode,#[fg=black]COPY ,}";
 
