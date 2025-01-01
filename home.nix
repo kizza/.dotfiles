@@ -7,12 +7,12 @@ in
   imports = [
     ./fonts.nix
     programs/alacritty
-    programs/base16-shell
     programs/bat
     programs/direnv.nix
     programs/git
     programs/nvim
     programs/ripgrep
+    programs/tinted-shell
     programs/tmux
     programs/zsh
   ] ++ (if isDarwin then [
