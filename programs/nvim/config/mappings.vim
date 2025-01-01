@@ -112,6 +112,9 @@ function! ToggleBlockSyntax()
 endfunction
 noremap <leader>ab :call ToggleBlockSyntax()<CR>
 
+command! TakeASnapshot :lua require("scripts/take_a_snapshot").take_a_snapshot()<CR>
+command! ReadASnapshot :lua require("scripts/take_a_snapshot").read_a_snapshot()<CR>
+
 "
 " Searching
 " --------------------------------------------------------------------
