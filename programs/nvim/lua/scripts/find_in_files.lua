@@ -26,7 +26,7 @@ function M.open_backdrop(zindex)
 end
 
 function M.build_input(on_submit)
-  local exists = pcall(vim.api.nvim_get_hl_by_name, "FindFilesBorder", true)
+  local exists = pcall(vim.api.nvim_get_hl, 0, { name = "FindFilesBorder", link = true })
   if not exists then
     colours.hi("FindFilesBorder", { fg = 3 })
   end
