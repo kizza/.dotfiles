@@ -28,7 +28,15 @@ return {
           cmdline = { title = " Command " },
           search_down = { title = " Search " },
           search_up = { title = " Search " },
-        }
+        },
+        opts = {
+          win_options = {
+            winhighlight = {
+              FloatBorder = "FloatBorder",
+              FloatTitle = "FloatTitle",
+            },
+          },
+        },
       },
       popupmenu = {
         enabled = true,
