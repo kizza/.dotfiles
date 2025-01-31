@@ -28,6 +28,7 @@ return {
           cmdline = { title = " Command " },
           search_down = { title = " Search " },
           search_up = { title = " Search " },
+          ripgrep = { kind = "search", pattern = { "^:%s*Rg%s+" }, icon = "", lang = "regex" },
         },
         opts = {
           win_options = {
