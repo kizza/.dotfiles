@@ -128,32 +128,15 @@ nnoremap <silent><leader>pp :lua require("scripts/find_in_files").find_in_files(
 " nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 
 " Escaped ripgrep command
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1,
+command! -bang -nargs=* Rgo call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1,
   \   fzf#vim#with_preview({ 'options': ['--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
+
+" Use telescope for my rg now
+command! -nargs=1 Rg lua require('telescope.builtin').grep_string({ search = <q-args>, use_regex = true })
 
 " Raw ripgrep command
 command! -bang -nargs=* Rgr call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".<q-args>, 1,
   \   fzf#vim#with_preview({ 'options': ['--prompt', 'Rgr> ', '--bind', 'ctrl-a:select-all,ctrl-d:deselect-all'] }), <bang>0)
-
-" Self reloading RG (supersede by telescope "Live grep"?)
-function! SelfReloadingFZF(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
-  let initial_command = printf(command_fmt, a:query)
-  " let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'window': { 'width': 0.9, 'height': 0.7}, 'options': ['--phony', '--query', a:query, '--prompt', 'Search> ', '--bind', 'change:reload:'.reload_command, '--bind', 'ctrl-a:select-all,ctrl-d:deselect-all']}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-command! -nargs=* -bang RG call SelfReloadingFZF(<q-args>, <bang>0)
-
-" nnoremap <silent> <C-f> :call SelfReloadingFZF("", 0)<CR>
-" nnoremap <silent> <leader>ff :call SelfReloadingFZF("", 0)<CR>
-" nnoremap <silent> <leader>fu :call SelfReloadingFZF(expand('<cword>'), 0)<CR>
-" nnoremap <leader>fb :BLines<CR>
-" nnoremap <leader>fh :History<CR>
-" nnoremap <leader>f/ :call fzf#vim#search_history({'left': '60'})<CR>
-" nnoremap <leader>f: :call fzf#vim#command_history({'left': '60'})<CR>
-
 
 "
 " Git
