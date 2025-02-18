@@ -144,6 +144,22 @@ return {
     end
   },
   {
+    -- Highlight undo/redo changes (like yank text does)
+    "y3owk1n/undo-glow.nvim",
+    event = "VeryLazy",
+    opts = function(_, opts)
+      opts.undo_hl = "IncSearch"
+      opts.redo_hl = "IncSearch"
+      opts.duration = 200
+    end,
+    config = function(_, opts)
+      local undo_glow = require("undo-glow")
+      undo_glow.setup(opts)
+      vim.keymap.set("n", "u", undo_glow.undo, { noremap = true, silent = true })
+      vim.keymap.set("n", "C-r", undo_glow.redo, { noremap = true, silent = true })
+    end,
+  },
+  {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
     dependencies = {
