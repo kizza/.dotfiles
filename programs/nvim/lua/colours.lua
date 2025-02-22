@@ -22,8 +22,7 @@ local function cterm_to_base16(i)
     [5] = "0E",
     [6] = "0C",
     [7] = "05",
-    [8] =
-    "03",
+    [8] = "03",
     [9] = "08",
     [10] = "0B",
     [11] = "0A",
@@ -32,8 +31,7 @@ local function cterm_to_base16(i)
     [14] = "0C",
     [15] = "07",
     [16] = "09",
-    [17] =
-    "0F",
+    [17] = "0F",
     [18] = "01",
     [19] = "02",
     [20] = "04",
@@ -45,10 +43,17 @@ end
 function M.get(i)
   if vim.opt.termguicolors:get() == false then return i end
 
+  -- Translate cterm index value to base16 code suffix
   local base16_value = cterm_to_base16(i)
   if not base16_value then return nil end
 
-  return base16_colours["base" .. base16_value]
+  if base16_colours == nil then
+    -- Return from tinted-theme palette
+    return "#" .. vim.g["tinted_gui" .. base16_value]
+  else
+    -- Return from nvim-base16 color palette
+    return base16_colours["base" .. base16_value]
+  end
   -- return "#" .. os.getenv("BASE16_COLOR_" .. cterm_to_base16(i) .. "_HEX")
 end
 

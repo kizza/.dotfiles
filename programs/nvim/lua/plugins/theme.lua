@@ -11,13 +11,17 @@ return {
       vim.g.base16_colorspace = 256
 
       -- Load base16 studio theme from environment
+      local theme_name = os.getenv("BASE16_THEME")
       local base16_studio_path = "~/base16-studio"
-      local theme_file = vim.fn.expand(base16_studio_path .. "/themes/vim/" .. os.getenv("BASE16_THEME") .. ".nvim")
+      local theme_file = vim.fn.expand(base16_studio_path .. "/themes/vim/" .. theme_name .. ".nvim")
       if vim.fn.filereadable(theme_file) == 1 then
-        vim.fn.execute("source " .. theme_file)                     -- base16studio
+        vim.schedule(function() print("Setting theme file " .. theme_name) end)
+        vim.fn.execute("source " .. theme_file) -- base16studio
       else
+        vim.schedule(function() print("Setting colorscheme base16-" .. os.getenv("BASE16_THEME")) end)
         vim.cmd("colorscheme base16-" .. os.getenv("BASE16_THEME")) -- fallback
       end
+
       require("highlights").setup()
 
       -- Toggle cterm/gui (to allow previewing themes from terminal)
