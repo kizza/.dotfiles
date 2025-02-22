@@ -18,10 +18,10 @@ function M.setup()
   hi("NvimInternalError", { fg = 1, bg = black })
 
   -- " Spelling needs black/white text
-  hi("SpellBad", { fg = red })
+  hi("SpellBad", { fg = red, undercurl = true })
   hi("SpellCap", { fg = red })
   hi("SpellRare", { fg = cyan })
-  hi("SpellLocal", { fg = yellow })
+  hi("SpellLocal", { fg = yellow, undercurl = true })
 
   hi("VertSplit", { fg = 19 })
   hi("NormalFloat", { bg = 18 })
