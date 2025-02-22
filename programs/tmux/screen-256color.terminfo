@@ -1,14 +1,20 @@
 # A screen-256color based TERMINFO that adds the escape sequences for italic.
+# https://dev.to/anurag_pramanik/how-to-enable-undercurl-in-neovim-terminal-and-tmux-setup-guide-2ld7
 #
 # Install:
 #
-#   tic screen-256color.terminfo
+#   tic -x screen-256color.terminfo
 #
 # Usage:
 #
 #   export TERM=screen-256color
 #
+# Example:
+#
+#   echo -e "\e[4:3mThis text has an undercurl\e[0m"
+#
 screen-256color|screen with 256 colors and italic,
         sitm=\E[3m, ritm=\E[23m,
-        smulx=\E[4\:%p1%dm,
+        Smulx=\E[4\:%p1%dm,
+        Ss=\E[%p1%d q, Se=\E[2 q,
         use=screen-256color,
