@@ -49,7 +49,7 @@ function M.opts()
           -- Reverse tab order (due to sorting)
           ["<Tab>"] = actions.toggle_selection + actions.move_selection_better,
           ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_worse,
-          ["<M-a>"] = actions.toggle_all,
+          ["<C-a>"] = actions.toggle_all,
         },
       },
       file_ignore_patterns = {
