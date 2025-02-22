@@ -1,7 +1,13 @@
 return {
-  { "tpope/vim-repeat",                event = "VeryLazy" },
-  { "tpope/vim-surround",              event = "VeryLazy" },
-  { "tpope/vim-commentary",            event = "VeryLazy" },
+  { "tpope/vim-repeat",   event = "VeryLazy" },
+  { "tpope/vim-surround", event = "VeryLazy" },
+  {
+    "tpope/vim-commentary",
+    event = "VeryLazy",
+    init = function(_, opts)
+      vim.cmd("autocmd FileType monkey-c setlocal commentstring=//%s")
+    end
+  },
   { "vim-scripts/ReplaceWithRegister", event = "VeryLazy" },
   { "wellle/targets.vim",              event = "VeryLazy" },
   { "tpope/vim-abolish",               event = "VeryLazy" },
