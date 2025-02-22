@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 DIR=~/Code/lookout
 [ ! -d "$DIR" ] && DIR=~/Code/fgf
@@ -20,6 +20,7 @@ if [ ! "$(docker ps | grep lookout-postgres)" ]; then
 fi
 
 # Backend
+heading "Booting backend..."
 tmux send-keys 'clear' C-m
 tmux rename-window "Backend"
 tmux send-keys "cd $DIR" C-m
