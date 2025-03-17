@@ -85,6 +85,8 @@ for i in range(0, 9)
 endfo
 
 " z fold index shortcuts
+" nmap <silent> zj za
+" nmap <silent> zk za
 for i in range(0, 9)
   execute "nnoremap <leader>z" . i . " :set foldlevel=". i . "<CR>"
 endfo

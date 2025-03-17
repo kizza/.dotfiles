@@ -65,6 +65,7 @@ function M.find_in_files()
       value = value:gsub("([" .. regex_escape_chars .. "])", "\\%1")
     end
     local command = "Rg " .. value
+    -- local command = "Telescope grep_string use_regex=true search=" .. value
     vim.fn.histadd("cmd", command) -- Add to command history
     vim.cmd(command)               -- Execute the command
   end

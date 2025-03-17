@@ -1,13 +1,13 @@
 [delta]
   features = line-numbers decorations
-  navigate = false
+  navigate = true
   side-by-side = false
   syntax-theme = base16
   true-color = always
 [delta "decorations"]
   commit-style = purple
   file-added-label = "  Added: "
-  file-modified-label = "  Edited: "
+  file-modified-label = "  Modified: "
   file-modified-label-style = yellow
   file-removed-label = "  Deleted: "
   file-renamed-label = "  Renamed: "
