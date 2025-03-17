@@ -1,0 +1,213 @@
+#!/usr/bin/env zsh
+
+function emphasize() {
+  local text="$1"
+  local italic_start="\x1b[3m"
+  local italic_end="\x1b[0m"
+  echo -n "${italic_start}${text}${italic_end}"
+}
+
+function colorize() {
+  local text="$1"
+  local color=$(get_color_code "$2")
+  local reset="\e[0m"
+  echo -n "${color}${text}${reset}"
+}
+
+function get_color_code() {
+  case "$1" in
+    "black") echo -n "\e[30m" ;;
+    "red") echo -n "\e[31m" ;;
+    "green") echo -n "\e[32m" ;;
+    "yellow") echo -n "\e[33m" ;;
+    "blue") echo -n "\e[34m" ;;
+    "magenta") echo -n "\e[35m" ;;
+    "cyan") echo -n "\e[36m" ;;
+    "white") echo -n "\e[37m" ;;
+    "bold black") echo -n "\e[1;30m" ;;
+    "bold red") echo -n "\e[1;31m" ;;
+    "bold green") echo -n "\e[1;32m" ;;
+    "bold yellow") echo -n "\e[1;33m" ;;
+    "bold blue") echo -n "\e[1;34m" ;;
+    "bold magenta") echo -n "\e[1;35m" ;;
+    "bold cyan") echo -n "\e[1;36m" ;;
+    "bold white") echo -n "\e[1;37m" ;;
+    "normal"|*) echo -n "\e[0m" ;;  # Reset or fallback
+  esac
+}
+
+function rebase_status() {
+  [[ ! -d $rebase_dir ]] && return # Return if no rebase
+
+  local rebase_branch=$(cat "$rebase_dir/head-name" 2>/dev/null | sed 's/refs\/heads\///')
+  echo "Rebasing $(emphasize $(colorize $rebase_branch 'magenta'))"
+  cat "$rebase_dir/done" | while read -r action sha msg; do
+    sha=${sha:0:7} # Shorten SHA to 7 characters
+    print -P "%F{green}${TICK} ${action}%f %F{yellow}${sha}%f %F{cyan}${msg}%f"
+  done
+  echo "\uf054 $(emphasize 'You are here')"
+  cat "$rebase_dir/git-rebase-todo" | while read -r action sha msg; do
+    sha=${sha:0:7} # Shorten SHA to 7 characters
+    print -P "\e[90m\uf141 ${action}%f %F{yellow}${sha}%f %F{cyan}${msg}%f"
+  done
+  echo ""
+}
+
+function original_status_without_rebase() {
+  [[ ! -d $rebase_dir ]] && git status --branch && return
+
+  # # Remaining normal status
+  local remaining_status="$(git -c color.ui=always status | sed '1,/^$/d')"
+  if [[ -n $remaining_status ]]; then
+    echo "\n$remaining_status"
+  fi
+}
+
+# Return formatted stream from expected `git diff --stat`
+function format_stats_output() {
+  while read -r file pipe count stat; do
+    if [[ "$count" == "Unmerged" ]]; then
+      entry="  $(tput setaf 5)$count${RESET}"
+    elif [[ $count -gt 10 ]]; then
+      entry="  $(tput setaf 5)$count${RESET} $stat"
+    else
+      entry="  $count $stat"
+    fi
+    echo "$file $entry"
+  done
+}
+
+function git_color_name() {
+  local slot="$1"  # eg. "changed" for modified, "added" for staged
+  # local color=$(git config --get "color.status.$slot")
+
+  # Fallback to Git defaults if unset
+  case "$slot" in
+    "added") [[ -z "$color" ]] && color="green" ;;
+    "changed") [[ -z "$color" ]] && color="yellow" ;;
+    "untracked") [[ -z "$color" ]] && color="cyan" ;;
+    "deleted") [[ -z "$color" ]] && color="red" ;; # not a default git colour
+    "unmerged") [[ -z "$color" ]] && color="red" ;;
+    "branch") [[ -z "$color" ]] && color="yellow" ;;
+    *) [[ -z "$color" ]] && color="normal" ;;  # Default to no color
+  esac
+
+  echo -n "$color"
+}
+
+function git_stylize() {
+  local label="$1"
+  local slot="$2"
+  local color="$(git_color_name "$2")"
+  echo -n "$(colorize "$(emphasize "$label")" $color)"
+}
+
+function git_status_stat() {
+  # Store diff stats
+  declare -A diff_stats
+  while read -r file stats; do
+    diff_stats["$file"]="$stats"
+  done < <(COLUMNS=99999 git -c color.ui=always diff --stat --stat-width=100 | sed '$d' | format_stats_output)
+
+  # Store diff --cached stat
+  declare -A diff_stats_cached
+  while read -r file stats; do
+    diff_stats_cached["$file"]="$stats"
+  done < <(COLUMNS=99999 git -c color.ui=always diff --stat --stat-width=100 --cached | sed '$d' | format_stats_output)
+
+  local indent=""
+  local gap="  "
+  local staged=""
+  local modified=""
+  local untracked=""
+  local unmerged=""
+
+  while IFS='' read -r line; do
+    [[ -z "$line" ]] && continue
+    X="${line:0:1}"; Y="${line:1:1}"; file="${line:3}"
+    case "$X$Y" in
+      "A ") # Added (staged)
+        local each_output="$(git_stylize "New file" "added")${gap}$file"
+        [[ -n "$staged" ]] && staged="$staged\n" # Add new line
+        staged="$staged$indent$each_output"
+        ;;
+
+      "D ") # Deleted (staged)
+        local each_output="$(git_stylize 'Deleted' 'deleted')${gap}$file"
+        [[ -n "$staged" ]] && staged="$staged\n" # Add new line
+        staged="$staged$indent$each_output"
+        ;;
+
+      " D") # Deleted (unstaged)
+        local each_output="$(git_stylize 'Deleted' 'deleted')${gap}$file"
+        [[ -n "$modified" ]] && modified="$modified\n" # Add new line
+        modified="$modified$indent$each_output"
+        ;;
+
+      "M " | "MM") # Modified (entirely staged, or partially staged)
+        local found_stat=$diff_stats_cached["$file"]
+        local each_output="$(git_stylize 'Modified' 'added')${gap}$file $found_stat"
+        [[ -n "$staged" ]] && staged="$staged\n" # Add new line
+        staged="$staged$indent$each_output"
+        ;;
+
+      " M") # Modified (unstaged)
+        local found_stat=$diff_stats["$file"]
+        local each_output="$(git_stylize 'Modified' 'changed')${gap}$file $found_stat"
+        [[ -n "$modified" ]] && modified="$modified\n" # Add new line
+        modified="$modified$indent$each_output"
+        ;;
+
+      "UU") # Deleted (by us)
+        local each_output="$(git_stylize 'Both modified' 'unmerged')${gap}$file $found_stat"
+        [[ -n "$unmerged" ]] && unmerged="$unmerged\n" # Add new line
+        unmerged="$unmerged$indent$each_output"
+        ;;
+
+      "AA") # Both added
+        local each_output="$(git_stylize 'Both added' 'unmerged')${gap}$file"
+        [[ -n "$unmerged" ]] && unmerged="$unmerged\n" # Add new line
+        unmerged="$unmerged$indent$each_output"
+        ;;
+
+      "DU") # Deleted (by us)
+        local each_output="$(git_stylize 'Deleted by us' 'unmerged')${gap}$file"
+        [[ -n "$unmerged" ]] && unmerged="$unmerged\n" # Add new line
+        unmerged="$unmerged$indent$each_output"
+        ;;
+
+      "??") # Untracked
+        local each_output="$(git_stylize $file 'untracked')"
+        [[ -n "$untracked" ]] && untracked="$untracked\n" # Add new line
+        untracked="$untracked${indent}$each_output"
+        ;;
+
+      *)
+        echo "${RED}Unknown state '$X$Y' for $file${RESET}"
+        ;;
+    esac
+  done < <(git status --porcelain)
+
+  if [[ -n "${staged}${modified}${untracked}${unmerged}" ]]; then
+    [[ -n "$staged" ]] && echo "$staged\n"
+    [[ -n "$modified" ]] && echo "$modified\n"
+    [[ -n "$untracked" ]] && echo "$untracked\n"
+    [[ -n "$unmerged" ]] && echo "$(emphasize "$(colorize "What to do with..." 'yellow')")\n$unmerged\n"
+
+    exit 0
+    # [[ -n "$staged" ]] && echo "$(tput setaf 0 && tput setab 2)  Staged ${RESET}\n$staged\n"
+    # [[ -n "$modified" ]] && echo "$(tput setaf 0 && tput setab 3)  Modified ${RESET}\n$modified\n"
+    # [[ -n "$untracked" ]] && echo "$(tput setaf 0 && tput setab 6) 󰜺 Untracked ${RESET}\n$untracked\n"
+  else
+    original_status_without_rebase
+  fi
+}
+
+git -C . rev-parse 2>/dev/null
+if [ $? -ne 0 ]; then
+  exit 0 # Not a git reposity or no commits
+fi
+
+local rebase_dir=$(git rev-parse --git-path rebase-merge 2>/dev/null)
+rebase_status
+git_status_stat

@@ -1,5 +1,4 @@
 alias g="git"
-alias gs="git status --branch"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias ga="git add -A" # -A adds deleted files by defailt also
@@ -11,6 +10,10 @@ alias gl="git l"
 alias gll="git log --pretty=format:\"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s\" --stat"
 alias gdba="git fetch --prune && git branch | grep -vE '(master|master)$' >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
 alias master="main"
+
+function gs() {
+  ~/.dotfiles/programs/git/scripts/git-status-stat
+}
 
 function since_master() {
   git diff --name-only origin/$(trunk)
