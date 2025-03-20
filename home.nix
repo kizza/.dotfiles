@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   isDarwin = builtins.currentSystem == "aarch64-darwin";
 in
 {
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "1password-cli"
+  ];
+
   imports = [
     ./fonts.nix
     programs/alacritty
@@ -25,6 +29,7 @@ in
     homeDirectory = builtins.getEnv "HOME";
     stateVersion = "22.05";
     packages = with pkgs; [
+      _1password-cli
       cloudflared
       delta
       docker
