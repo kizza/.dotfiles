@@ -35,7 +35,11 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("trim_trailing_whitespace"),
   pattern = "*",
-  command = [[%s/\s\+$//e]],
+  callback = function()
+    if vim.bo.filetype ~= "markdown" then
+      vim.cmd([[%s/\s\+$//e]])
+    end
+  end,
 })
 
 -- Resize splits if window got resized
