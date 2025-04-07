@@ -17,6 +17,7 @@
   abort = rebase --abort
   add = add -A
   amend = commit --amend --no-edit
+  assumed-unchanged = "!git ls-files -v | grep ^h"
   br = branch
   ch = checkout
   cm = commit
@@ -34,7 +35,7 @@
   reabse = rebase
   rollback = "!git show -s --format=%B | pbcopy && git reset HEAD~"
   s = status
-  staged = diff --cached  --name-only
+  staged = diff --cached --name-only
   tracked = "!git status --untracked-files=no --porcelain | awk '{ print $2 }'"
   unstage = reset HEAD
   unstash = stash pop
