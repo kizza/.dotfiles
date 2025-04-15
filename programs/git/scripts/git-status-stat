@@ -144,7 +144,7 @@ function git_status_stat() {
         modified="$modified$indent$each_output"
         ;;
 
-      "M " | "MM") # Modified (entirely staged, or partially staged)
+      "M ") # Modified (entirely staged)
         local found_stat=$diff_stats_cached["$file"]
         local each_output="$(git_stylize 'Modified' 'added')${gap}$file $found_stat"
         [[ -n "$staged" ]] && staged="$staged\n" # Add new line
@@ -154,6 +154,18 @@ function git_status_stat() {
       " M") # Modified (unstaged)
         local found_stat=$diff_stats["$file"]
         local each_output="$(git_stylize 'Modified' 'changed')${gap}$file $found_stat"
+        [[ -n "$modified" ]] && modified="$modified\n" # Add new line
+        modified="$modified$indent$each_output"
+        ;;
+
+      "MM") # Modified (in both - ie. partially staged)
+        local found_stat=$diff_stats_cached["$file"]
+        local each_output="$(git_stylize 'Modified' 'added')${gap}$file $found_stat"
+        [[ -n "$staged" ]] && staged="$staged\n" # Add new line
+        staged="$staged$indent$each_output"
+
+        found_stat=$diff_stats["$file"]
+        each_output="$(git_stylize 'Modified' 'changed')${gap}$file $found_stat"
         [[ -n "$modified" ]] && modified="$modified\n" # Add new line
         modified="$modified$indent$each_output"
         ;;
