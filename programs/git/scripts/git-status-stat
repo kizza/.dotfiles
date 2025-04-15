@@ -170,6 +170,12 @@ function git_status_stat() {
         modified="$modified$indent$each_output"
         ;;
 
+      "R ") # Renamed (and staged - otherwise, prsents as separate modified & deleted)
+        local each_output="$(git_stylize 'Renamed' 'added')${gap}$file"
+        [[ -n "$staged" ]] && staged="$staged\n" # Add new line
+        staged="$staged$indent$each_output"
+        ;;
+
       "UU") # Deleted (by us)
         local each_output="$(git_stylize 'Both modified' 'unmerged')${gap}$file $found_stat"
         [[ -n "$unmerged" ]] && unmerged="$unmerged\n" # Add new line
