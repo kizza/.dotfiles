@@ -18,7 +18,7 @@ function M.open_backdrop(zindex)
     zindex = zindex
   })
   vim.api.nvim_set_hl(0, "KizzaBackdrop", { bg = "#000000", default = true })
-  vim.api.nvim_set_option_value("winblend", 80, { scope = "local", win = backdrop_win })
+  vim.api.nvim_set_option_value("winblend", 60, { scope = "local", win = backdrop_win })
   vim.api.nvim_set_option_value("winhighlight", "Normal:KizzaBackdrop", { scope = "local", win = backdrop_win })
   vim.bo[backdrop_buf].buftype = "nofile"
   vim.bo[backdrop_buf].filetype = "kizza_backdrop"
@@ -26,10 +26,6 @@ function M.open_backdrop(zindex)
 end
 
 function M.build_input(on_submit)
-  local exists = pcall(vim.api.nvim_get_hl, 0, { name = "FindFilesBorder", link = true })
-  if not exists then
-    colours.hi("FindFilesBorder", { fg = 3 })
-  end
   return Input({
     position = "50%",
     size = { width = 60 },
@@ -41,7 +37,7 @@ function M.build_input(on_submit)
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:FindFilesBorder",
+      winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
     },
   }, {
     prompt = "  ",
