@@ -9,7 +9,7 @@ local start_italics=$'%{\x1b[3m%}'
 local end_italics=$'%{\x1b[0m%}'
 
 local user="%F{5}%n@%m:%f"
-[[ "$HOST" =~ "MacBook" ]] && user=""
+[[ "$HOST" =~ "Mac" ]] && user=""
 
 git_prompt()
 {
