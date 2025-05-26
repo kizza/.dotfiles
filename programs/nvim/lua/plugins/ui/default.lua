@@ -121,6 +121,12 @@ return {
             cterm_color = colours.yellow,
             name = "Erb",
           },
+          ["prawn"] = {
+            icon = "",
+            color = colours.get(colours.yellow),
+            cterm_color = colours.yellow,
+            name = "Prawn",
+          },
           ["sass"] = {
             icon = "",
             color = colours.get(colours.magenta),
