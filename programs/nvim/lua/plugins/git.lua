@@ -84,6 +84,7 @@ return {
           hi("GitSignsAddInline", { fg = colours.green, reverse = true })
           hi("GitSignsDeleteInline", { fg = colours.red, reverse = true })
           hi("GitSignsChangeInline", { fg = colours.magenta, reverse = true })
+          hi("GitSignsStagedChange", { fg = colours.darken(colours.magenta, 0.8) }) -- defaulted to deep blue?
         end
       }
     end
