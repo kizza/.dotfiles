@@ -18,6 +18,9 @@
   autoSetupRemote = true
 [pull]
   rebase = true
+[pretty]
+  custom = "%C(magenta)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(italic blue)%an%Creset"
+  other = "%C(magenta)%h%Creset %s %C(green)(%ar)%Creset %C(italic blue)%an"
 [secrets]
   providers = git secrets --aws-provider
   patterns = (A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}

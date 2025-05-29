@@ -34,7 +34,7 @@
                     <key>invisibles</key>
                     <string>#08000000</string>
                     <key>lineHighlight</key>
-                    <string>#12000000</string>
+                    <string>#08000000</string>
                     <key>selection</key>
                     <string>#0b000000</string>
                     <key>gutter</key>
@@ -216,7 +216,7 @@
                 <key>settings</key>
                 <dict>
                     <key>foreground</key>
-                    <string>#09000000</string>
+                    <string>#05000000</string>
                 </dict>
             </dict>
             <dict>
@@ -256,7 +256,7 @@
                 <key>name</key>
                 <string>Tags</string>
                 <key>scope</key>
-                <string>entity.name.tag</string>
+                <string>entity.name.tag, entity.name</string>
                 <key>settings</key>
                 <dict>
                     <key>foreground</key>
@@ -311,7 +311,7 @@
                 <key>name</key>
                 <string>Headings</string>
                 <key>scope</key>
-                <string>markup.heading punctuation.definition.heading, entity.name.section</string>
+                <string>markup.heading punctuation.definition.heading, entity.name.section, markup.heading - text.html.markdown</string>
                 <key>settings</key>
                 <dict>
                     <key>fontStyle</key>
