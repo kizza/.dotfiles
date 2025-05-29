@@ -1,7 +1,7 @@
 [alias]
   # Logs
-  l = log --color --graph --pretty=format:'%C(magenta)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(italic blue)%an%Creset' --abbrev-commit
-  ll = log --pretty=format:"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s" --stat
+  l = log --color --graph --pretty=custom --abbrev-commit
+  ll = log --pretty=format:"%C(magenta)%h%Creset %s %C(green)(%ar)%Creset %C(blue)%an" --stat
   l1 = !git l -n 1
   l2 = !git l -n 2
   l3 = !git l -n 3

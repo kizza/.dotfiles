@@ -1,5 +1,12 @@
 [color]
   ui = auto
+[color "log"]
+  commit = magenta
+  author = green cyan
+  date = yellow
+  summary = normal
+  ref = yellow
+  stat = yellow
 [color "branch"]
   current = yellow reverse
   local = yellow

@@ -30,6 +30,7 @@
     # file.".config/nvim/parser/ruby.so".source = "${pkgs.vimPlugins.nvim-treesitter.builtGrammars.tree-sitter-ruby}/parser";
     # file.".config/nvim/parser/javascript.so".source = "${pkgs.vimPlugins.nvim-treesitter.builtGrammars.tree-sitter-javascript}/parser";
     file.".config/nvim/after/queries/ruby/highlights.scm".text = builtins.readFile ../vim/after/queries/ruby/highlights.scm;
+    file.".config/nvim/after/queries/git_rebase/highlights.scm".text = builtins.readFile ../vim/after/queries/git_rebase/highlights.scm;
   };
 
   programs.neovim = {
