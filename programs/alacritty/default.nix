@@ -50,15 +50,15 @@
       font = {
         size = 18;
         normal = {
-          family = "SauceCodePro Nerd Font Mono";
+          family = "Maple Mono NF";
           style = "Regular";
         };
         bold = {
-          family = "SauceCodePro Nerd Font Mono";
+          family = "Maple Mono NF";
           style = "Bold";
         };
         italic = {
-          family = "SauceCodePro Nerd Font Mono";
+          family = "Maple Mono NF";
           style = "Italic";
         };
         offset = {
