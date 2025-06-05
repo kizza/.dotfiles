@@ -144,9 +144,11 @@ command! -bang -nargs=* Rgr call fzf#vim#grep("rg --column --line-number --no-he
 " Git
 " --------------------------------------------------------------------
 "
-command! GitContext execute("silent !gitcontext ".expand("%"))
+command! GitContext execute("silent !gitcontext ".expand("%:."))
 command! GitFile execute("silent !gitfile ".expand("%:.")." ".line("."))
 command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))
+command! GitFixup :lua require("scripts/create_fixup_commit").show()<CR>
+command! Blame execute("silent Gitsigns blame")
 
 nnoremap <silent> <leader>gs :GFiles?<CR>
 nnoremap <silent> <leader>gc :GitContext<CR>
@@ -162,31 +164,33 @@ nnoremap <leader>dl :diffget 4<CR>
 nnoremap <silent> <leader>fs :execute("silent !git add %")<CR>
 
 func! CustomAction()
-  let l:items = [
-    \ { 'word': 'Git Context', 'abbr': '1st', 'user_data': 'context' },
-    \ { 'word': 'Git File', 'abbr': '2nd', 'user_data': 'file' },
-    \ { 'word': 'Git Sha', 'abbr': '2nd', 'user_data': 'sha' },
-    \ ]
-
-  call actionmenu#open(
-    \ l:items,
-    \ { index, item -> CustomActionCallback(index, item) },
-    \ { 'icon': { 'character': '', 'foreground': 'yellow' } }
-    \ )
-endfunc
-
-func! CustomActionCallback(index, item)
-  if a:item['user_data'] == "context"
-    " execute("silent !gitcontext ".expand("%"))
-    GitContext
-  elseif a:item['user_data'] == "file"
-    GitFile
-    " execute("silent !gitfile ".expand("%"))
-  elseif a:item['user_data'] == "sha"
-    GitSha
-    " execute("silent !linesha ".expand("%")." ".line("."))
-    " echom "Copied sha"
-  endif
+  lua << EOF
+    require("contextmenu").open(
+      {
+        { word = ' Go to file (github)', user_data = 'file' },
+        { word = ' Show commits (github)', user_data = 'context' },
+        { word = '󰆏 Copy commit sha', user_data = 'sha' },
+        { word = '󰁨 Create fixup', user_data = 'fixup' },
+      },
+      function(item)
+        if item then
+          vim.notify("Selected " .. item.word)
+          if item.user_data == "context" then
+            vim.cmd("GitContext")
+          elseif  item.user_data == "file" then
+            vim.cmd("GitFile")
+          elseif item.user_data == "sha" then
+            vim.cmd("GitSha")
+          elseif item.user_data == "fixup" then
+            vim.schedule(function()
+              vim.cmd("GitFixup")
+            end)
+          end
+        end
+      end,
+      { icon = '' }
+    )
+EOF
 endfunc
 
 nnoremap <silent> <leader>G :call CustomAction()<CR>
