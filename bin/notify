@@ -1,1 +1,4 @@
-osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
+#!/usr/bin/env bash
+
+# ls /System/Library/Sounds (for sound names)
+osascript -e "display notification \"$2\" with title \"$1\" sound name \"Purr\""
