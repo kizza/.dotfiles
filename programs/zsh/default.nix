@@ -15,7 +15,7 @@
     syntaxHighlighting = {
       enable = true;
     };
-    initExtra = ''
+    initContent = ''
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./brew.sh}
         ${builtins.readFile ./direnv.sh}
