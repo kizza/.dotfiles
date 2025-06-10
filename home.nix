@@ -51,7 +51,6 @@ in
       cargo
       colima
       coreutils
-      maple-mono-NF
       overmind
       rustc
       solargraph
