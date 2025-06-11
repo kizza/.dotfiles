@@ -14,8 +14,13 @@ stdenv.mkDerivation rec {
 
   dontUnpack = true;
 
+  # infocmp was not returning my terminfo
+  # even though infocmp -D showed ~/.terminfo as a valid directory
+  # I *believe* it's because it wasn't compiled by the same `tic` binary
+  # I am using `/usr/bin/tic` directly to fix this for now
+  # ~${pkgs.ncurses}/bin/tic -x -o $out $src~
   installPhase = ''
-    tic -o $out $src
+    /usr/bin/tic -x -o $out $src
   '';
 
   meta = with lib; {
