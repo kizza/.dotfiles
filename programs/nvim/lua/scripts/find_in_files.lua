@@ -40,7 +40,7 @@ function M.build_input(on_submit)
       winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
     },
   }, {
-    prompt = "  ",
+    prompt = NuiText("  ", "NoiceCmdlineIcon"),
     default_value = "",
     on_submit = on_submit
   })
@@ -77,7 +77,7 @@ function M.find_in_files()
   local function toggle_mode()
     mode = mode == "normal" and "regex" or "normal"
     local display_mode = mode == "regex" and "Regex" or ""
-    input.border:set_text("bottom", NuiText(display_mode, "Comment"), "right")
+    input.border:set_text("bottom", NuiText(display_mode, "@variable.member"), "right")
   end
   M.assign_keymap(input, "<Tab>", toggle_mode)
 
