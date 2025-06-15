@@ -5,7 +5,7 @@ alias capture_unicode="xxd -psd"
 
 # Run cops/linters on branch files
 alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
-alias fasterb="since_master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erblint"
+alias fasterb="since_master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erb_lint"
 alias crystalball="bundle exec crystalball"
 
 function fastspec {
