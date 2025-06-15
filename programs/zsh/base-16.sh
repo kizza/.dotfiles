@@ -6,4 +6,4 @@ BASE16_SHELL_ENABLE_VARS="true"
         source "$BASE16_SHELL/profile_helper.sh"
 
 # BAT templates
-export BAT_THEME="base16"
+export BAT_THEME="my-base16"

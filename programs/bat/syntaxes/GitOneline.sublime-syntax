@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+name: Git Oneline
+file_extensions: [gitoneline]
+scope: source.gitoneline
+contexts:
+  main:
+    - match: '^([0-9a-f]{7,40})\s+(.*)$'
+      scope: meta.git.oneline
+      captures:
+        1: constant.numeric.git.sha
+        2: none

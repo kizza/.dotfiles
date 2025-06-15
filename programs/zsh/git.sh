@@ -57,9 +57,13 @@ function main() {
   git checkout $(trunk)
 }
 
+function build_fzf_preview {
+  echo "$1 | bat --color=always --style=plain $2"
+}
+
 # Fuzzy find the branch to switch to
 function branch() {
-  BRANCH=$(git branch --sort=-committerdate | fzf --height=50% --info=hidden --reverse | awk '{$1=$1;print}')
+  BRANCH=$(git branch --sort=-committerdate | fzf --height=50% --info=hidden --reverse --preview="$(build_fzf_preview 'git log {-1} --oneline' '--language=gitoneline')" | awk '{$1=$1;print}')
   if [ ! -z "$BRANCH" ]; then
     git checkout "$BRANCH"
   fi
