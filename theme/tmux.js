@@ -5,6 +5,13 @@ const time = "#(date '+%-I:%M')";
 const dir = "#{b:pane_current_path}";
 const prefix = "#{?client_prefix,#[fg=black]PREFIX,} #{?pane_in_mode,#[fg=black]COPY ,}";
 
+const separators = { left: '', right: '' };
+// const separators = { left: '', right: '' };
+
+const magnify = '󰍉'
+// const magnify = ' '
+
+
 const colours = dark => {
   const background = "black";
   let active = "green";
@@ -68,11 +75,11 @@ set -g status-left-length 4
 # Right side of status bar
 set -g status-right-style bg=${inactiveTabBg},fg=colour243
 set -g status-right-length 150
-set -g status-right "${prefix}#[fg=${segment1},bg=${inactiveTabBg}]#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]#[fg=colour18,bg=${segment3},bold] #S "
+set -g status-right "${prefix}#[fg=${segment1},bg=${inactiveTabBg}]${separators.right}#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]${separators.right}#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]${separators.right}#[fg=colour18,bg=${segment3},bold] #S "
 
 # Window status
-set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag, ,}"
-set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag, ,}"
+set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag,${magnify} ,}"
+set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag,${magnify} ,}"
 
 # Current window status
 set -g window-status-current-style bg=${activeTabBg},fg=${activeTabFg}
@@ -107,7 +114,7 @@ set -g message-style bg=${background},fg=${active}
 set -g message-command-style bg=red,fg=yellow
 
 # Mode
-set -g mode-style bg=${active},fg=colour231
+set -g mode-style bg=magenta,fg=colour231
 `;
 
 const homedir = require("os").homedir();
