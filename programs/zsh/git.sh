@@ -194,9 +194,9 @@ fixup() {
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   if [[ "$BRANCH" = "master" || "$BRANCH" = "main" ]]; then
     out=$(
-      git log HEAD~20 --graph --color=always  --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
+      git log -n 50 --graph --color=always  --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
-          --preview "echo 'Currently staged...\n' && git diff --cached --color" --toggle-sort=\`)
+          --preview "echo {} | cut -d ' ' -f2 | xargs git show --color" --toggle-sort=\`)
   else
     out=$(
       git log $(trunk).. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
