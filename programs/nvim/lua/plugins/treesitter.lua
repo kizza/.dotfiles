@@ -52,11 +52,6 @@ return {
       -- require("nvim-treesitter.install").compilers = { 'clang' }
       require("nvim-treesitter.configs").setup(opts)
 
-      local opt = vim.opt
-      opt.foldlevel = 20
-      opt.foldmethod = "expr"
-      opt.foldexpr = "nvim_treesitter#foldexpr()"
-
       -- Include eruby as embedded_template
       -- local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
       -- parser_config.embedded_template = {
