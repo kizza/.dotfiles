@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 with import <nixpkgs> {};
 
@@ -38,21 +38,19 @@ in
 {
   home = {
     file = {
-      ".config/tinted-theming/tinted-shell".source = tintedShell;
+      # Use activation below, to change permissions on file
+      # ".config/tinted-theming/tinted-shell".source = tintedShell;
+    };
 
-#       # Vim
-#       ".vim/colors/base16-solarized-lighter.vim".text = builtins.readFile ./themes/base16-solarized-lighter.vim;
-#       ".vim/colors/base16-atelier-dune-lighter.vim".text = builtins.readFile ./themes/base16-atelier-dune-lighter.vim;
-#       ".vim/colors/base16-gruvbox-dark-medium-custom.vim".text = builtins.readFile ./themes/base16-gruvbox-dark-medium-custom.vim;
-#       ".vim/colors/base16-joker.vim".text = builtins.readFile ./themes/base16-joker.vim;
-#       ".vim/colors/base16-tokyonight.vim".text = builtins.readFile ./themes/base16-tokyonight.vim;
-
-#       # Neovim
-#       ".config/nvim/colors/base16-solarized-lighter.vim".text = builtins.readFile ./themes/base16-solarized-lighter.vim;
-#       ".config/nvim/colors/base16-atelier-dune-lighter.vim".text = builtins.readFile ./themes/base16-atelier-dune-lighter.vim;
-#       ".config/nvim/colors/base16-gruvbox-dark-medium-custom.vim".text = builtins.readFile ./themes/base16-gruvbox-dark-medium-custom.vim;
-#       ".config/nvim/colors/base16-joker.vim".text = builtins.readFile ./themes/base16-joker.vim;
-#       ".config/nvim/colors/base16-tokyonight.vim".text = builtins.readFile ./themes/base16-tokyonight.vim;
+    activation = {
+      copyTintedShell = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        DIR="$HOME/.config/tinted-theming/tinted-shell"
+        rm -rf "$DIR"
+        mkdir -p "$DIR"
+        cp -r ${tintedShell}/. $DIR
+        find "$DIR" -type d -exec chmod 755 {} \;
+        find "$DIR" -type f -exec chmod 644 {} \;
+      '';
     };
   };
 }
