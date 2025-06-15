@@ -49,6 +49,27 @@ function sha_for_fixup_commit() {
   echo $RELATED_SHA
 }
 
+function rebasewith() {
+  local cmd="$1" sha="$2"
+
+  # If no SHA provided, use the commit after the merge base with main (first commit in branch)
+  [ -z "$sha" ] && sha=$(git cherry main -v | head -n 1 | awk '{print $2}')
+
+  # Prompt for continuation
+  heading "Start rebase with '$1'?"
+  git log -1 --oneline "$sha"
+  git log "$sha"..HEAD --oneline --reverse
+  echo -n "Would you like to continue? (y/n) " && read response
+
+  # Execute rebase with command
+  if [[ "$response" =~ ^[Yy]$ ]]; then
+    donebox "Executing rebase with command: $cmd"
+    git rebase "$sha" --exec "git show --stat --oneline && zsh -ic '$cmd'"
+  else
+    echo "Sure thing."
+  fi
+}
+
 function trunk() {
   git rev-parse --abbrev-ref origin/HEAD | sed 's/origin\///'
 }
