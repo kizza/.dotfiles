@@ -35,15 +35,6 @@ return {
     },
   },
   {
-    "kizza/jump-from-treesitter.nvim",
-    keys = {
-      { "gd", ":call jump_from_treesitter#jump()<CR>", desc = "Jump from treesitter" },
-    },
-    init = function()
-      vim.g.jump_from_treesitter_fallback = "lua vim.lsp.buf.definition()"
-    end
-  },
-  {
     "kizza/vim-reorder-buffers",
     keys = {
       { "<leader>gT", "<cmd>ShiftBufferLeft<cr>",  desc = "Shift buffers left" },
