@@ -133,7 +133,7 @@ function git_status_stat() {
         ;;
 
       "D ") # Deleted (staged)
-        local each_output="$(git_stylize 'Deleted' 'deleted')${gap}$file"
+        local each_output="$(git_stylize 'Deleted' 'added')${gap}$file"
         [[ -n "$staged" ]] && staged="$staged\n" # Add new line
         staged="$staged$indent$each_output"
         ;;
