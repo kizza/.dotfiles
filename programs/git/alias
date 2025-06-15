@@ -29,6 +29,7 @@
   files = diff-tree --no-commit-id --name-only -r
   fixup = commit --fixup
   main = checkout master
+  marker = commit --allow-empty -m
   master = checkout master
   pl = pull --rebase
   pu = push
