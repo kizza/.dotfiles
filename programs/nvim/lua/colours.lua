@@ -1,20 +1,19 @@
-local M              = {}
-local base16_colours = require('base16-colorscheme').colors;
+local M        = {}
 
 -- M.colour_names = { black = 0, red = 1, green = 2, yellow = 3, blue = 4, magenta = 5, cyan = 6, white = 7 }
-M.black              = 0
-M.red                = 1
-M.green              = 2
-M.yellow             = 3
-M.blue               = 4
-M.magenta            = 5
-M.cyan               = 6
-M.white              = 7
-M.colour_names       = { 0, 1, 2, 3, 4, 5, 6, 7 }
+M.black        = 0
+M.red          = 1
+M.green        = 2
+M.yellow       = 3
+M.blue         = 4
+M.magenta      = 5
+M.cyan         = 6
+M.white        = 7
+M.colour_names = { 0, 1, 2, 3, 4, 5, 6, 7 }
 
-M.dark_grey          = 18
-M.grey               = 19
-M.light_grey         = 20
+M.dark_grey    = 18
+M.grey         = 19
+M.light_grey   = 20
 
 local function cterm_to_base16(i)
   local mapping = {
@@ -46,6 +45,7 @@ end
 
 function M.get(i)
   if vim.opt.termguicolors:get() == false then return i end
+  local base16_colours = require('base16-colorscheme').colors;
 
   -- Translate cterm index value to base16 code suffix
   local base16_value = cterm_to_base16(i)
@@ -62,7 +62,7 @@ function M.get(i)
 end
 
 function M.debug(group_name)
-  local hl_group = vim.api.nvim_get_hl_by_name(group_name, true)
+  local hl_group = vim.api.nvim_get_hl(0, { name = group_name })
 
   -- Extract the foreground and background colors
   if hl_group.foreground then hl_group.foreground = string.format("#%06x", hl_group.foreground) end
@@ -77,7 +77,7 @@ Colour.__index = Colour
 function Colour.new(cterm)
   local self = setmetatable({}, Colour)
   if type(cterm) ~= "number" then
-    error("Cannot build colours from ".. cterm .. " (" .. type(cterm) ..")")
+    error("Cannot build colours from " .. cterm .. " (" .. type(cterm) .. ")")
   end
   if cterm < 0 or cterm > 21 or math.floor(cterm) ~= cterm then
     error("Invalid cterm value: must be an integer between 0 and 21")
@@ -137,9 +137,9 @@ end
 function M.transition_hex(start_hex, end_hex, percentage)
   percentage = math.max(0, math.min(percentage or 0, 1))
   local function hex_to_rgb(hex)
-    return tonumber(hex:sub(2,3),16),
-           tonumber(hex:sub(4,5),16),
-           tonumber(hex:sub(6,7),16)
+    return tonumber(hex:sub(2, 3), 16),
+        tonumber(hex:sub(4, 5), 16),
+        tonumber(hex:sub(6, 7), 16)
   end
 
   local function lerp(a, b, t)
@@ -156,7 +156,7 @@ function M.transition_hex(start_hex, end_hex, percentage)
   return string.format("#%02x%02x%02x", r, g, b)
 end
 
-function M.create_hi_autocmd()
+function M.create_user_command()
   -- Define the :Hi command
   vim.api.nvim_create_user_command("Hi", function(opts)
     -- Split the command args into group name and attributes

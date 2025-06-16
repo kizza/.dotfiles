@@ -143,7 +143,7 @@ command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%").
 command! GitFixup :lua require("scripts/create_fixup_commit").show()<CR>
 command! Blame execute("silent Gitsigns blame")
 
-nnoremap <silent> <leader>gs :GFiles?<CR>
+" nnoremap <silent> <leader>gs :GFiles?<CR> Using snacks now
 nnoremap <silent> <leader>gc :GitContext<CR>
 nnoremap <silent> <leader>gf :GitFile<CR>
 vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%:.")." ".line("'<")." ".line("'>"))<CR>
@@ -154,7 +154,7 @@ nnoremap <leader>dp :diffput 1<CR>
 nnoremap <leader>dh :diffget 2<CR>
 nnoremap <leader>dl :diffget 4<CR>
 
-nnoremap <silent> <leader>fs :execute("silent !git add %")<CR>
+" nnoremap <silent> <leader>fs :execute("silent !git add %")<CR>  using for find search history
 
 func! CustomAction()
   lua << EOF

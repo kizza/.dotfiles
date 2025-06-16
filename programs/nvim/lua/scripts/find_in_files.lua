@@ -17,9 +17,10 @@ function M.open_backdrop(zindex)
     focusable = false,
     zindex = zindex
   })
-  vim.api.nvim_set_hl(0, "KizzaBackdrop", { bg = "#000000", default = true })
-  vim.api.nvim_set_option_value("winblend", 60, { scope = "local", win = backdrop_win })
-  vim.api.nvim_set_option_value("winhighlight", "Normal:KizzaBackdrop", { scope = "local", win = backdrop_win })
+  -- vim.api.nvim_set_hl(0, "KizzaBackdrop",
+  --   { bg = colours.darken(0, 0.8, { to = "#000000" }).hex, blend = 30, default = true })
+  -- vim.api.nvim_set_option_value("winblend", 15, { scope = "local", win = backdrop_win })
+  -- vim.api.nvim_set_option_value("winhighlight", "Normal:KizzaBackdrop", { scope = "local", win = backdrop_win })
   vim.bo[backdrop_buf].buftype = "nofile"
   vim.bo[backdrop_buf].filetype = "kizza_backdrop"
   return backdrop_win
@@ -51,27 +52,35 @@ function M.assign_keymap(input, key, fun)
   input:map("i", key, function() fun() end, { noremap = true })
 end
 
+local function use_backdrop()
+  return vim.api.nvim_get_hl(0, { name = "Normal", link = false })["bg"] ~= nil
+end
+
 function M.find_in_files()
   local mode = "normal"
 
   local function on_submit(value)
     -- value = vim.fn.shellescape(value)
     if mode == "normal" then
-      local regex_escape_chars = ("[]()"):gsub(".", "%%" .. "%0") -- Escapes each char, for substitution below eg. %[%]%(%)
-      value = value:gsub("([" .. regex_escape_chars .. "])", "\\%1")
+      -- local regex_escape_chars = ("[]()"):gsub(".", "%%" .. "%0") -- Escapes each char, for substitution below eg. %[%]%(%)
+      -- value = value:gsub("([" .. regex_escape_chars .. "])", "\\%1")
+      -- value = escape_string(value)
     end
-    local command = "Rg " .. value
+
+    local command = "lua Snacks.picker.grep({ search = '" .. value .. "', live = false })"
+    -- local command = "Rg " .. value
     -- local command = "Telescope grep_string use_regex=true search=" .. value
-    vim.fn.histadd("cmd", command) -- Add to command history
-    vim.cmd(command)               -- Execute the command
+    -- vim.fn.histadd("cmd", command) -- Add to command history
+    vim.cmd(command) -- Execute the command
   end
 
   -- mount/open the component
   local input = M.build_input(on_submit)
-  local backdrop_win = M.open_backdrop(input._.win_config.zindex - 5)
+  local backdrop_win
+  if (use_backdrop()) then
+    backdrop_win = M.open_backdrop(input._.win_config.zindex - 5)
+  end
   input:mount()
-  colours.hi("MySpecialChar", { fg = colours.cyan })
-  vim.cmd [[syn match MySpecialChar ""]]
 
   -- Toggle mode with <Tab>
   local function toggle_mode()
@@ -90,7 +99,9 @@ function M.find_in_files()
   -- unmount component when cursor leaves buffer
   input:on(event.BufLeave, function()
     input:unmount()
-    vim.api.nvim_win_close(backdrop_win, true)
+    if (backdrop_win ~= nil) then
+      vim.api.nvim_win_close(backdrop_win, true)
+    end
   end)
 end
 
