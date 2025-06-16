@@ -67,8 +67,8 @@ nmap <silent> <leader>ib :edit %<CR>
 nmap <silent> <leader>iv :vsplit %<CR>
 
 " Copy buffer paths
-nmap <silent> cp :let @+ = expand("%")<CR>
-nmap <silent> cP :let @+ = expand("%") . ":" . line(".")<CR>
+nmap <silent> cp :let @+ = expand("%:.t")<CR>
+nmap <silent> cP :let @+ = expand("%:.t") . ":" . line(".")<CR>
 
 " Quick jump to buffer index
 func! BufferFromIndex(index)
