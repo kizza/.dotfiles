@@ -41,11 +41,13 @@ require("lazy").setup("plugins", {
   -- debug = true,
 })
 
+-- Allow listening to events asap
+require("autocmds")
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     vim.cmd("source ~/.config/nvim/config/mappings.vim")
-    require("autocmds")
     -- vim.cmd [[set runtimepath^=~/.vim runtimepath+=~/.vim/after]]
     -- vim.cmd [[let &packpath=&runtimepath]]
     -- vim.cmd [[source ~/.vimrc]]
