@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+target=$1
+
+if [ -z "$target" ]; then
+  echo "No path provided 🤔"
+  exit 1
+fi
+
+if [ ! -L "$target" ]; then
+  echo "It's already local 💡"
+  exit 1
+fi
+
+heading "Decouple $target?"
+echo "This will unlink it from it's upstream and leave it local"
+echo -n "Would you like to continue? (y/n) " && read response
+
+if [[ "$response" =~ ^[Yy]$ ]]; then
+  echo "Ok"
+  tmp=$(mktemp)
+  cp "$target" "$tmp" && rm "$target" && mv "$tmp" "$target"
+  donetick "Done. It's now local ✨"
+else
+  echo "Sure thing. Nothing touched 👌"
+fi
+
