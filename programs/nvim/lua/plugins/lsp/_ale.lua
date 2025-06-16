@@ -1,12 +1,13 @@
 return {
   "dense-analysis/ale",
+  enabled = false,
   event = "VeryLazy",
   init = function()
     vim.g.ale_fixers = {
-      ruby = {  'rubocop' },
+      ruby = { 'rubocop' },
     }
     vim.g.ale_linters = {
-      ruby = {  'rubocop', 'solargraph' },
+      ruby = { 'rubocop', 'solargraph' },
     }
 
     vim.g.ale_ruby_rubocop_executable = 'bundle'

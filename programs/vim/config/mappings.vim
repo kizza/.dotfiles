@@ -106,7 +106,7 @@ command! GitContext execute("silent !gitcontext ".expand("%"))
 command! GitFile execute("silent !gitfile ".expand("%")." ".line("."))
 command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))
 
-nnoremap <silent> <leader>gs :GFiles?<CR>
+" nnoremap <silent> <leader>gs :GFiles?<CR>  Using snacks
 nnoremap <silent> <leader>gc :GitContext<CR>
 nnoremap <silent> <leader>gf :GitFile<CR>
 vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%")." ".line("'<")." ".line("'>"))<CR>

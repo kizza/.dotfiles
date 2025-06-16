@@ -24,6 +24,7 @@ end
 function M.highlight()
   local colours = require("colours")
   local hi = colours.hi
+  hi("NotifyBackground", { bg = colours.black })
   hi("NotifyINFOIcon", { fg = colours.cyan })
   hi("NotifyDEBUGIcon", { fg = colours.magenta })
   hi("NotifyWARNIcon", { fg = colours.yellow })

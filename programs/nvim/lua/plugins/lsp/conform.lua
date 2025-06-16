@@ -2,6 +2,7 @@ return {
   "stevearc/conform.nvim",
   event = "VeryLazy",
   config = function()
+    -- This is called as a fallback from my lsp setup (if lsp doens't have formatting)
     require("conform").setup({
       formatters_by_ft = {
         ruby = { "rubocop" },

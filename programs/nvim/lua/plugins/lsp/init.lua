@@ -2,12 +2,15 @@ local M = {
   "neovim/nvim-lspconfig",
   lazy = false,
   dependencies = {
-    { import = "plugins.lsp.nvim-lint" },
+    -- { import = "plugins.lsp.nvim-lint" },
     { import = "plugins.lsp.conform" },
     { import = "plugins.lsp.mason" },
     -- { import = "plugins.lsp.null-ls" },
     -- { import = "plugins.lsp.ale" },
-  }
+  },
+  opts = {
+    document_highlight = { enabled = false },
+  },
 }
 
 function M.set_diagnostic_bindings()
@@ -41,6 +44,18 @@ function M.set_diagnostic_autocmds()
   })
   -- autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
   -- autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()
+end
+
+function M.disable_syntax_highlighting()
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("DisableSemanticHighlighting", { clear = true }),
+    callback = function(e)
+      local client = vim.lsp.get_client_by_id(e.data.client_id)
+      if client then
+        client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
+      end
+    end,
+  })
 end
 
 function M.format_asynchronously(bufnr)
@@ -140,7 +155,11 @@ function M.start_servers()
 
   lspconfig.solargraph.setup {
     cmd = { "bundle", "exec", "solargraph", "stdio" },
-    on_attach = M.on_attach,
+    -- on_attach = M.on_attach,
+    on_attach = function(client, bufnr)
+      -- print("solargraph is connected!")
+      M.on_attach(client, bufnr)
+    end,
     flags = {
       debounce_text_changes = 3000,
     },
@@ -155,15 +174,29 @@ function M.start_servers()
     },
   }
 
+  -- Debug active clients (and their properties)
+  -- lua print(vim.inspect(vim.lsp.get_active_clients()))
+  lspconfig.ruby_lsp.setup {
+    -- on_attach = function(client, bufnr)
+    --   client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
+    --   M.on_attach(client, bufnr)
+    -- end,
+    settings = {
+      rubyLsp = {
+        enabledFeatures = { "documentFormatting", "diagnostics", "hover", "completion" }
+      }
+    }
+  }
+
   local runtime_path = vim.split(package.path, ';')
   table.insert(runtime_path, 'lua/?.lua')
   table.insert(runtime_path, 'lua/?/init.lua')
 
   lspconfig.lua_ls.setup {
-    on_attach = function(client, bufnr)
-      client.server_capabilities.semanticTokensProvider = nil -- Remove flash of unstyled content
-      M.on_attach(client, bufnr)
-    end,
+    -- on_attach = function(client, bufnr)
+    --   client.server_capabilities.semanticTokensProvider = nil -- Remove flash of unstyled content
+    --   M.on_attach(client, bufnr)
+    -- end,
     settings = {
       Lua = {
         -- Disable telemetry
@@ -183,7 +216,9 @@ function M.start_servers()
           library = {
             -- Make the server aware of Neovim runtime files
             vim.fn.expand('$VIMRUNTIME/lua'),
-            vim.fn.stdpath('config') .. '/lua'
+            vim.fn.stdpath('config') .. '/lua',
+            vim.fn.stdpath('config') .. '/deps',
+            vim.fn.stdpath('data') .. '/lazy' -- include installed plugins
           }
         }
       }
@@ -240,11 +275,15 @@ end
 function M.has_lsp_formatter()
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
-  if #clients == 0 then return false end
+  if #clients == 0 then
+    vim.notify("No lsp clients to format", vim.log.levels.INFO, { title = "LSP" })
+    return false
+  end
 
   for _, client in ipairs(clients) do
     if client.server_capabilities.documentFormattingProvider then
       print(client.name .. " supports formatting")
+      vim.notify(client.name .. " supports formatting", vim.log.levels.INFO, { title = "LSP" })
       return true
     end
   end
@@ -256,15 +295,17 @@ function M.format()
     vim.lsp.buf.format { async = true }
     -- vim.notify("Formatted via lsp")
   else
+    vim.notify("Formatting via confirm", vim.log.levels.INFO, { title = "LSP" })
     require("conform").format()
     -- vim.notify("Formatted via confirm")
   end
 end
 
-function M.config()
+function M.config(_, opts)
   M.start_servers()
   M.set_diagnostic_bindings()
   -- M.set_diagnostic_autocmds()
+  M.disable_syntax_highlighting()
 
   vim.api.nvim_create_user_command(
     "Format",
@@ -290,8 +331,15 @@ function M.config()
     --   prefix = '●', -- Could be '■', '▎', 'x'
     -- },
     severity_sort = true,
+    -- float = {
+    --   source = "always", -- Or "if_many"
+    -- },
     float = {
-      source = "always", -- Or "if_many"
+      format = function(diagnostic)
+        -- print(vim.inspect(diagnostic))
+        local client = diagnostic.source or "LSP?"
+        return string.format("[%s] %s", client, diagnostic.message)
+      end,
     },
   })
 
