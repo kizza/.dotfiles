@@ -32,6 +32,7 @@ return {
         },
         opts = {
           win_options = {
+            winblend = 0, -- for transparency
             winhighlight = {
               FloatBorder = "FloatBorder",
               FloatTitle = "FloatTitle",
@@ -39,8 +40,9 @@ return {
           },
         },
       },
+
       popupmenu = {
-        enabled = true,
+        enabled = false,
       },
 
       messages = {
@@ -91,20 +93,25 @@ return {
       -- hi NoiceCmdlinePrompt ctermbg=red ctermfg=green
       -- hi NoiceCmdlinePopupTitle ctermbg=0 ctermfg=magenta
       -- hi NoiceCmdlinePopupBorder ctermbg=0 ctermfg=magenta
-      vim.cmd [[
-        hi link NoiceCmdlinePopupTitle FloatTitle
-        hi link NoiceCmdlinePopupBorder FloatBorder
-        hi link NoiceCmdlinePopupTitleSearch FloatTitle
-        hi link NoiceCmdlinePopupBorderSearch FloatBorder
-        hi link NoiceConfirmBorder FloatBorder
-        hi link NoiceCmdlineIconSearch NoiceCmdlineIcon
-        hi clear NoiceConfirm
-      ]]
+
+      -- vim.cmd [[
+      --   hi link NoiceCmdlinePopupTitle FloatTitle
+      --   hi link NoiceCmdlinePopupBorder FloatBorder
+      --   hi link NoiceCmdlinePopupTitleSearch FloatTitle
+      --   hi link NoiceCmdlinePopupBorderSearch FloatBorder
+      --   hi link NoiceConfirmBorder FloatBorder
+      --   hi link NoiceCmdlineIconSearch NoiceCmdlineIcon
+      --   hi clear NoiceConfirm
+      -- ]]
 
       local colours = require("colours")
       local hi = colours.hi
       hi("NoiceFormatConfirmDefault", { fg = 0, bg = colours.magenta, bold = true })
-      hi("NoiceCmdlineIcon", { fg = colours.cyan, bg = 0 })
+      hi("NoiceCmdlinePopup", { bg = 18 })
+      hi("NoiceCmdlineIcon", { fg = colours.cyan, bg = 18 })
+
+      local _icon, lua_blue = require("nvim-web-devicons").get_icon_color_by_filetype("lua")
+      vim.api.nvim_set_hl(0, "NoiceCmdlineIconLua", { ctermfg = 4, fg = lua_blue, default = false })
     end,
   }
 }

@@ -67,6 +67,8 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
+require("colours").create_user_command()
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),

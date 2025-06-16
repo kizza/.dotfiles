@@ -5,7 +5,23 @@ local darken = theme.darken
 local black, red, green, yellow, blue, magenta, cyan, white = unpack(theme.colour_names)
 
 function M.setup()
-  hi("CursorLine", { bg = darken(4, 0.9) })
+  -- Transparency
+  vim.cmd [[
+    hi clear Normal
+    hi clear NormalNC
+    hi clear NormalFloat
+    hi clear TabLineFill " Set by base16-colorscheme (nvim -V1 then `verbose hi TabLineFill`)
+    hi clear StatusLine
+
+    hi Normal guibg=NONE
+    hi link NormalNC Normal
+    hi link TabLineFill Normal
+  ]]
+  --hi("Normal", { bg = 0 })
+  hi("NormalFloat", { bg = 18 })
+
+  hi("CursorLine", { bg = darken(4, 0.86) })
+  vim.cmd [[hi clear CursorLineNr | hi link CursorLineNr CursorLine]]
   hi("Visual", { bg = darken(5, 0.8) })
   hi("Identifier", { fg = 21 }) -- Includes (shVariable)
   hi("Comment", { fg = 8, italic = true })
@@ -29,10 +45,11 @@ function M.setup()
   hi("SpellLocal", { fg = yellow, undercurl = true })
 
   hi("VertSplit", { fg = 19 })
+  hi("Folded", { fg = 3 })
   -- hi("NormalFloat", { link = "Normal" })
-  hi("NormalFloat", { bg = 18 })
+  -- hi("NormalFloat", { bg = 18 })
   hi("FloatTitle", { fg = magenta, bg = 18 })
-  hi("FloatBorder", { fg = darken(yellow, 0.7), bg = 18 })
+  hi("FloatBorder", { fg = darken(yellow, 0.2), bg = 18 })
   hi("FloatTransparent", { bg = nil })
   hi("WinSeparator", { link = "VertSplit" }) -- as per neovim .10
 
@@ -89,7 +106,7 @@ function M.setup()
   hi("@function.method", { fg = blue })
   hi("@function.method.call", { fg = blue })
 
-  hi("@keyword", { fg = 17 })
+  hi("@keyword", { fg = 6, italic = true })
   hi("@keyword.function", { fg = 17 })
   hi("@keyword.return", { fg = 17, italic = true })
   hi("@constant.builtin", { fg = 17, italic = true })

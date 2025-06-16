@@ -88,6 +88,7 @@ return {
           -- Highlights
           local colours = require("colours")
           local hi = colours.hi
+          hi("GitSignsAdd", { fg = 2, bg = colours.darken(2, 0.9) })
           hi("GitSignsChange", { link = "DiffChange" })
           hi("GitSignsAddInline", { fg = colours.green, reverse = true })
           hi("GitSignsDeleteInline", { fg = colours.red, reverse = true })

@@ -1,8 +1,7 @@
-local picker = require("snacks.picker")
 local M = {}
 
 function M.show()
-  picker.git_log({
+  require("snacks.picker").git_log({
     title = "Select fixup",
     current_line = true,
     actions = {

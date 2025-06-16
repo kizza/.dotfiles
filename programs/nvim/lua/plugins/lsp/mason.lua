@@ -1,22 +1,24 @@
 return {
   "williamboman/mason-lspconfig",
-  lazy = false,
+  -- lazy = true,
+  event = "VeryLazy",
   dependencies = {
     {
       "williamboman/mason.nvim",
-      lazy = false,
+      lazy = true,
       build = ":MasonUpdate"
     }
   },
   config = function()
     require('mason').setup({})
     require('mason-lspconfig').setup({
+      automatic_enable = false,
       ensure_installed = {
         'ts_ls',
         'eslint',
         'lua_ls',
         'html',
-        'cssls'
+        'ruby_lsp',
       }
     })
 
