@@ -41,6 +41,54 @@ function M.refresh()
   require("lualine.highlight").create_highlight_groups(M.build_theme())
 end
 
+function M.build_spinner(opts)
+  local defaults = {
+    -- label = " Asking...",
+    symbols = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+  }
+  opts = vim.tbl_extend("force", defaults, opts or {})
+  opts.symbol_size = #opts.symbols
+
+  local C = require("lualine.component"):extend()
+  C.processing = false
+  C.label = nil
+  C.spinner_index = 1
+
+  -- Initializer
+  function C:init(options)
+    C.super.init(self, options)
+
+    local group = vim.api.nvim_create_augroup("CodeCompanionHooks", {})
+
+    vim.api.nvim_create_autocmd({ "User" }, {
+      -- pattern = "CodeCompanionRequest*",
+      pattern = "CodeCompanion*",
+      group = group,
+      callback = function(request)
+        if request.match == "CodeCompanionChatSubmitted" or request.match == "CodeCompanionRequestStarted" then
+          self.processing = true
+          self.label = " Asking"
+        elseif request.match == "CodeCompanionChatStopped" or request.match == "CodeCompanionRequestFinished" then
+          self.processing = false
+          self.label = nil
+        end
+      end,
+    })
+  end
+
+  -- Function that runs every time statusline is updated
+  function C:update_status()
+    if self.label then
+      self.spinner_index = (self.spinner_index % opts.symbol_size) + 1
+      return opts.symbols[self.spinner_index] .. self.label
+    else
+      return nil
+    end
+  end
+
+  return C
+end
+
 function M.config(_, opts)
   local filename_section = {
     'filename',
@@ -80,7 +128,10 @@ function M.config(_, opts)
       },
       lualine_c = { filename_section },
       lualine_x = { 'diagnostics', { 'filetype', colored = true } },
-      lualine_y = { { 'progress' } },
+      lualine_y = {
+        { M.build_spinner() },
+        { 'progress' }
+      },
       lualine_z = { line_location_section }
     },
     inactive_sections = {
