@@ -28,8 +28,16 @@ return {
     keys = {
       { "<leader>gm", "<cmd>GitMessenger<cr>", desc = "Open git messenger" },
     },
-    init = function()
+    config = function()
       vim.g.git_messenger_always_into_popup = 1
+      vim.g.git_messenger_floating_win_opts = { border = 'single' }
+      vim.g.git_messenger_popup_content_margins = false
+      vim.cmd [[
+        hi link gitmessengerPopupNormal NormalFloat " window
+        hi link gitmessengerHeader DiffChange " titles
+        hi link gitmessengerHash @constant " commit sha
+        hi link gitmessengerHistory @keyword " history counter index
+      ]]
     end
   },
   {
