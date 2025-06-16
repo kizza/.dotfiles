@@ -1,22 +1,27 @@
+local cache
+
 -- Walk thr provided string through treesitter syntax portions
 -- to build a table of { text, highlight } pairs
----@param result table
 ---@param s string
 ---@param lnum number
----@param coloff? number
-local function fold_virt_text(result, s, lnum, coloff)
+---@param coloff? number The left prefix offset to captures highlights from
+local function fold_virt_text(s, lnum, coloff)
+  local cached = cache:get(s)
+  if cached then return cached end
+
   if not coloff then coloff = 0 end
 
+  local rendered = {}
   local text = ""
   local hl
   for i = 1, #s do
     local char = s:sub(i, i)
     local hls = vim.treesitter.get_captures_at_pos(0, lnum, coloff + i - 1)
-    local _hl = hls[#hls]
+    local _hl = hls[#hls] -- use the last (of many) highlights
     if _hl then
       local new_hl = "@" .. _hl.capture
       if new_hl ~= hl then
-        table.insert(result, { text, hl })
+        table.insert(rendered, { text, hl })
         text = ""
         hl = nil
       end
@@ -26,7 +31,10 @@ local function fold_virt_text(result, s, lnum, coloff)
       text = text .. char
     end
   end
-  table.insert(result, { text, hl })
+  table.insert(rendered, { text, hl })
+
+  cache:set(s, rendered) -- cache for next time
+  return rendered
 end
 
 ---@return table
@@ -37,11 +45,11 @@ function _G.custom_foldtext()
   local result = {}
 
   -- Insert virtual text
-  fold_virt_text(result, start, vim.v.foldstart - 1)
+  vim.list_extend(result, fold_virt_text(start, vim.v.foldstart - 1))
   table.insert(result, { " ", "FoldPillInverse" })
   table.insert(result, { "...", "FoldPill" })
   table.insert(result, { " ", "FoldPillInverse" })
-  fold_virt_text(result, end_, vim.v.foldend - 1, #(end_str:match("^(%s+)") or ""))
+  vim.list_extend(result, fold_virt_text(end_, vim.v.foldend - 1, #(end_str:match("^(%s+)") or "")))
 
   -- Insert label
   local fold_line_count = vim.v.foldend - vim.v.foldstart + 1
@@ -53,6 +61,10 @@ end
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
+    -- Initialize cache
+    local SimpleCache = require("scripts.simplecache")
+    cache = SimpleCache.new("folding")
+
     -- Highlights
     local theme = require("colours")
     theme.hi("FoldPill", { bg = 19 })
@@ -132,7 +144,7 @@ return {
 
       require('ufo').setup({
         fold_virt_text_handler = handler,
-        provider_selector = function(bufnr, filetype, buftype)
+        provider_selector = function(_bufnr, _filetype, _buftype)
           return { 'treesitter', 'indent' }
         end
       })
