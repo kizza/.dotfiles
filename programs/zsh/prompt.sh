@@ -13,18 +13,25 @@ local user="%F{5}%n@%m:%f"
 
 git_prompt()
 {
+  git -C ./ rev-parse 2>/dev/null || return # No git
+
+  local label="?"
+  local head
   head=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
   if [ $? -eq 0 ]; then
     if [[ $head != "HEAD" ]]; then
-      output=$head
+      label=$head
     else
-      rebase=$(cat $(git rev-parse --show-toplevel)/.git/rebase-merge/done | awk '{ print $1 " " substr($2,0,10) }')
-      if [[ $rebase != "" ]]; then
-        output=$(echo $rebase | tail -n1) # Could be several lines
+      local rebase_dir=$(git rev-parse --git-path rebase-merge 2>/dev/null)
+      if [[ -d $rebase_dir ]]; then
+        local rebase=$(cat "$rebase_dir/done" | awk '{ print $1 " " substr($2,0,10) }')
+        if [[ $rebase != "" ]]; then
+          label=$(echo $rebase | tail -n1) # Could be several lines
+        fi
       fi
     fi
-    echo '%F{4}  '$start_italics$output'%f'$end_italics
   fi
+  echo -n '%F{4}  '$start_italics$label'%f'$end_italics
 }
 
 nix_prompt () {
