@@ -19,8 +19,8 @@ nnoremap <Leader>l :Lazy<CR>
 
 " Yank from current cursor position till end of line
 noremap Y y$
+nmap gR gr$
 noremap <leader>y "+y
-
 
 " nnoremap <C-d> <C-d>zz
 " nnoremap <C-u> <C-u>zz
