@@ -147,6 +147,7 @@ fshow() {
   git log --graph --color=always \
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index \
+      --preview="git show {2} --color" \
       --bind=ctrl-s:toggle-sort \
       --bind "ctrl-w:execute:
                 (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show -w % | delta --paging never | less -R') << 'FZF-EOF'
