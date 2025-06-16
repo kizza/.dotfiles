@@ -46,7 +46,7 @@ in
       yarn
       zoxide
     ] ++ (if isDarwin then [
-      awscli
+      awscli2
       btop
       cargo
       colima
