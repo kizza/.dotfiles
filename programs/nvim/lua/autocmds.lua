@@ -73,9 +73,11 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "aerial-nav",
     "checkhealth",
+    "codecompanion",
     "help",
     "man",
     "fugitive",
+    "gitsigns-blame",
     "query",         -- InspectTree query
     "DiffviewFiles", -- InspectTree query
     "fugitiveblame",
