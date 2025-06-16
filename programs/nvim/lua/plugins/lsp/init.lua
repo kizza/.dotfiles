@@ -10,14 +10,6 @@ local M = {
   }
 }
 
-function M.set_diagnostic_signs()
-  local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-  for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl }) -- numhl = ""?
-  end
-end
-
 function M.set_diagnostic_bindings()
   vim.api.nvim_set_keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>',
     { noremap = true, silent = true })
@@ -271,7 +263,6 @@ end
 
 function M.config()
   M.start_servers()
-  M.set_diagnostic_signs()
   M.set_diagnostic_bindings()
   -- M.set_diagnostic_autocmds()
 
@@ -286,6 +277,14 @@ function M.config()
   vim.diagnostic.config({
     virtual_text = false,
     update_in_insert = false,
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = ' ',
+        [vim.diagnostic.severity.WARN] = ' ',
+        [vim.diagnostic.severity.HINT] = ' ',
+        [vim.diagnostic.severity.INFO] = ' ',
+      },
+    },
     -- virtual_text = {
     --   source = "always",  -- Or "if_many"
     --   prefix = '●', -- Could be '■', '▎', 'x'
