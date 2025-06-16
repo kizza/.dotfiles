@@ -2,6 +2,7 @@ local M = {
   'nvim-telescope/telescope.nvim',
   -- tag = '0.1.1',
   event = "VeryLazy",
+  enabled = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-fzf-native.nvim",
@@ -75,32 +76,34 @@ function M.config(_, opts)
   require('telescope').setup(opts)
 
   local builtin = require('telescope.builtin')
-  vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-  vim.keymap.set('n', '<leader>fr', builtin.resume, {})
-  vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-  vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-  vim.keymap.set('n', '<leader>fl', builtin.current_buffer_fuzzy_find, {})
-  vim.keymap.set('n', '<C-b>', builtin.buffers, {})
-  vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
+  -- vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+  -- vim.keymap.set('n', '<leader>fr', builtin.resume, {})
+  -- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live greppy" })
+  -- vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+  -- vim.keymap.set('n', '<leader>fl', builtin.current_buffer_fuzzy_find, {})
+  -- vim.keymap.set('n', '<C-b>', builtin.buffers, {})
+  -- vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
   vim.keymap.set('n', '<leader>ft', builtin.treesitter, {})
   vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-  vim.keymap.set('n', '<leader>fm', builtin.marks, {})
-  vim.keymap.set('n', '<leader>fc', builtin.git_commits, {})
-  vim.keymap.set('n', '<leader>fu', builtin.grep_string, {})
+  -- vim.keymap.set('n', '<leader>fm', builtin.marks, {})
+  -- vim.keymap.set('n', '<leader>fc', builtin.git_commits, {})
+  -- vim.keymap.set('n', '<leader>fu', builtin.grep_string, {})
   -- vim.keymap.set('n', '<leader>fu', function() builtin.live_grep { default_text = vim.fn.expand('<cword>') } end, {})
   -- vim.keymap.set('n', '<leader>fu', function() vim.cmd("Rg " .. vim.fn.expand('<cword>')) end, {})
-  vim.keymap.set('n', '<C-p>',
-    function()
-      local opts = { show_untracked = true }
-      vim.fn.system('git rev-parse --is-inside-work-tree')
-      if vim.v.shell_error == 0 then
-        require "telescope.builtin".git_files(opts)
-      else
-        require "telescope.builtin".find_files(opts)
-      end
-    end,
-    {}
-  )
+
+  -- Trying snacks
+  -- vim.keymap.set('n', '<C-p>',
+  --   function()
+  --     local opts = { show_untracked = true }
+  --     vim.fn.system('git rev-parse --is-inside-work-tree')
+  --     if vim.v.shell_error == 0 then
+  --       require "telescope.builtin".git_files(opts)
+  --     else
+  --       require "telescope.builtin".find_files(opts)
+  --     end
+  --   end,
+  --   {}
+  -- )
 
   M.highlight()
 end

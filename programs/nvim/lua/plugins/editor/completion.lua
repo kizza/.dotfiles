@@ -162,7 +162,7 @@ function M.opts()
       end, { "i", "s" }),
 
 
-      -- Up and down are reversed for serach and command (as are sequenced 'near_cursor'
+      -- Up and down are reversed for search and command (as are sequenced 'near_cursor'
       -- (though this itself is reversed when using noice!)
       ['<C-n>'] = cmp.mapping({
         c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),

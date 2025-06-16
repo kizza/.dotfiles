@@ -24,6 +24,15 @@
 ; The :: between symbols (TSType)
 (scope_resolution) @boolean
 
+; The "attribute" in an assignment on an object
+; eg. self.*this_bit_here* = foo
+((assignment
+  left: (call
+    receiver: (self)
+    method: (identifier) @custom.setter.method)
+  right: (_)) @custom.setter.assignment
+ (#set! priority 100))
+
 ; The class level methods (before_actoin or layout)
 (class
   (body_statement

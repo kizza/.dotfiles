@@ -8,7 +8,7 @@ end
 return {
   "mfussenegger/nvim-lint",
   event = "VeryLazy",
-  -- enabled = false,
+  enabled = false,
   config = function()
     require("lint").linters_by_ft = {
       ruby = { "rubocop" },

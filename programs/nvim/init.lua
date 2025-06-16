@@ -1,6 +1,9 @@
 require("settings")
 require("filetypes")
 
+-- Debug autocmds
+-- vim.opt.verbose = 9
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -20,7 +23,7 @@ require("lazy").setup("plugins", {
   -- install = { colorscheme = { "tokyonight" } },
   dev = {
     path = "~/Code/kizza",
-    fallback = false, -- Fallback to git when local plugin doesn't exist
+    fallback = true, -- Fallback to git when local plugin doesn't exist
   },
   checker = { enabled = true },
   change_detection = { notify = false },
