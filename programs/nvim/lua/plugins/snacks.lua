@@ -195,7 +195,7 @@ return {
       { "<leader>fl", function() Snacks.picker.lines() end,                             desc = "Find Lines" },
       { "<leader>fu", function() Snacks.picker.grep_word() end,                         desc = "Grep Word" },
       { "<leader>fg", function() Snacks.picker.grep() end,                              desc = "Grep" },
-      { "<leader>fc", function() Snacks.picker.git_log() end,                           desc = "Find Commit" },
+      { "<leader>fc", function() Snacks.picker.git_log_file() end,                      desc = "Find File Commit" },
       { "<leader>fm", function() Snacks.picker.marks() end,                             desc = "Find Mark" },
       { "<leader>fr", function() Snacks.picker.resume() end,                            desc = "Resume find" },
       { "<leader>fs", function() Snacks.picker.search_history() end,                    desc = "Find Recent Search" },
