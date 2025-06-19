@@ -4,7 +4,10 @@ local hi = theme.hi
 local darken = theme.darken
 local black, red, green, yellow, blue, magenta, cyan, white = unpack(theme.colour_names)
 
-function M.setup()
+---@type table<number, fun(): nil>
+local highlights = {}
+
+local function defaults()
   -- Transparency
   vim.cmd [[
     hi clear Normal
@@ -118,6 +121,36 @@ function M.setup()
 
   -- Typescript
   hi("@tag", { fg = 5 })
+end
+
+-- Allow providing styles from plugin specs for ease repainting
+---@param fn fun(): nil
+local function append(fn)
+  table.insert(highlights, fn)
+end
+
+-- Execute provided highlights function - and save for re-rnuning
+---@param fn fun(): nil
+function M.register(fn)
+  append(fn)
+  fn()
+end
+
+function M.setup()
+  -- Include our default highlight function
+  append(defaults)
+
+  -- Re-run when colorscheme changes
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = function() M.highlight() end,
+  })
+end
+
+-- Execute all the highlights functions
+function M.highlight()
+  for _, func in ipairs(highlights) do
+    func()
+  end
 end
 
 return M

@@ -104,14 +104,16 @@ return {
       --   hi clear NoiceConfirm
       -- ]]
 
-      local colours = require("colours")
-      local hi = colours.hi
-      hi("NoiceFormatConfirmDefault", { fg = 0, bg = colours.magenta, bold = true })
-      hi("NoiceCmdlinePopup", { bg = 18 })
-      hi("NoiceCmdlineIcon", { fg = colours.cyan, bg = 18 })
+      require("highlights").register(function()
+        local colours = require("colours")
+        local hi = colours.hi
+        hi("NoiceFormatConfirmDefault", { fg = 0, bg = colours.magenta, bold = true })
+        hi("NoiceCmdlinePopup", { bg = 18 })
+        hi("NoiceCmdlineIcon", { fg = colours.cyan, bg = 18 })
 
-      local _icon, lua_blue = require("nvim-web-devicons").get_icon_color_by_filetype("lua")
-      vim.api.nvim_set_hl(0, "NoiceCmdlineIconLua", { ctermfg = 4, fg = lua_blue, default = false })
+        local _icon, lua_blue = require("nvim-web-devicons").get_icon_color_by_filetype("lua")
+        vim.api.nvim_set_hl(0, "NoiceCmdlineIconLua", { ctermfg = 4, fg = lua_blue, default = false })
+      end)
     end,
   }
 }

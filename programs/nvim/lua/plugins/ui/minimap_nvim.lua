@@ -11,10 +11,12 @@ return {
       width = 10
     },
     config = function(_, opts)
-      local theme = require("colours")
-      theme.hi("MinimapNormal", { fg = 20 })
-      theme.hi("MinimapViewport", { fg = 7, bg = theme.darken(19, 0.7) })
-      theme.hi("MinimapCursorLine", { fg = 3, bg = theme.darken(3, 0.7) })
+      require("highlights").register(function()
+        local theme = require("colours")
+        theme.hi("MinimapNormal", { fg = 20 })
+        theme.hi("MinimapViewport", { fg = 7, bg = theme.darken(19, 0.7) })
+        theme.hi("MinimapCursorLine", { fg = 3, bg = theme.darken(3, 0.7) })
+      end)
 
       local minimap = require("minimap")
       minimap.setup(opts)
