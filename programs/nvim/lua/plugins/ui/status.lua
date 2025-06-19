@@ -145,4 +145,13 @@ function M.config(_, opts)
   }
 end
 
+function M.config(_, _opts)
+  build()
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = function()
+      vim.schedule(function() build() end)
+    end,
+  })
+end
+
 return M

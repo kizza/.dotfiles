@@ -8,21 +8,23 @@ return {
     config = function(_, opts)
       require('snacks').setup(opts)
 
-      local colours = require("colours")
-      -- colours.hi("SnacksIndent", { fg = 19 })
-      -- colours.hi("SnacksIndentScope", { fg = 20 }) -- Current
+      require("highlights").register(function()
+        local colours = require("colours")
+        -- colours.hi("SnacksIndent", { fg = 19 })
+        -- colours.hi("SnacksIndentScope", { fg = 20 }) -- Current
 
-      -- Find all available highlights with
-      -- Snacks.picker.highlights({pattern = "hl_group:^Snacks"})
-      vim.defer_fn(function()
-        colours.hi("SnacksPickerGitStatusUntracked", { fg = colours.cyan, italic = true })
-        colours.hi("SnacksPickerDir", { fg = 20 })
-        -- hi("SnacksPickerInputNormal", { bg = colours.black })
-        colours.hi("SnacksIndent", { fg = colours.darken(8, 0.4) })
-        colours.hi("SnacksPickerTree", { link = "SnacksIndent" })
-        colours.hi("SnacksIndentScope", { fg = colours.darken(5, 0.1) }) -- Current
-        colours.hi("SnacksDashboardFile", { fg = 7 })                    -- Current
-      end, 100)
+        -- Find all available highlights with
+        -- Snacks.picker.highlights({pattern = "hl_group:^Snacks"})
+        vim.defer_fn(function()
+          colours.hi("SnacksPickerGitStatusUntracked", { fg = colours.cyan, italic = true })
+          colours.hi("SnacksPickerDir", { fg = 20 })
+          -- hi("SnacksPickerInputNormal", { bg = colours.black })
+          colours.hi("SnacksIndent", { fg = colours.darken(8, 0.4) })
+          colours.hi("SnacksPickerTree", { link = "SnacksIndent" })
+          colours.hi("SnacksIndentScope", { fg = colours.darken(5, 0.1) }) -- Current
+          colours.hi("SnacksDashboardFile", { fg = 7 })                    -- Current
+        end, 100)
+      end)
 
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd [[cab sp lua Snacks.picker]]
