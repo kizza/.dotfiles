@@ -275,5 +275,11 @@ Replace the CURRENT EXACT NAME with the best alternative at the PRECISE location
 
     -- Expand 'cc' into 'CodeCompanion' in the command line
     vim.cmd [[cab cc CodeCompanion]]
+
+    -- Style highlights
+    require("highlights").register(function()
+      local colours = require("colours")
+      colours.hi("CodeCompanionChatVariable", { fg = 6, bg = 0 })
+    end)
   end
 }
