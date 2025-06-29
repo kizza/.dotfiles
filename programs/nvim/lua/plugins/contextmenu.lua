@@ -1,7 +1,7 @@
 return {
   {
     -- "kizza/contextmenu.nvim",
-    dir = "~/Code/kizza/contextmenu.nvim",
+    dir = "~/Code/kizza/nvim/contextmenu.nvim",
     enabled = true,
     event = "VeryLazy",
     opts = {},
