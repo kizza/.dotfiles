@@ -3,7 +3,7 @@ return {
   -- { import = "plugins.navigation.telescope" },
   {
     -- "kizza/minimap.nvim",
-    dir = "~/Code/kizza/actionmenu.nvim",
+    dir = "~/Code/kizza/nvim/actionmenu.nvim",
     enabled = true,
     event = "VeryLazy",
     opts = {

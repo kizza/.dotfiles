@@ -22,7 +22,7 @@ require("lazy").setup("plugins", {
   defaults = { lazy = true },
   -- install = { colorscheme = { "tokyonight" } },
   dev = {
-    path = "~/Code/kizza",
+    path = "~/Code/kizza/nvim",
     fallback = true, -- Fallback to git when local plugin doesn't exist
   },
   checker = { enabled = true },
