@@ -28,7 +28,7 @@ M.dependencies = {
   -- "quangnguyen30192/cmp-nvim-ultisnips",
   {
     -- "kizza/cmp-rg-lsp",
-    dir = "~/Code/kizza/cmp-rg-lsp",
+    dir = "~/Code/kizza/nvim/cmp-rg-lsp",
   },
   {
     'tzachar/cmp-tabnine',
