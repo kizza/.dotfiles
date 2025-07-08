@@ -35,6 +35,7 @@ in
       docker
       entr
       eza
+      fastfetch
       fd
       fzf
       git-secrets
