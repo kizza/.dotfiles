@@ -75,11 +75,68 @@ return {
   -- },
   {
     "j-hui/fidget.nvim",
-    enabled = false,
     event = "VeryLazy",
-    opts = {
-      text = { spinner = "dots", done = "✔", commenced = "", completed = "" }
-    }
+    opts = function()
+      return {
+        progress = {
+          ignore = {
+            "ruby_lsp",
+          },
+        },
+        notification = {
+          view = {
+            icon_separator = " ",                   -- Separator between group name and icon
+            group_separator = "---",                -- Separator between notification groups
+            group_separator_hl = "FidgetSeparator", -- Highlight group used for group separator
+            render_message =                        -- How to render notification messages
+                function(msg, cnt)
+                  return cnt == 1 and msg or string.format("✨ (%dx) %s", cnt, msg)
+                end,
+          },
+          window = {
+            normal_hl = "Fidget",              -- Base highlight group in the notification window
+            winblend = vim.opt.winblend:get(), -- Background color opacity in the notification window
+            border = "none",                   -- Border around the notification window
+            zindex = 45,                       -- Stacking priority of the notification window
+            max_width = 0,                     -- Maximum width of the notification window
+            max_height = 0,                    -- Maximum height of the notification window
+            x_padding = 1,                     -- Padding from right edge of window boundary
+            y_padding = 0,                     -- Padding from bottom edge of window boundary
+            align = "bottom",                  -- How to align the notification window
+            relative = "editor",               -- What the notification window position is relative to
+          },
+          configs = {
+            {
+              annote_style = "Question",
+              debug_annote = "DEBUG",
+              debug_style = "Comment",
+              error_annote = "ERROR",
+              error_style = "ErrorMsg",
+              group_style = "Title",
+              icon = "❰❰",
+              icon_style = "Special",
+              info_annote = " ",
+              info_style = "Question",
+              name = "Notifications",
+              ttl = 5,
+              update_hook = function(item)
+                print(vim.inspect(item))
+              end,
+              warn_annote = "WARN",
+              warn_style = "WarningMsg"
+            }
+          }
+        }
+      }
+    end,
+    config = function(_, opts)
+      require("fidget").setup(opts)
+      local theme = require("colours")
+      require("highlights").register(function()
+        theme.hi("Fidget", { bg = 18, fg = 8 })
+        theme.hi("FidgetSeparator", { bg = 0, fg = 6 })
+      end)
+    end
   },
   {
     "nvim-tree/nvim-web-devicons",
