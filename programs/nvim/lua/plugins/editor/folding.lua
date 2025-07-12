@@ -58,38 +58,44 @@ function _G.custom_foldtext()
   return result
 end
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "VeryLazy",
-  callback = function()
-    -- Initialize cache
-    local SimpleCache = require("scripts.simplecache")
-    cache = SimpleCache.new("folding")
+local function configure_folding()
+  -- Initialize cache
+  local SimpleCache = require("scripts.simplecache")
+  cache = SimpleCache.new("folding")
 
-    -- Highlights
+  -- Highlights
+  require("highlights").register(function()
     local theme = require("colours")
     theme.hi("FoldPill", { bg = 19 })
     theme.hi("FoldPillInverse", { fg = 19 })
     theme.hi("FoldInfo", { italic = true })
+  end)
 
-    -- Beahviour
-    local opt = vim.opt
-    opt.foldmethod = "expr" -- Use expression-based folding
-    opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    opt.foldtext = "v:lua.custom_foldtext()"
-    opt.foldenable = false -- Disable folding by default (folds open)
-    opt.foldlevel = 20
+  -- Beahviour
+  local opt = vim.opt
+  opt.foldmethod = "expr" -- Use expression-based folding
+  opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  opt.foldtext = "v:lua.custom_foldtext()"
+  opt.foldenable = false -- Disable folding by default (folds open)
+  opt.foldlevel = 20
 
-    -- Keybindings
-    vim.cmd [[
-      " z fold index shortcuts
-      " nmap <silent> zj za
-      " nmap <silent> zk za
-      for i in range(0, 9)
-        execute "nnoremap <leader>z" . i . " :set foldlevel=". i . "<CR>"
-      endfo
-    ]]
-  end,
-})
+  -- Keybindings
+  vim.cmd [[
+    " z fold index shortcuts
+    " nmap <silent> zj za
+    " nmap <silent> zk za
+    for i in range(0, 9)
+      execute "nnoremap <leader>z" . i . " :set foldlevel=". i . "<CR>"
+    endfo
+  ]]
+end
+
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "VeryLazy",
+--   callback = function()
+configure_folding() -- seems this needs to get in early?
+-- end
+-- })
 
 return {
   {
