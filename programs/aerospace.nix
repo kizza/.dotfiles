@@ -97,6 +97,11 @@ in
           check-further-callbacks = false;
         }
         {
+          "if" = {app-id = "com.google.chrome.for.testing";};
+          run = ["layout floating"];
+          check-further-callbacks = false;
+        }
+        {
           "if" = {app-id = "com.microsoft.Outlook";};
           run = ["move-node-to-workspace 3 --focus-follows-window"];
           check-further-callbacks = false;
