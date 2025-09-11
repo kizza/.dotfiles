@@ -181,6 +181,13 @@ function M.start_servers()
     --   client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
     --   M.on_attach(client, bufnr)
     -- end,
+    init_options = {
+      addonSettings = {
+        ["Ruby LSP Rails"] = {
+          enablePendingMigrationsPrompt = false,
+        },
+      }
+    },
     settings = {
       rubyLsp = {
         enabledFeatures = { "documentFormatting", "diagnostics", "hover", "completion" }
