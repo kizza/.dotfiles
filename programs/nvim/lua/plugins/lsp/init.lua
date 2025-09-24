@@ -141,9 +141,6 @@ function M.format_publish_diagnostics(err, result, ctx, config)
 end
 
 function M.start_servers()
-  local use_solargraph_diagnostics = false
-  local lspconfig = require("lspconfig")
-
   -- Diagnostics range not as good as null-ls
   -- lspconfig.rubocop.setup {
   --   cmd = {"bundle", "exec", "rubocop", "--lsp"},
@@ -153,30 +150,36 @@ function M.start_servers()
   --   },
   -- }
 
-  lspconfig.solargraph.setup {
-    cmd = { "bundle", "exec", "solargraph", "stdio" },
-    -- on_attach = M.on_attach,
-    on_attach = function(client, bufnr)
-      -- print("solargraph is connected!")
-      M.on_attach(client, bufnr)
-    end,
-    flags = {
-      debounce_text_changes = 3000,
-    },
-    settings = {
-      solargraph = {
-        diagnostics = use_solargraph_diagnostics,
-        max_files = 6000
+  local use_solargraph_diagnostics = false
+  local use_solargraph = false
+
+  if use_solargraph then
+    vim.lsp.config('solargraph', {
+      cmd = { "bundle", "exec", "solargraph", "stdio" },
+      -- on_attach = M.on_attach,
+      on_attach = function(client, bufnr)
+        -- print("solargraph is connected!")
+        M.on_attach(client, bufnr)
+      end,
+      flags = {
+        debounce_text_changes = 3000,
       },
-    },
-    init_options = {
-      formatting = use_solargraph_diagnostics,
-    },
-  }
+      settings = {
+        solargraph = {
+          diagnostics = use_solargraph_diagnostics,
+          max_files = 6000
+        },
+      },
+      init_options = {
+        formatting = use_solargraph_diagnostics,
+      },
+    })
+    vim.lsp.enable('solargraph')
+  end
 
   -- Debug active clients (and their properties)
   -- lua print(vim.inspect(vim.lsp.get_active_clients()))
-  lspconfig.ruby_lsp.setup {
+  vim.lsp.config('ruby_lsp', {
     -- on_attach = function(client, bufnr)
     --   client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
     --   M.on_attach(client, bufnr)
@@ -190,16 +193,23 @@ function M.start_servers()
     },
     settings = {
       rubyLsp = {
-        enabledFeatures = { "documentFormatting", "diagnostics", "hover", "completion" }
-      }
-    }
-  }
+        enabledFeatures = { "documentFormatting", "diagnostics", "hover", "completion" },
+      },
+    },
+    -- cmd = nil, -- use existing server
+    -- transport = {
+    --   type = "tcp",
+    --   host = "127.0.0.1",
+    --   port = 7777,
+    -- }
+  })
+  vim.lsp.enable('ruby_lsp')
 
   local runtime_path = vim.split(package.path, ';')
   table.insert(runtime_path, 'lua/?.lua')
   table.insert(runtime_path, 'lua/?/init.lua')
 
-  lspconfig.lua_ls.setup {
+  vim.lsp.config('lua_ls', {
     -- on_attach = function(client, bufnr)
     --   client.server_capabilities.semanticTokensProvider = nil -- Remove flash of unstyled content
     --   M.on_attach(client, bufnr)
@@ -230,20 +240,22 @@ function M.start_servers()
         }
       }
     }
-  }
+  })
+  vim.lsp.enable('lua_ls')
 
-  lspconfig.eslint.setup {
+  vim.lsp.config('eslint', {
     on_attach = function(client, bufnr)
       -- Eslint requires us to tell it to support formatting
       client.server_capabilities.documentFormattingProvider = true
       client.handlers["textDocument/publishDiagnostics"] = M.format_publish_diagnostics
       M.on_attach(client, bufnr)
     end
-  }
+  })
+  vim.lsp.enable('eslint')
 
   -- lspconfig.tailwindcss.setup { on_attach = M.on_attach }
 
-  lspconfig.ts_ls.setup {
+  vim.lsp.config('ts_ls', {
     on_attach = function(client, bufnr)
       -- I don't like this one formatting
       client.server_capabilities.documentFormattingProvider = false
@@ -276,7 +288,8 @@ function M.start_servers()
         importModuleSpecifierPreference = "non-relative",
       },
     }
-  }
+  })
+  vim.lsp.enable('ts_ls')
 end
 
 function M.has_lsp_formatter()
