@@ -294,7 +294,7 @@ end
 
 function M.has_lsp_formatter()
   local bufnr = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   if #clients == 0 then
     vim.notify("No lsp clients to format", vim.log.levels.INFO, { title = "LSP" })
     return false
@@ -302,8 +302,8 @@ function M.has_lsp_formatter()
 
   for _, client in ipairs(clients) do
     if client.server_capabilities.documentFormattingProvider then
-      print(client.name .. " supports formatting")
-      vim.notify(client.name .. " supports formatting", vim.log.levels.INFO, { title = "LSP" })
+      -- print(client.name .. " supports formatting")
+      -- vim.notify(client.name .. " supports formatting", vim.log.levels.INFO, { title = "LSP" })
       return true
     end
   end
