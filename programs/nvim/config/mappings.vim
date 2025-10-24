@@ -70,6 +70,9 @@ nmap <silent> <leader>iv :vsplit %<CR>
 nmap <silent> cp :let @+ = expand("%:.t")<CR>
 nmap <silent> cP :let @+ = expand("%:.t") . ":" . line(".")<CR>
 
+" Copy ruby module path
+nmap <silent> <leader>cm :lua require("scripts/copy_ruby_module_path").copy()<CR>
+
 " Quick jump to buffer index
 func! BufferFromIndex(index)
   let l:lines = split(execute('ls'), "\n")
