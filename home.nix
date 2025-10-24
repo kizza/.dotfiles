@@ -30,6 +30,7 @@ in
     stateVersion = "22.05";
     packages = with pkgs; [
       _1password-cli
+      cargo
       cloudflared
       delta
       docker
@@ -49,7 +50,6 @@ in
     ] ++ (if isDarwin then [
       awscli2
       btop
-      cargo
       colima
       coreutils
       overmind
