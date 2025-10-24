@@ -1,8 +1,7 @@
 local fmt = string.format
 
 return {
-  -- "olimorris/codecompanion.nvim",
-  dir = "~/Code/kizza/nvim/codecompanion.nvim",
+  "olimorris/codecompanion.nvim",
   event = "VeryLazy",
   opts = {
     display = {

@@ -2,8 +2,9 @@ return {
   -- { import = "plugins.navigation.tree" }, -- Using snacks isntead
   -- { import = "plugins.navigation.telescope" },
   {
-    -- "kizza/minimap.nvim",
-    dir = "~/Code/kizza/nvim/actionmenu.nvim",
+    "kizza/actionmenu.nvim",
+    branch = "v2",
+    dev = true,
     enabled = true,
     event = "VeryLazy",
     opts = {
@@ -253,16 +254,6 @@ return {
         hi fzf3 ctermfg=lightgrey ctermbg=black
       ]]
     end
-  },
-  {
-    import = "funs.tabs"
-    -- "willothy/nvim-cokeline",
-    -- dependencies = {
-    --   "nvim-lua/plenary.nvim",       -- Required for v0.4.0+
-    --   "nvim-tree/nvim-web-devicons", -- If you want devicons
-    --   "stevearc/resession.nvim"      -- Optional, for persistent history
-    -- },
-    -- config = true
   },
   {
     -- A well-integrated, low-configuration buffer list that lives in the tabline

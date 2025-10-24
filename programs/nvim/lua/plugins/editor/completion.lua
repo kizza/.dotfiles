@@ -27,10 +27,6 @@ M.dependencies = {
   -- "SirVer/ultisnips",
   -- "quangnguyen30192/cmp-nvim-ultisnips",
   {
-    -- "kizza/cmp-rg-lsp",
-    dir = "~/Code/kizza/nvim/cmp-rg-lsp",
-  },
-  {
     'tzachar/cmp-tabnine',
     build = './install.sh',
     config = function()

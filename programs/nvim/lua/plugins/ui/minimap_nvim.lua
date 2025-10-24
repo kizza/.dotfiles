@@ -1,7 +1,8 @@
 return {
   {
-    -- "kizza/minimap.nvim",
-    dir = "~/Code/kizza/nvim/minimap.nvim",
+    "kizza/minimap.nvim",
+    branch = "dev",
+    dev = true,
     enabled = true,
     -- event = "VeryLazy",
     -- event = { "BufEnter", "BufReadPost", "BufNewFile" },

@@ -18,7 +18,7 @@ return {
         'eslint',
         'lua_ls',
         'html',
-        'ruby_lsp',
+        -- 'ruby_lsp', -- doesn't build in debian?
       }
     })
 
