@@ -50,33 +50,35 @@ return {
       },
     },
     adapters = {
-      claude = function()
-        return require("codecompanion.adapters").extend("anthropic", {
-          name = "Cate (claude)",
-          schema = {
-            model = {
-              -- default = "claude-3-7-sonnet-20250219",
-              default = "claude-3-5-sonnet-20241022",
+      http = {
+        claude = function()
+          return require("codecompanion.adapters").extend("anthropic", {
+            name = "Cate (claude)",
+            schema = {
+              model = {
+                -- default = "claude-3-7-sonnet-20250219",
+                default = "claude-3-5-sonnet-20241022",
+              },
             },
-          },
-          env = {
-            api_key = "cmd:op read op://ix4sh7cjltmluk6jv3gpffeptm/b4hiqit2dh352cx4bc54t3djb4/credential --no-newline",
-          },
-        })
-      end,
-      openai = function()
-        return require("codecompanion.adapters").extend("openai", {
-          name = "Oliver (openai)",
-          schema = {
-            model = {
-              default = "gpt-4o-mini",
+            env = {
+              api_key = "cmd:op read op://ix4sh7cjltmluk6jv3gpffeptm/b4hiqit2dh352cx4bc54t3djb4/credential --no-newline",
             },
-          },
-          env = {
-            api_key = "cmd:op read op://ix4sh7cjltmluk6jv3gpffeptm/rpxqvymji6d7bbchlfi4ltilgy/credential --no-newline",
-          },
-        })
-      end,
+          })
+        end,
+        openai = function()
+          return require("codecompanion.adapters").extend("openai", {
+            name = "Oliver (openai)",
+            schema = {
+              model = {
+                default = "gpt-4o-mini",
+              },
+            },
+            env = {
+              api_key = "cmd:op read op://ix4sh7cjltmluk6jv3gpffeptm/rpxqvymji6d7bbchlfi4ltilgy/credential --no-newline",
+            },
+          })
+        end,
+      }
     },
     strategies = {
       chat = {
