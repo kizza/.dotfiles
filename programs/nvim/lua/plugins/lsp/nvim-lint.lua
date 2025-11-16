@@ -8,11 +8,10 @@ end
 return {
   "mfussenegger/nvim-lint",
   event = "VeryLazy",
-  enabled = false,
   config = function()
     require("lint").linters_by_ft = {
       ruby = { "rubocop" },
-      -- eruby = { "erb_lint" },
+      eruby = { "erb_lint" },
     }
 
     vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
