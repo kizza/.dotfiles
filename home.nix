@@ -20,6 +20,10 @@ in
     programs/tmux
     programs/zsh
   ] ++ (if isDarwin then [
+    programs/aerospace.nix
+    programs/jankyborders.nix
+    programs/sketchybar
+    programs/ghostty.nix
     programs/karabiner
     programs/macvim
   ] else []);

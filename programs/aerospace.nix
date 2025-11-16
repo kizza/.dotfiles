@@ -49,31 +49,30 @@ in
         main.binding = {
           # Modes
           alt-w = "mode service";
-          cmd-alt-1 = "workspace 1";
-          cmd-alt-2 = "workspace 2";
-          cmd-alt-3 = "workspace 3";
-          cmd-alt-4 = "workspace 4";
-          cmd-alt-5 = "workspace 5";
+          alt-2 = "workspace 2";
+          alt-3 = "workspace 3";
+          alt-4 = "workspace 4";
+          alt-5 = "workspace 5";
           # Focus
-          cmd-alt-h = "focus --boundaries all-monitors-outer-frame left";
-          cmd-alt-j = "focus --boundaries all-monitors-outer-frame down";
-          cmd-alt-k = "focus --boundaries all-monitors-outer-frame up";
-          cmd-alt-l = "focus --boundaries all-monitors-outer-frame right";
+          alt-h = "focus --boundaries all-monitors-outer-frame left";
+          alt-j = "focus --boundaries all-monitors-outer-frame down";
+          alt-k = "focus --boundaries all-monitors-outer-frame up";
+          alt-l = "focus --boundaries all-monitors-outer-frame right";
           # Move
-          cmd-alt-down = "move down";
-          cmd-alt-up = "move up";
-          cmd-alt-left = "move left";
-          cmd-alt-right = "move right";
-          cmd-alt-ctrl-down = "move-node-to-monitor --focus-follows-window next";
-          cmd-alt-ctrl-up = "move-node-to-monitor --focus-follows-window prev";
+          alt-down = "move down";
+          alt-up = "move up";
+          alt-left = "move left";
+          alt-right = "move right";
+          alt-ctrl-down = "move-node-to-monitor --focus-follows-window next";
+          alt-ctrl-up = "move-node-to-monitor --focus-follows-window prev";
           # Arrange
-          cmd-alt-slash = "layout tiles accordion";
-          cmd-alt-equal = "balance-sizes";
-          cmd-alt-minus = "resize smart -200";
-          cmd-alt-shift-equal = "resize smart +200"; # Plus
-          cmd-alt-enter = "fullscreen";
-          cmd-alt-quote = "join-with left";
-          cmd-alt-backspace = "layout floating tiling";
+          alt-slash = "layout tiles accordion";
+          alt-equal = "balance-sizes";
+          alt-minus = "resize smart -200";
+          alt-shift-equal = "resize smart +200"; # Plus
+          alt-enter = "fullscreen";
+          alt-quote = "join-with left";
+          alt-backspace = "layout floating tiling";
         };
         service.binding = {
           s = "mode send";
