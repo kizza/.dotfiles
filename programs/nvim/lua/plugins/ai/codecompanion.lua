@@ -52,12 +52,12 @@ return {
     adapters = {
       http = {
         claude = function()
-          return require("codecompanion.adapters").extend("anthropic", {
-            name = "Cate (claude)",
+          return require("codecompanion.adapters.http").extend("anthropic", {
+            name = "cate",
+            formatted_name = "Cate (claude)",
             schema = {
               model = {
-                -- default = "claude-3-7-sonnet-20250219",
-                default = "claude-3-5-sonnet-20241022",
+                default = "claude-3-7-sonnet-20250219"
               },
             },
             env = {
@@ -66,7 +66,7 @@ return {
           })
         end,
         openai = function()
-          return require("codecompanion.adapters").extend("openai", {
+          return require("codecompanion.adapters.http").extend("openai", {
             name = "Oliver (openai)",
             schema = {
               model = {
