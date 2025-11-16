@@ -8,6 +8,16 @@ in
     "1password-cli"
   ];
 
+  # Override Fish to skip tests (they were flakey in home-manager update)
+  nixpkgs.overlays = [
+    (final: prev: {
+      fish = prev.fish.overrideAttrs (old: {
+        doCheck = false;
+        cmakeFlags = (old.cmakeFlags or [ ]) ++ [ "-DFISH_BUILD_TESTS=OFF" ];
+      });
+    })
+  ];
+
   imports = [
     ./fonts.nix
     programs/alacritty

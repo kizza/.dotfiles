@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   # home = {
@@ -8,7 +8,7 @@
   programs.zsh = {
     enable = true;
     defaultKeymap = "viins";
-    dotDir = ".config/zsh";
+    dotDir = "${config.home.homeDirectory}/zsh";
     autosuggestion = {
       enable = true;
     };
