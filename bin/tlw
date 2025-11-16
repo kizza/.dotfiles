@@ -9,7 +9,7 @@ tmux rename-session "Lookout"
 # Ensure services are running
 if [ ! "$(colima list | grep Running)" ]; then
   heading "Starting colima..."
-  colima start --cpu 1 --memory 2 --disk 40
+  colima start --cpu 1 --memory 2 --disk 100
   donetick "Colima started"
 fi
 
