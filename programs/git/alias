@@ -38,6 +38,7 @@
   s = status
   staged = diff --cached --name-only
   tracked = "!git status --untracked-files=no --porcelain | awk '{ print $2 }'"
+  committed = "!f() { git show --pretty=format: --name-only \"${1:-HEAD}\"; }; f"
   unstage = reset HEAD
   unstash = stash pop
   wipe = reset --hard HEAD
@@ -47,3 +48,18 @@
 
   # reset diff of file modes (will claim "bad input" if there are no diffs found)
   permission-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
+
+  detail = "!f() { \
+    commit=${1:-HEAD}; \
+    echo \"$(tput setaf 5)Message:$(tput sgr0)\"; \
+    printf "%s" "$(tput setaf 7)"; \
+    git log -1 --format=%B \"$commit\"; \
+    printf "%s" "$(tput sgr0)"; \
+    echo \"$(tput setaf 5)Files:$(tput sgr0)\"; \
+    printf "%s" "$(tput setaf 7)"; \
+    git diff-tree --no-commit-id --name-only -r \"$commit\"; \
+    printf "%s" "$(tput sgr0)"; \
+    echo; \
+    echo \"$(tput setaf 5)Diff:$(tput sgr0)\"; \
+    git show --color \"$commit\" --pretty=format:; \
+  }; f"
