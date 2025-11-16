@@ -52,6 +52,8 @@ noremap <C-w>k :call DoubleWindow()<CR>
 nnoremap <leader>bb :BufExplorer<cr>
 nnoremap <silent> gt :bnext<CR>
 nnoremap <silent> gT :bprev<CR>
+nnoremap <silent> <Tab> :bnext<CR>
+nnoremap <silent> <S-Tab> :bprev<CR>
 nnoremap <silent> <leader>x :bdelete<CR>
 " nnoremap <leader>x :silent! bprevious<CR>:silent! bdelete #<CR>
 " nnoremap <silent><leader>gT :ShiftBufferLeft<CR>
