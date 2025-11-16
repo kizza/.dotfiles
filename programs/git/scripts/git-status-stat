@@ -126,7 +126,7 @@ function git_status_stat() {
     [[ -z "$line" ]] && continue
     X="${line:0:1}"; Y="${line:1:1}"; file="${line:3}"
     case "$X$Y" in
-      "A ") # Added (staged)
+      "A " | "AM") # Added (staged)
         local each_output="$(git_stylize "New file" "added")${gap}$file"
         [[ -n "$staged" ]] && staged="$staged\n" # Add new line
         staged="$staged$indent$each_output"
