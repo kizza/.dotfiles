@@ -19,7 +19,7 @@ in
       enable = true;
       keepAlive = false;
     };
-    userSettings = {
+    settings = {
       after-startup-command = [
         "exec-and-forget ~/.local/bin/sketchybar" # Start sketchybar
       ];
