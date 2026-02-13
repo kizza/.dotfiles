@@ -144,19 +144,14 @@ function freset() {
 
 # See https://gist.github.com/junegunn/f4fca918e937e6bf5bad
 fshow() {
-  git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index \
-      --preview="git show {2} --color" \
-      --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-w:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show -w % | delta --paging never | less -R') << 'FZF-EOF'
-                {}
-                FZF-EOF" \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show % | delta --paging never | less -R') << 'FZF-EOF'
-                {}
-                FZF-EOF"
+  git log --graph --color=always --format="%C(magenta)%h%C(yellow)%d %C(white)%s %C(cyan)%C(italic)%cr" | \
+  fzf --ansi --no-sort --reverse --tiebreak=index --preview \
+   'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git detail $1 ; }; f {}' \
+      --bind "j:down,k:up,alt-j:preview-down,alt-k:preview-up,ctrl-f:preview-page-down,ctrl-b:preview-page-up,q:abort,ctrl-m:execute:
+        (grep -o '[a-f0-9]\{7\}' | head -1 |
+        xargs -I % sh -c 'git detail % | delta --paging never | less -r') << 'FZF-EOF'
+        {}
+        FZF-EOF" --preview-window=right:60%
 }
                 # xargs -I % sh -c 'git show --color=always % | delta') << 'FZF-EOF'
 
