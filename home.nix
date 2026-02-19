@@ -6,6 +6,7 @@ in
 {
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "1password-cli"
+    "github-copilot-cli"
   ];
 
   # Override Fish to skip tests (they were flakey in home-manager update)
