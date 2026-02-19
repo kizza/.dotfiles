@@ -2,6 +2,7 @@ alias fat="bat"
 alias ls="eza"
 alias dotfiles="cd ~/.dotfiles"
 alias capture_unicode="xxd -psd"
+alias copilot="gh copilot"
 
 # Run cops/linters on branch files
 alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
