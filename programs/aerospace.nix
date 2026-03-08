@@ -3,16 +3,9 @@
 # Make link available as eneded
 # ln -s $(which aerospace) ~/.local/bin/aerospace
 
-let
-  aerospaceModule = import ../modules/aerospace.nix;
-in
 {
-  # Ignore the upstream module (not up to date)
-  disabledModules = [ "programs/aerospace.nix" ];
-
-  # Import local module
-  imports = [ aerospaceModule ];
-
+  # If server needs to be run manually
+  # open "$(dirname "$(dirname "$(readlink -f $(which aerospace))")")/Applications/Aerospace.app"
   programs.aerospace = {
     enable = true;
     launchd = {
