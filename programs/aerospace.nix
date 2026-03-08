@@ -105,6 +105,21 @@ in
           check-further-callbacks = false;
         }
         {
+          "if" = {app-id = "com.apple.TextEdit";};
+          run = ["layout floating"];
+          check-further-callbacks = false;
+        }
+        {
+          "if" = {app-id = "com.apple.Preview";};
+          run = ["layout floating"];
+          check-further-callbacks = false;
+        }
+        {
+          "if" = {app-id = "com.microsoft.Excel";};
+          run = ["layout floating"];
+          check-further-callbacks = false;
+        }
+        {
           "if" = {app-id = "com.microsoft.Outlook";};
           run = ["move-node-to-workspace 3 --focus-follows-window"];
           check-further-callbacks = false;
