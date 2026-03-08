@@ -3,6 +3,16 @@
 # Make link available as eneded
 # ln -s $(which aerospace) ~/.local/bin/aerospace
 
+let
+  updateBordersColour = ''
+    exec-and-forget \
+    FS=$(aerospace list-windows --focused --format "%{window-is-fullscreen}"); \
+    LAYOUT=$(aerospace list-windows --focused --format "%{window-layout}"); \
+    if [ "$FS" = "true" ]; then borders active_color=0xffffffff; \
+    elif [ "$LAYOUT" = "floating" ]; then borders active_color=0xffD699B6; \
+    else borders active_color=0xff7FBBB3; fi
+  '';
+in
 {
   # If server needs to be run manually
   # open "$(dirname "$(dirname "$(readlink -f $(which aerospace))")")/Applications/Aerospace.app"
@@ -29,6 +39,7 @@
         "-c"
         "~/.local/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
       ];
+      on-focus-changed = [updateBordersColour];
       accordion-padding = 240;
       gaps = {
         inner.horizontal = 12;
@@ -65,12 +76,12 @@
           alt-shift-equal = "resize smart +200"; # Plus
           alt-enter = "fullscreen";
           alt-quote = "join-with left";
-          alt-backspace = "layout floating tiling";
+          alt-backspace = ["layout floating tiling" updateBordersColour]; # Show floating border
         };
         service.binding = {
           s = "mode send";
           r = ["reload-config" "mode main"];
-          z = ["fullscreen" "mode main"];
+          z = ["fullscreen" "mode main" updateBordersColour]; # Show focused border
           x = ["layout floating tiling" "mode main"];
           backspace = ["flatten-workspace-tree" "mode main"];
         };
