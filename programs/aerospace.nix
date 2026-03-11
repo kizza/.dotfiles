@@ -4,6 +4,7 @@
 # ln -s $(which aerospace) ~/.local/bin/aerospace
 
 let
+  # A verbose script to execute, to change the border colour based on state
   updateBordersColour = ''
     exec-and-forget \
     FS=$(aerospace list-windows --focused --format "%{window-is-fullscreen}"); \
@@ -12,6 +13,23 @@ let
     elif [ "$LAYOUT" = "floating" ]; then borders active_color=0xffD699B6; \
     else borders active_color=0xff7FBBB3; fi
   '';
+
+  # Define apps that should float
+  floatingApps = [
+    "com.apple.Preview"
+    "com.apple.TextEdit"
+    "com.apple.finder"
+    "com.google.chrome.for.testing"
+    "com.macpaw.CleanMyMac-setapp"
+    "com.microsoft.Excel"
+  ];
+
+  # Helper function to create floating window rules
+  mkFloatingRule = appId: {
+    "if" = { app-id = appId; };
+    run = ["layout floating"];
+    check-further-callbacks = false;
+  };
 in
 {
   # If server needs to be run manually
@@ -93,32 +111,11 @@ in
           "5" = ["move-node-to-workspace 5" "mode main"];
         };
       };
-      on-window-detected = [
-        {
-          "if" = {app-id = "com.apple.finder";};
-          run = ["layout floating"];
-          check-further-callbacks = false;
-        }
-        {
-          "if" = {app-id = "com.google.chrome.for.testing";};
-          run = ["layout floating"];
-          check-further-callbacks = false;
-        }
-        {
-          "if" = {app-id = "com.apple.TextEdit";};
-          run = ["layout floating"];
-          check-further-callbacks = false;
-        }
-        {
-          "if" = {app-id = "com.apple.Preview";};
-          run = ["layout floating"];
-          check-further-callbacks = false;
-        }
-        {
-          "if" = {app-id = "com.microsoft.Excel";};
-          run = ["layout floating"];
-          check-further-callbacks = false;
-        }
+      on-window-detected =
+        # Make floating rules from app ids above
+        (map mkFloatingRule floatingApps)
+        # Manual window detection rules...
+        ++ [
         {
           "if" = {app-id = "com.microsoft.Outlook";};
           run = ["move-node-to-workspace 3 --focus-follows-window"];
