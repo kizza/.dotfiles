@@ -1,9 +1,11 @@
 #!/usr/bin/env zsh
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-  # background="0xFF${BASE16_COLOR_04_HEX#\#}"
-  # sketchybar --set $NAME label.color=0xaa000000 background.color=$background
-  sketchybar --set $NAME label.color=0xaa000000 background.color=0xFF7FBBB3
+  FG="0xFFFFFFFF"
+  BG="0x90$BASE16_COLOR_0E_HEX"
+  sketchybar --set $NAME label.color=$FG background.color=$BG
 else
-  sketchybar --set $NAME label.color=0x77FFFFFF background.color=0x00D699B6
+  FG="0xF0$BASE16_COLOR_07_HEX"
+  BG="0x60$BASE16_COLOR_02_HEX"
+  sketchybar --set $NAME label.color=$FG background.color=$BG
 fi
