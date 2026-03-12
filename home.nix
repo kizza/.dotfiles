@@ -34,6 +34,7 @@ in
     programs/aerospace.nix
     programs/jankyborders.nix
     programs/sketchybar
+    programs/irb.nix
     programs/gh.nix
     programs/ghostty.nix
     programs/karabiner
