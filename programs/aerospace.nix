@@ -65,7 +65,7 @@ in
         outer.left = 6;
         outer.bottom = 6;
         outer.top = 6;
-        outer.right = 40; # Sketchybar gap
+        outer.right = 56; # Sketchybar gap
       };
       mode = {
         main.binding = {
