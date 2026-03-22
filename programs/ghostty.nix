@@ -22,7 +22,6 @@ adjust-underline-position = 4
 # Cursor
 #
 cursor-invert-fg-bg = true
-cursor-color = #99CCFF
 cursor-opacity = 1
 # cursor-style = bar
 term = screen-256color
