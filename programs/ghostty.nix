@@ -12,8 +12,8 @@ font-family = Maple Mono NF
 font-size = 18
 font-thicken = true
 font-thicken-strength = 255
-adjust-cell-height = 36%
-adjust-cursor-height = 36%
+adjust-cell-height = 37%
+adjust-cursor-height = 37%
 bold-is-bright = true
 adjust-underline-position = 4
 
