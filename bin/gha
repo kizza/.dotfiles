@@ -4,6 +4,41 @@ set -euo pipefail
 
 die() { echo "$*" >&2; exit 1; }
 
+# Capitalize first letter of a string
+capitalize() {
+  local str="$1"
+  echo "$(echo "${str:0:1}" | tr '[:lower:]' '[:upper:]')${str:1}"
+}
+
+# Format workflow status into human-readable text
+format_status() {
+    local workflow="$1"
+    local status="$2"
+
+    case "$workflow" in
+        main.yml)
+            case "$status" in
+                pending) echo "⏳ Pending build" ;;
+                in_progress) echo "🛠️ Building" ;;
+                completed) echo "✅ Built" ;;
+                *) echo "🤷‍♀️ $status ($workflow)" ;;
+            esac
+            ;;
+        deploy.yml)
+            case "$status" in
+                pending) echo "⏳ Pending deploy" ;;
+                in_progress) echo "✨ Deploying" ;;
+                completed) echo "🚀 Deployed" ;;
+                *) echo "🤷‍♀️ $status ($workflow)" ;;
+            esac
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+
 case "${1:-}" in
     # List the branches within the latest deploy (running or otherwise)
     latest)
@@ -26,16 +61,66 @@ case "${1:-}" in
         gh run list --workflow=deploy.yml --limit=10
         ;;
 
-    "")
+    status)
         # Ensure we have latest main for context
         LOCAL=$(git rev-parse origin/main 2>/dev/null)
         REMOTE=$(git ls-remote origin refs/heads/main | cut -f1)
         [ "$LOCAL" != "$REMOTE" ] && git fetch origin main --quiet
 
+        # Collect all merge commits from the last week
+        AUTHOR=$(git config user.name)
+        # AUTHOR="Rowan Hogan"
+        # AUTHOR="Dan Henderson"
+        MERGE_DATA=$(git log --merges --first-parent --since=2.days.ago --pretty="%h %ad %an %s" --date=short origin/main \
+          | grep -F "$AUTHOR" \
+          | sed -E -n 's/([^ ]+) ([^ ]+) [^f]* from [^/]+\/([^ ]+)/\1 \3/p')
+
+        if [ -z "$MERGE_DATA" ]; then
+            echo "No recent merges found in the last week"
+            exit 0
+        fi
+
+        # Fetch workflow runs once (oldest first for chronological output)
+        MAIN_RUNS=$(gh run list --workflow=main.yml --branch=main --limit=10 --json headSha,status,displayTitle | jq -r '[.[] | "\(.headSha) \(.status) \(.displayTitle)"] | reverse | .[]')
+        DEPLOY_RUNS=$(gh run list --workflow=deploy.yml --limit=10 --json headSha,status,displayTitle | jq -r '[.[] | "\(.headSha) \(.status) \(.displayTitle)"] | reverse | .[]')
+
+        # Check each merge commit
+        while read -r SHA BRANCH; do
+            FOUND=false
+
+            # Check deploy.yml first (since main must pass through deploy)
+            while IFS= read -r line; do
+                read -r RUN_SHA STATUS TITLE <<< "$line"
+                if git merge-base --is-ancestor "$SHA" "$RUN_SHA" 2>/dev/null; then
+                    FOUND=true
+                    echo "$(format_status "deploy.yml" "$STATUS"). $BRANCH (sound=blow)"
+                    break
+                fi
+            done <<< "$DEPLOY_RUNS"
+
+            # Skip to next SHA
+            [ "$FOUND" = true ] && continue
+
+            # Only check main.yml if not found in deploy
+            while IFS= read -r line; do
+                read -r RUN_SHA STATUS TITLE <<< "$line"
+                if git merge-base --is-ancestor "$SHA" "$RUN_SHA" 2>/dev/null; then
+                    echo "$(format_status "main.yml" "$STATUS"). $BRANCH (sound=blow)"
+                    break
+                fi
+            done <<< "$MAIN_RUNS"
+        done <<< "$MERGE_DATA"
+        ;;
+
+    "")
+        # Ensure we have latest main for context
+        # LOCAL=$(git rev-parse origin/main 2>/dev/null)
+        # REMOTE=$(git ls-remote origin refs/heads/main | cut -f1)
+        # [ "$LOCAL" != "$REMOTE" ] && git fetch origin main --quiet
+
         # Find your recently merged branches
-        YOUR_NAME="$(git config user.name)"
         MERGE_SHA=$(git log --merges --first-parent --since=1.weeks.ago --pretty="%h %ad %an %s" --date=short origin/main \
-          | grep -F "$YOUR_NAME" \
+          | grep -F "$(git config user.name)" \
           | sed -E -n 's/([^ ]+) ([^ ]+) .*? from ([^ ]+)/\1 → \3 (\2)/p' \
           | fzf \
           | cut -d ' ' -f 1)

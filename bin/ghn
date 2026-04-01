@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# GitHub Notifications → CLIHub
+#
+# Polls GitHub's notifications API for actionable items:
+#   - review_requested: someone asked you to review a PR
+#   - mention: you were @mentioned in a comment
+#   - author: activity on a PR you authored
+#   - state_change: a PR you're involved in changed state
+#   - comment: new comment on a thread you're in
+#
+# Output: CLIHub single-line notification format, one per line.
+# De-duplication: meta.gh_id + meta.gh_updated change when the
+# notification thread is updated, breaking through acknowledgement.
+#
+# Dependencies: gh (authenticated), jq, date
+
+set -euo pipefail
+
+# Look back 2 days (portable: GNU date then BSD date fallback)
+SINCE=$(date -u -d '2 days ago' '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null \
+     || date -u -v-2d '+%Y-%m-%dT%H:%M:%SZ')
+
+gh api "/notifications?participating=true&since=${SINCE}" --jq '
+  .[] |
+  # Extract PR/issue number from the API URL (last path segment)
+  (.subject.url | split("/") | last) as $number |
+
+  # Short repo name (strip org prefix)
+  .repository.name as $repo |
+
+  # Build browser URL from API URL
+  # api.github.com/repos/{owner}/{repo}/pulls/123 → github.com/{owner}/{repo}/pull/123
+  (.subject.url
+    | sub("https://api.github.com/repos/"; "https://github.com/")
+    | sub("/pulls/"; "/pull/")
+  ) as $html_url |
+
+  # Map reason to [type] and human-readable prefix
+  (if .reason == "review_requested" then { type: "info", topic: "Review requested" }
+   elif .reason == "mention"        then { type: "info", topic: "Mentioned" }
+   elif .reason == "author"         then { type: "info", topic: "Activity on your PR" }
+   elif .reason == "state_change"   then { type: "info", topic: "State changed" }
+   elif .reason == "comment"        then { type: "info", topic: "Comment" }
+   else                                  { type: "info", topic: "Notification" }
+   end) as $mapping |
+
+  # Build the CLIHub output line
+  "[" + $mapping.type + "] " +
+  .subject.title + " #" + $number + "." +
+  " (subtitle=" + $mapping.topic + " (" + $repo + ")" +
+  "; sound=hero" +
+  "; url=" + $html_url +
+  "; meta.gh_id=" + .id +
+  "; meta.gh_updated=" + .updated_at + ")"
+'
