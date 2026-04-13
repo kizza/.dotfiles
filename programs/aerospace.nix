@@ -5,7 +5,7 @@
 
 let
   # A verbose script to execute, to change the border colour based on state
-  updateBordersColour = ''
+  updateBordersColour = builtins.replaceStrings ["\n" "\\"] [" " ""] ''
     exec-and-forget \
     FS=$(aerospace list-windows --focused --format "%{window-is-fullscreen}"); \
     LAYOUT=$(aerospace list-windows --focused --format "%{window-layout}"); \
@@ -16,12 +16,15 @@ let
 
   # Define apps that should float
   floatingApps = [
+    "com.1password.1password"
     "com.apple.Preview"
     "com.apple.TextEdit"
     "com.apple.finder"
     "com.google.chrome.for.testing"
     "com.macpaw.CleanMyMac-setapp"
     "com.microsoft.Excel"
+    "com.microsoft.teams2"
+    "md.obsidian"
   ];
 
   # Helper function to create floating window rules
@@ -116,6 +119,21 @@ in
         (map mkFloatingRule floatingApps)
         # Manual window detection rules...
         ++ [
+        {
+          "if" = {app-id = "com.mitchellh.ghostty";};
+          run = ["move-node-to-workspace 1 --focus-follows-window"];
+          check-further-callbacks = false;
+        }
+        {
+          "if" = {app-id = "com.google.Chrome";};
+          run = ["move-node-to-workspace 1 --focus-follows-window"];
+          check-further-callbacks = false;
+        }
+        {
+          "if" = {app-id = "company.thebrowser.Browser";};
+          run = ["move-node-to-workspace 2 --focus-follows-window"];
+          check-further-callbacks = false;
+        }
         {
           "if" = {app-id = "com.microsoft.Outlook";};
           run = ["move-node-to-workspace 3 --focus-follows-window"];
