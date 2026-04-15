@@ -42,8 +42,45 @@ const colours = dark => {
     segment1: segment1,
     segment2: segment2,
     segment3: segment3,
+
+    ...{
+      inactiveTabBg: "colour18", // No background
+      // activeTabFg: "green",
+      inactiveTabFg: "colour20", // Subtle inactive labels
+    }
   };
 };
+
+const icon = (restoreFg) => {
+  const iconMap = {
+    // nvim: `#[fg=green]#[fg=${restoreFg}]`,
+    nvim: ``,
+    // zsh: "",
+    // zsh: " ",
+    ".overmind-wrapp": `#[fg=red]#[fg=${restoreFg}]`,
+    bash: " ",
+    zsh: " ",
+  };
+
+  return Object.entries(iconMap)
+    .reduceRight(
+      (acc, [cmd, icon]) =>
+        `#{?#{==:#{pane_current_command},${cmd}},${icon},${acc}}`,
+      "#{pane_current_command}"
+    );
+}
+
+const I = (variant) => {
+  return "";
+  if (variant === "active") {
+    return `#[fg=colour20,italics]#I#[default]`;
+  } else {
+    return `#[italics]#I#[default]`;
+  }
+}
+
+// If window name is the same as the current command, hide it to save space
+const W = `#{?#{==:#{window_name},#{pane_current_command}},,#{window_name} }`;
 
 const buildTheme = ({
   active,
@@ -78,8 +115,8 @@ set -g status-right-length 150
 set -g status-right "${prefix}#[fg=${segment1},bg=${inactiveTabBg}]${separators.right}#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]${separators.right}#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]${separators.right}#[fg=colour18,bg=${segment3},bold] #S "
 
 # Window status
-set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}] #I:#W ${dir} #{?window_zoomed_flag,${magnify} ,}"
-set -g window-status-current-format " #[fg=${activeTabFg}]#I:#[fg=${activeTabFg}]#W ${dir}#[fg=${active}] #{?window_zoomed_flag,${magnify} ,}"
+set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}]${I()}#[fg=${inactiveTabFg}] ${W}${icon(inactiveTabFg)} ${dir} #{?window_zoomed_flag,${magnify} ,}"
+set -g window-status-current-format "#[fg=${inactiveTabBg}]${separators.left}#[fg=${activeTabFg}]${I('active')} ${W}${icon(activeTabFg)} ${dir}#[fg=${active}] #{?window_zoomed_flag,${magnify} ,}#[fg=${activeTabBg},bg=${inactiveTabBg}]${separators.left}"
 
 # Current window status
 set -g window-status-current-style bg=${activeTabBg},fg=${activeTabFg}
