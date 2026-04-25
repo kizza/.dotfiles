@@ -67,9 +67,21 @@ return {
   },
   {
     "kizza/vim-reorder-buffers",
+    cmd = { "ShiftBufferLeft", "ShiftBufferRight", "MoveBufferTo", "CloseBuffersUntil", "CloseBuffersAfter" },
     keys = {
-      { "<leader>gT", "<cmd>ShiftBufferLeft<cr>",  desc = "Shift buffers left" },
-      { "<leader>gt", "<cmd>ShiftBufferRight<cr>", desc = "Shift buffers right" },
+      { "<leader>gT",  "<cmd>ShiftBufferLeft<cr>",   desc = "Shift buffers left" },
+      { "<leader>gt",  "<cmd>ShiftBufferRight<cr>",  desc = "Shift buffers right" },
+      { "<leader>tm1", "<cmd>MoveBufferTo 1<cr>",    desc = "Move buffer to first" },
+      { "<leader>tm2", "<cmd>MoveBufferTo 2<cr>",    desc = "Move buffer to second" },
+      { "<leader>tm3", "<cmd>MoveBufferTo 3<cr>",    desc = "Move buffer to third" },
+      { "<leader>tm4", "<cmd>MoveBufferTo 4<cr>",    desc = "Move buffer to fourth" },
+      { "<leader>tm5", "<cmd>MoveBufferTo 5<cr>",    desc = "Move buffer to fifth" },
+      { "<leader>tm6", "<cmd>MoveBufferTo 6<cr>",    desc = "Move buffer to sixth" },
+      { "<leader>tm7", "<cmd>MoveBufferTo 7<cr>",    desc = "Move buffer to seventh" },
+      { "<leader>tm8", "<cmd>MoveBufferTo 8<cr>",    desc = "Move buffer to eighth" },
+      { "<leader>tm9", "<cmd>MoveBufferTo 9<cr>",    desc = "Move buffer to nineth" },
+      { "<leader>txh", "<cmd>CloseBuffersUntil<cr>", desc = "Close buffers before" },
+      { "<leader>txl", "<cmd>CloseBuffersAfter<cr>", desc = "Close buffers after" },
     },
   },
   {
