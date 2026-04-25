@@ -6,7 +6,9 @@ return {
     "RRethy/vim-illuminate",
     event = "VeryLazy",
     opts = {
-      providers = { "lsp", "treesitter", "regex" },
+      -- TODO: Re-add "treesitter" provider once vim-illuminate supports the new nvim-treesitter API
+      -- (removed due to breaking change in nvim-treesitter locals module)
+      providers = { "lsp", "regex" },
       under_cursor = false,
       filetypes_denylist = {
         'NvimTree',
