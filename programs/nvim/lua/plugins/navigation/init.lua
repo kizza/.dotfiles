@@ -13,11 +13,12 @@ return {
     end,
   },
   {
-    "olimorris/persisted.nvim",
-    event = "BufReadPre", -- Ensure the plugin loads only when a buffer has been loaded
-    opts = {
-      -- Your config goes here ...
-    },
+    "kizza/aikido-tabs.nvim",
+    lazy = false,
+    enabled = true,
+    config = function(_, opts)
+      require("aikido-tabs").setup(opts)
+    end
   },
   {
     "folke/flash.nvim",
