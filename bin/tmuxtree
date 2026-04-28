@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Ensure we're in the root of a git repository
+git rev-parse --show-toplevel >/dev/null 2>&1 || {
+  echo "Not in a git repo"
+  exit 1
+}
+
+# Case insensitive session check
+# -F → literal string (no regex issues)
+# -x → exact match
+# -i → case insensitive
+session_exists() {
+  tmux list-sessions -F '#S' 2>/dev/null | grep -Fxi "$1"
+}
+
+# Get worktree paths and present via fzf
+selected=$(git worktree list --porcelain | awk '/^worktree/ {print $2}' | fzf --height 40% --reverse --prompt="Select worktree: ")
+
+# Exit if no selection made
+[[ -z "$selected" ]] && exit 0
+
+name=$(basename "$selected")
+
+# Check if tmux session exists
+if session_exists "$name"; then
+  echo "Session exists: $name"
+  exit 0
+fi
+
+echo "Creating session: $name"
+
+tmux new-session -d -s "$name" -c "$selected" -n "Server"
+tmux new-window -t "$name" -n "Code" -c "$selected"
+
+# Code window
+tmux send-keys -t "$name:Code" "nvim ." C-m
+
+# focus Code (so you land where you work)
+tmux select-window -t "$name:Code"
