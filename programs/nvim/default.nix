@@ -33,7 +33,5 @@
     file.".config/nvim/after/queries/git_rebase/highlights.scm".text = builtins.readFile ../vim/after/queries/git_rebase/highlights.scm;
   };
 
-  programs.neovim = {
-    enable = true;
-  };
+  home.packages = [ pkgs.neovim ];
 }
