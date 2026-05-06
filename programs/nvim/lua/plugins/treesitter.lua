@@ -1,29 +1,17 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- last release is way too old and doesn't work on Windows
+    branch = "main",
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      highlight = {
-        enable = true,
-        custom_captures = {
-          ["custom.method.name"] = "TSCustomMethodName",
-          ["custom.keyword_parameter.name"] = "TSCustomKeywordParameterName",
-          ["custom.keyword_parameter.value"] = "TSCustomKeywordParameterValue",
-          ["custom.class.method.invocation"] = "TSCustomClassMethodInvocation",
-          ["custom.method"] = "TSCustomMethod",
-        },
-      },
-      indent = { enable = true, disable = { "python", "ruby" } },
-      context_commentstring = { enable = true, enable_autocmd = false },
-      matchup = { -- integrate with vim-matchup
-        enable = true,
-      },
-      ensure_installed = {
+    lazy = false,
+    -- event = { "BufReadPost", "BufNewFile" }, -- does not support lazy loading
+
+    config = function()
+      local ts = require("nvim-treesitter")
+
+      ts.install({
         "bash",
         "c",
-        -- "embedded_template",
         "html",
         "git_rebase",
         "javascript",
@@ -37,31 +25,42 @@ return {
         "python",
         "query",
         "regex",
-        "ruby", -- seems to work again
+        "ruby",
         "tsx",
         "typescript",
         "vim",
         "vimdoc",
         "yaml",
-      },
-      incremental_selection = {
-        enable = false,
-      },
-    },
-    config = function(_, opts)
-      -- require("nvim-treesitter.install").compilers = { 'clang' }
-      require("nvim-treesitter.configs").setup(opts)
+      })
 
-      -- Include eruby as embedded_template
-      -- local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-      -- parser_config.embedded_template = {
-      --   -- install_info = {
-      --   --   url = 'https://github.com/tree-sitter/tree-sitter-embedded-template',
-      --   --   files =  { 'src/parser.c' },
-      --   --   requires_generate_from_grammar  = true,
-      --   -- },
-      --   used_by = {'eruby'}
-      -- }
+      -- Enable Treesitter highlighting + parsing
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+
+          -- Recommended by upstream to avoid double-highlighting
+          vim.bo[args.buf].syntax = "off"
+        end,
+      })
+
+      -- Native indentation still immature for some langs
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "python", "ruby" },
+        callback = function()
+          vim.bo.autoindent = true
+          vim.bo.smartindent = true
+        end,
+      })
+
+      -- Your custom captures
+      vim.api.nvim_set_hl(0, "TSCustomMethodName", {})
+      vim.api.nvim_set_hl(0, "TSCustomKeywordParameterName", {})
+      vim.api.nvim_set_hl(0, "TSCustomKeywordParameterValue", {})
+      vim.api.nvim_set_hl(0, "TSCustomClassMethodInvocation", {})
+      vim.api.nvim_set_hl(0, "TSCustomMethod", {})
+
+      -- matchup integration currently unstable on 0.12
+      -- vim.g.matchup_treesitter_enabled = 0
     end,
   },
 }
