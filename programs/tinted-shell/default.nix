@@ -1,9 +1,7 @@
 { pkgs, lib, ... }:
 
-with import <nixpkgs> {};
-
 let
-  tintedShell = stdenv.mkDerivation rec {
+  tintedShell = pkgs.stdenv.mkDerivation rec {
     pname = "tinted-shell";
     version = "1.0.0";
 

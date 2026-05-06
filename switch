@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+set -eo pipefail
+
+NIX_CONFIG="warn-dirty = false" home-manager switch --flake ~/.dotfiles

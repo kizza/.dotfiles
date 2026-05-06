@@ -1,15 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
-with import <nixpkgs> {};
-
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   pname = "screen-256italic";
   version = "1.0.0";
 
   src = ./screen-256color.terminfo;
 
   nativeBuildInputs = [
-    ncurses
+    pkgs.ncurses
   ];
 
   dontUnpack = true;
