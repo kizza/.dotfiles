@@ -8,7 +8,7 @@
   programs.zsh = {
     enable = true;
     defaultKeymap = "viins";
-    dotDir = "${config.home.homeDirectory}/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     autosuggestion = {
       enable = true;
     };

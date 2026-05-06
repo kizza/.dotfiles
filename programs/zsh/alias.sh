@@ -35,5 +35,5 @@ function v {
 }
 
 function fresh {
-  nix-shell --run "home-manager switch" ~/.dotfiles/shell.nix && notify "Fresh/!" "Your dotfiles are now fresh"
+  ~/.dotfiles/switch && notify "Fresh/!" "Your dotfiles are now fresh"
 }

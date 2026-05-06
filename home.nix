@@ -1,27 +1,28 @@
 { pkgs, lib, ... }:
 
-let
-  isDarwin = builtins.currentSystem == "aarch64-darwin";
-in
 {
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "1password-cli"
     "github-copilot-cli"
   ];
 
-  # Override Fish to skip tests (they were flakey in home-manager update)
   nixpkgs.overlays = [
     (final: prev: {
+      # Override Fish to skip tests (they were flakey in home-manager update)
       fish = prev.fish.overrideAttrs (old: {
         doCheck = false;
         cmakeFlags = (old.cmakeFlags or [ ]) ++ [ "-DFISH_BUILD_TESTS=OFF" ];
+      });
+
+      # Override neovim to skip tests (error --listen: address already in use: "T162")
+      neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
+        doCheck = false;
       });
     })
   ];
 
   imports = [
     ./fonts.nix
-    programs/alacritty
     programs/bat
     programs/direnv.nix
     programs/git
@@ -30,20 +31,9 @@ in
     programs/tinted-shell
     programs/tmux
     programs/zsh
-  ] ++ (if isDarwin then [
-    programs/aerospace.nix
-    programs/jankyborders.nix
-    programs/sketchybar
-    programs/irb.nix
-    programs/gh.nix
-    programs/ghostty.nix
-    programs/karabiner
-    programs/macvim
-  ] else []);
+  ];
 
   home = {
-    username = builtins.getEnv "USER";
-    homeDirectory = builtins.getEnv "HOME";
     stateVersion = "22.05";
     packages = with pkgs; [
       _1password-cli
@@ -59,24 +49,12 @@ in
       git-secrets
       htop
       jq
-      nodePackages.pnpm
+      pnpm
       tree-sitter
       watch
       yarn
       zoxide
-    ] ++ (if isDarwin then [
-      awscli2
-      btop
-      colima
-      coreutils
-      overmind
-      rustc
-      solargraph
-    ] else []);
-
-    sessionVariables = {
-      HOME_MANAGER_CONFIG = "$HOME/.dotfiles/home.nix";
-    };
+    ];
   };
 
   programs = {
