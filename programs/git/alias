@@ -63,3 +63,16 @@
     echo \"$(tput setaf 5)Diff:$(tput sgr0)\"; \
     git show --color \"$commit\" --pretty=format:; \
   }; f"
+
+  # @usage git add-worktree with/branch-name
+  add-worktree = "!f() { \
+    branch=\"$1\"; \
+    if [ -z \"$branch\" ]; then \
+      echo \"Usage: git add-worktree <branch-name>\"; \
+      return 1; \
+    fi; \
+    repo=$(basename \"$PWD\"); \
+    safe_branch=$(echo \"$branch\" | tr '/' '-'); \
+    path=\"../${repo}-${safe_branch}\"; \
+    git worktree add \"$path\" -b \"$branch\"; \
+  }; f"
