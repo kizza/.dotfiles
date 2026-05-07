@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 pkgs.stdenv.mkDerivation rec {
-  pname = "screen-256italic";
+  pname = "screen-256-terminfo";
   version = "1.0.0";
 
   src = ./screen-256color.terminfo;
