@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  italics = pkgs.callPackage ./italics.nix {};
+  italics = pkgs.callPackage ./terminfo.nix {};
 in
 {
   programs.tmux = {
