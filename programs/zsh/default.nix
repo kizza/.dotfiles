@@ -47,6 +47,11 @@
       share = true;
     };
 
+    # Ignore `compaudit` showing /nix/var/nix/profiles/default/share/zsh
+    initExtra = ''
+      compinit -u
+    '';
+
     shellAliases = {
       reload = ". ~/.config/zsh/.zshrc";
       ls = "ls --color";
