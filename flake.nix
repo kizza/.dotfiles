@@ -8,18 +8,17 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # nixgl = {
-    #   url = "github:nix-community/nixGL";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     nixpkgs,
     home-manager,
+    nixgl,
     ...
-    # nixgl,
   }:
     {
       homeConfigurations = {
@@ -75,6 +74,107 @@
               ];
             }
             ./home.nix
+          ];
+        };
+
+        "keiran@machina" = home-manager.lib.homeManagerConfiguration rec {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+          extraSpecialArgs = {
+            inherit nixgl; # Pass nixgl to nixgl.nix
+          };
+
+          modules = [
+            (
+              {config, ...}: {
+                xdg.enable = true;
+
+                home.username = "keiran";
+                home.homeDirectory = "/home/keiran";
+
+                services.ollama = {
+                  enable = true;
+                  host = "127.0.0.1";
+                };
+
+                home.packages = with pkgs; [
+                  ncdu
+                ];
+
+                programs = {
+                  firefox = {
+                    enable = true;
+                    configPath = "${config.xdg.configHome}/mozilla/firefox";
+                  };
+                };
+              }
+            )
+            ./home.nix
+            ./programs/nixgl.nix
+            ./programs/hyprlnd.nix
+            ./programs/ghostty-wrapped.nix
+          ];
+        };
+
+        "ava@machina" = home-manager.lib.homeManagerConfiguration rec {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+          extraSpecialArgs = {
+            inherit nixgl; # Pass nixgl to nixgl.nix
+          };
+
+          modules = [
+            (
+              {config, ...}: {
+                xdg.enable = true;
+                home.username = "ava";
+                home.homeDirectory = "/home/ava";
+
+                home.packages = with pkgs; [
+                  rclone
+                ];
+
+                programs = {
+                  firefox = {
+                    enable = true;
+                    configPath = "${config.xdg.configHome}/mozilla/firefox";
+                  };
+                };
+              }
+            )
+            ./home.nix
+            ./programs/nixgl.nix
+            ./programs/hyprlnd.nix
+            ./programs/ghostty-wrapped.nix
+          ];
+        };
+
+        "holly@machina" = home-manager.lib.homeManagerConfiguration rec {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+          extraSpecialArgs = {
+            inherit nixgl; # Pass nixgl to nixgl.nix
+          };
+
+          modules = [
+            (
+              {config, ...}: {
+                xdg.enable = true;
+                home.username = "holly";
+                home.homeDirectory = "/home/holly";
+
+                programs = {
+                  firefox = {
+                    enable = true;
+                    configPath = "${config.xdg.configHome}/mozilla/firefox";
+                  };
+                };
+              }
+            )
+            ./home.nix
+            ./programs/nixgl.nix
+            ./programs/hyprlnd.nix
+            ./programs/ghostty-wrapped.nix
           ];
         };
       };

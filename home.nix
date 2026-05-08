@@ -39,6 +39,7 @@
       _1password-cli
       cargo
       cloudflared
+      coreutils
       delta
       docker
       entr
