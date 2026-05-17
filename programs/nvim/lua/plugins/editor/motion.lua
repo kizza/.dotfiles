@@ -32,7 +32,7 @@ return {
   {
     -- Magical "auto" increments of selection based on treesitter scopes
     "RRethy/nvim-treesitter-textsubjects",
-    enabled = true,
+    enabled = false,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     lazy = false,           -- Doesn't seem to work when lazy
     opts = {
