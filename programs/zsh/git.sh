@@ -16,7 +16,7 @@ function gs() {
 }
 
 function since_master() {
-  git diff --name-only origin/$(trunk)
+  git diff --name-only $(trunk) # Local only
 }
 
 function gdb() {
