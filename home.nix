@@ -1,11 +1,6 @@
 { pkgs, lib, ... }:
 
 {
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "1password-cli"
-    "github-copilot-cli"
-  ];
-
   nixpkgs.overlays = [
     (final: prev: {
       # Override Fish to skip tests (they were flakey in home-manager update)

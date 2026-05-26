@@ -20,10 +20,22 @@
     nixgl,
     ...
   }:
+    let
+      allowUnfree = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+        "1password-cli"
+        "claude-code"
+        "github-copilot-cli"
+      ];
+
+      mkPkgs = system: import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = allowUnfree;
+      };
+    in
     {
       homeConfigurations = {
         "keiran@Keirans-MacBook-Pro.local" = home-manager.lib.homeManagerConfiguration rec {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          pkgs = mkPkgs "aarch64-darwin";
           modules = [
             {
               home.username = "keiran";
