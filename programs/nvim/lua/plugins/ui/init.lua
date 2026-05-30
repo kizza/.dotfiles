@@ -188,19 +188,20 @@ return {
     -- Highlight undo/redo changes (like yank text does)
     "y3owk1n/undo-glow.nvim",
     event = "VeryLazy",
-    enabled = false,
     opts = function()
       local colours = require("colours")
+      local darken = colours.darken
       return {
         animation = {
-          enabled = true,
-          duration = 300,
+          enabled = false,
+          duration = 240,
           animtion_type = "fade",
           window_scoped = true,
         },
         highlights = {
-          undo = { hl_color = { bg = colours.get(3) } },
-          redo = { hl_color = { bg = colours.get(2) } },
+          undo = { hl_color = { bg = darken(3, 0.7).hex } },
+          redo = { hl_color = { bg = darken(2, 0.7).hex } },
+          paste = { hl_color = { bg = darken(4, 0.7).hex } },
         }
       }
     end,
