@@ -38,6 +38,7 @@
   s = status
   staged = diff --cached --name-only
   tracked = "!git status --untracked-files=no --porcelain | awk '{ print $2 }'"
+  tree-root = "!dirname \"$(git rev-parse --path-format=absolute --git-common-dir)\""
   committed = "!f() { git show --pretty=format: --name-only \"${1:-HEAD}\"; }; f"
   unstage = reset HEAD
   unstash = stash pop
@@ -75,4 +76,12 @@
     safe_branch=$(echo \"$branch\" | tr '/' '-'); \
     path=\"../${repo}-${safe_branch}\"; \
     git worktree add \"$path\" -b \"$branch\"; \
+  }; f"
+
+  # @usage git add-worktree with/branch-name
+  rm-worktree = "!f() { \
+    selected=$(git worktree list --porcelain | awk '/^worktree/ {print $2}' | fzf --height 40% --reverse --prompt=\"Select worktree: \"); \
+    [ -z \"$selected\" ] && exit 0; \
+    echo "Removing $selected..."; \
+    git worktree remove \"$selected\"; \
   }; f"
