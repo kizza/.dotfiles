@@ -10,7 +10,8 @@ Review the uncommitted changes, determine how they naturally group into a set of
 # Guidelines:
 
 * Group changes by intent, not by file.
-* Use the fewest commits that still clearly separate unrelated concerns.
+* Build towards a change, introducing elements or foundations, before their use
+* Balance the above with the fewest commits that still clearly separate unrelated concerns.
 * Do not create commits for incidental fixes made while developing the branch (typos, formatting, small corrections).
 * Create separate commits when a change solves a different problem, represents an important design decision, or would reasonably be reverted independently.
 - Specs covering a change MUST always be within the commit that they are covering, they are a coherent and logic change.
