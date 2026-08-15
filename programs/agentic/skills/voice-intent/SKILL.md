@@ -1,19 +1,20 @@
 ---
 name: voice-intent
 description: >
-  Before starting a batch of work that will need a permission prompt, speak one short
+  Before any Bash command, edit, or fetch not certain to be allowlisted, speak one short
   spoken line stating the WHY/WHERE — not the mechanics — via piper_say, then proceed.
 ---
 
-When I'm about to do something that will trigger a permission prompt, I say one short
-line out loud first so Keiran can decide by ear, without reading the screen.
+Before I do anything I'm not certain is already allowlisted, I say one short line out loud
+first so Keiran can decide by ear, without reading the screen. I err toward speaking rather
+than trying to predict which calls will prompt.
 
 # How
 
 Run once, before the gated action:
 
 ```bash
-~/.dotfiles/bin/piper_say 'can I dig into the DB for rollback patterns?'
+piper_say 'can I dig into the DB for rollback patterns?'
 ```
 
 `piper_say` is allowlisted, so speaking never itself prompts. The visual
@@ -26,7 +27,7 @@ so a missed line only costs the narration, never the prompt.
   "I need to execute bin/bash psql...". The heart of it, ≤ ~8 words.
 - **One line per unit of work, not per command.** A single investigation that runs six
   gated commands gets one "can I dig into the DB?" — not six lines.
-- **Only for things that actually prompt.** Destructive ops, non-allowlisted commands,
-  writes/edits outside the working dir, network fetches. Skip it for routine
-  allowlisted work (e.g. rspec, linters) — silence is the default there.
+- **Err toward speaking.** Don't try to predict which calls prompt — if you're unsure a call
+  is allowlisted, speak first. Over-speaking costs a second of audio; a silent prompt defeats
+  the point. Only the obviously-routine allowlisted loop (rspec, linters, `ls`) stays silent.
 - **Speak, then act.** Say the line, then make the gated call in the same turn.
