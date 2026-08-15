@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, edgePkgs, ... }:
 
 {
   programs.opencode = {
     enable = true;
+    package = edgePkgs.opencode; # Use edge packages for latest
     agents = {
       pm = ''
         ---
