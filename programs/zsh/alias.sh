@@ -8,6 +8,18 @@ alias copilot="gh copilot"
 alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
 alias fasterb="since_master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erb_lint"
 alias crystalball="bundle exec crystalball"
+# Piper tts (python3 -m pip install --user piper-tts)
+alias piper='$(python3 -m site --user-base)/bin/piper'
+piper-say() {
+  printf '%s' "$*" | \
+    piper --model ~/.config/piper/voices/alba-medium.onnx --output-raw | \
+    ffplay -autoexit -nodisp -loglevel quiet \
+      -f s16le \
+      -ar 22050 \
+      -ch_layout mono \
+      -
+}
+
 
 function fastspec {
   FILES=$(since_master | grep \._spec.rb$ | xargs ls 2>/dev/null)
