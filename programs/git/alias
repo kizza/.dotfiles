@@ -65,6 +65,22 @@
     git show --color \"$commit\" --pretty=format:; \
   }; f"
 
+  # Stop on every commit since <upstream> with that commit applied, for tailoring it in place.
+  # Because the commit is applied rather than rolled back, HEAD~1 is its parent, so the editor can
+  # diff against the committed content and `git amend` keeps the message. At each stop:
+  #   nvim -p $(git committed) && git add . && git amend && git continue
+  # Rebases onto the merge-base, not the branch tip, so a moved upstream never re-parents the work.
+  # @usage git review-commits [upstream]
+  review-commits = "!f() { \
+    default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null); \
+    default=${default#origin/}; \
+    if [ -z \"$default\" ]; then \
+      git rev-parse --verify --quiet main >/dev/null 2>&1 && default=main || default=master; \
+    fi; \
+    base=$(git merge-base HEAD \"${1:-$default}\") || return 1; \
+    GIT_SEQUENCE_EDITOR=\"perl -i -pe s/^pick/edit/\" git rebase -i \"$base\"; \
+  }; f"
+
   # @usage git add-worktree with/branch-name
   add-worktree = "!f() { \
     branch=\"$1\"; \
