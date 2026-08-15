@@ -6,8 +6,6 @@ return {
     lazy = false,
     ---@type snacks.Config
     config = function(_, opts)
-      require('snacks').setup(opts)
-
       require("highlights").register(function()
         local colours = require("colours")
         -- colours.hi("SnacksIndent", { fg = 19 })
@@ -15,16 +13,21 @@ return {
 
         -- Find all available highlights with
         -- Snacks.picker.highlights({pattern = "hl_group:^Snacks"})
-        vim.defer_fn(function()
-          colours.hi("SnacksPickerGitStatusUntracked", { fg = colours.cyan, italic = true })
-          colours.hi("SnacksPickerDir", { fg = 20 })
-          -- hi("SnacksPickerInputNormal", { bg = colours.black })
-          colours.hi("SnacksIndent", { fg = colours.darken(8, 0.4) })
-          colours.hi("SnacksPickerTree", { link = "SnacksIndent" })
-          colours.hi("SnacksIndentScope", { fg = colours.darken(5, 0.1) }) -- Current
-          colours.hi("SnacksDashboardFile", { fg = 7 })                    -- Current
-        end, 100)
+        -- vim.defer_fn(function()
+        colours.hi("SnacksPickerGitStatusUntracked", { fg = colours.cyan, italic = true })
+        colours.hi("SnacksPickerDir", { fg = 20 })
+        -- hi("SnacksPickerInputNormal", { bg = colours.black })
+        colours.hi("SnacksIndent", { fg = colours.darken(8, 0.4) })
+        colours.hi("SnacksPickerTree", { link = "SnacksIndent" })
+        colours.hi("SnacksIndentScope", { fg = colours.darken(5, 0.1) }) -- Current
+        colours.hi("SnacksDashboardFile", { fg = 7 })
+        colours.hi("SnacksDashboardIcon", { fg = 5 })
+        colours.hi("SnacksDashboardSpecial", { fg = 3, italic = true })
+        colours.hi("SnacksDashboardTerminal", { bg = 18 })
+        -- end, 100)
       end)
+
+      require('snacks').setup(opts)
 
       -- Expand 'cc' into 'CodeCompanion' in the command line
       vim.cmd [[cab sp lua Snacks.picker]]
@@ -142,6 +145,7 @@ return {
           },
         }
       },
+      notify = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
       scope = { enabled = true },

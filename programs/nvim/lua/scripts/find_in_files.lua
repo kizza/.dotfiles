@@ -41,7 +41,7 @@ function M.build_input(on_submit)
       winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
     },
   }, {
-    prompt = NuiText("  ", "NoiceCmdlineIcon"),
+    prompt = NuiText("   ", "NoiceCmdlineIcon"),
     default_value = "",
     on_submit = on_submit
   })
