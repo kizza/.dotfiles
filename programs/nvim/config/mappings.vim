@@ -62,6 +62,9 @@ nnoremap <silent> <leader>x :bdelete<CR>
 " Close all other buffers
 nnoremap <silent> <leader>o :w <bar> %bd <bar> e# <bar> bd# <CR><CR>
 
+" Flag a buffer as discardable
+nmap <silent> <leader>bd :lua require("scripts/discardable_buffers").mark_buffer_as_discardable()<CR>
+
 " Open current file in new tmux split
 " nnoremap <silent> <leader>at :execute("silent !withsplit 'v ".expand("%")."'")<CR>
 nmap <silent> <leader>it :silent execute("!withvimsplit ". expand("%"))<CR>
