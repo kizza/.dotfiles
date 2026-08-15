@@ -21,7 +21,7 @@ piper-say() {
 }
 
 function fastspec {
-  FILES=$(since_master | grep \._spec.rb$ | xargs ls 2>/dev/null)
+  FILES=$(since_master | grep _spec.rb$)
   heading "Running rspec with..."
   echo $FILES
   echo $FILES | xargs rspec
