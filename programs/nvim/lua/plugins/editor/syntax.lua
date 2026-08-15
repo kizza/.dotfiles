@@ -1,6 +1,7 @@
 return {
-  { "chrisbra/Colorizer",     event = "VeryLazy" },
-  { 'mg979/vim-visual-multi', event = "VeryLazy" },
+  -- { "chrisbra/Colorizer",     event = "VeryLazy" }, -- Visualise colour codes
+  { "brenoprata10/nvim-highlight-colors", cmd = "HighlightColors" }, -- Visualise colour codes (handles HSL and vars etc)
+  { 'mg979/vim-visual-multi',             event = "VeryLazy" },
   {
     -- Vim plugin for automatically highlighting other uses of the word under the cursor
     "RRethy/vim-illuminate",
