@@ -10,7 +10,7 @@ in
     escapeTime = 0;
     extraConfig = let
       shellPackage = pkgs.zsh;
-      defaultCommand = if pkgs.stdenv.isDarwin then
+      defaultCommand = if pkgs.stdenv.hostPlatform.isDarwin then
         "exec ${pkgs.reattach-to-user-namespace}/bin/reattach-to-user-namespace -l ${shellPackage}/bin/zsh"
       else
         "exec ${shellPackage}/bin/zsh";

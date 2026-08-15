@@ -17,7 +17,7 @@ pkgs.stdenv.mkDerivation rec {
   # I *believe* it's because it wasn't compiled by the same `tic` binary
   # I am using `/usr/bin/tic` directly to fix this for now
   # ~${pkgs.ncurses}/bin/tic -x -o $out $src~
-  installPhase = if pkgs.stdenv.isDarwin then ''
+  installPhase = if pkgs.stdenv.hostPlatform.isDarwin then ''
     /usr/bin/tic -x -o $out $src
   '' else ''
     ${pkgs.ncurses}/bin/tic -x -o $out $src

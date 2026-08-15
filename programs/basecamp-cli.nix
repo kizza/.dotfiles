@@ -4,9 +4,9 @@ let
   version = "0.7.2";
 
   platform =
-    if pkgs.stdenv.isDarwin && pkgs.stdenv.isAarch64 then "darwin_arm64"
-    else if pkgs.stdenv.isDarwin then "darwin_amd64"
-    else if pkgs.stdenv.isLinux && pkgs.stdenv.isAarch64 then "linux_arm64"
+    if pkgs.stdenv.hostPlatform.isDarwin && pkgs.stdenv.hostPlatform.isAarch64 then "darwin_arm64"
+    else if pkgs.stdenv.hostPlatform.isDarwin then "darwin_amd64"
+    else if pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isAarch64 then "linux_arm64"
     else "linux_amd64";
 
   basecamp-cli = pkgs.stdenv.mkDerivation {
