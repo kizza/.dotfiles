@@ -51,6 +51,7 @@
   permission-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
 
   detail = "!f() { \
+    [ -z \"$1\" ] && { echo \"$(tput setaf 1)Empty$(tput sgr0)\"; return; }; \
     commit=${1:-HEAD}; \
     echo \"$(tput setaf 5)Message:$(tput sgr0)\"; \
     printf "%s" "$(tput setaf 7)"; \
