@@ -227,7 +227,7 @@
         };
 
         "ava@machina" = home-manager.lib.homeManagerConfiguration rec {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = mkPkgs "x86_64-linux";
 
           extraSpecialArgs = {
             inherit nixgl; # Pass nixgl to nixgl.nix
@@ -260,7 +260,7 @@
         };
 
         "holly@machina" = home-manager.lib.homeManagerConfiguration rec {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = mkPkgs "x86_64-linux";
 
           extraSpecialArgs = {
             inherit nixgl; # Pass nixgl to nixgl.nix
