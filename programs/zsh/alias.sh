@@ -33,6 +33,23 @@ function set_colour {
 
 function code { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
 
+# Jump to a git worktree via fzf
+fwt() {
+  local selection
+  selection=$(git worktree list --porcelain \
+    | awk '
+      /^worktree/ { path=$2 }
+      /^branch/   {
+        sub("refs/heads/", "", $2)
+        printf "%s\t%s\n", $2, path
+      }
+    ' \
+    | fzf \
+    | cut -f2)
+
+  [[ -n "$selection" ]] && cd "$selection"
+}
+
 # Fuzzy find directory files with "v" otherwise open "v ."
 function v {
   if [[ $# -eq 1 ]]; then
