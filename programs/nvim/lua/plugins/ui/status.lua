@@ -169,11 +169,16 @@ function M.build_lsp_spinner()
 end
 
 local function build()
+  local is_not_tool_window = function()
+    return vim.bo.filetype ~= "codecompanion"
+  end
+
   local filename_section = {
     'filename',
     path = 1,
     shorting_target = 40,
-    symbols = { modified = '', readonly = '', unnamed = '[No name]', newfile = '[New]' }
+    symbols = { modified = '', readonly = '', unnamed = '[No name]', newfile = '[New]' },
+    cond = is_not_tool_window
   }
 
   local line_location_section = function()
@@ -191,6 +196,36 @@ local function build()
 
   local colours = require("colours")
 
+  local codecompanion_details = function()
+    local ok, cc = pcall(require, "codecompanion")
+    if not ok then return "No codecompanion" end
+    local chat = cc.buf_get_chat(vim.api.nvim_get_current_buf())
+    if not chat then return "No chat" end
+    local adapter = chat.adapter
+    if not adapter then return "No adapter" end
+
+    local parts = {}
+
+    -- adapter formatted name
+    if adapter.formatted_name then
+      table.insert(parts, adapter.formatted_name)
+    end
+
+    -- model name
+    if adapter.model and adapter.model.name then
+      table.insert(parts, adapter.model.name)
+    elseif adapter.schema and adapter.schema.model and adapter.schema.model.default then
+      table.insert(parts, adapter.schema.model.default)
+    end
+
+    -- type (http or not)
+    if adapter.type then
+      table.insert(parts, "(" .. adapter.type .. ")")
+    end
+
+    return table.concat(parts, " ")
+  end
+
   require("lualine").setup {
     options = {
       theme = M.build_theme(),
@@ -203,10 +238,45 @@ local function build()
     sections = {
       lualine_a = { 'mode' },
       lualine_b = {
-        { 'branch', icon = { '', color = { fg = colours.get(4) } } }
+        {
+          'branch',
+          icon = { '', color = { fg = colours.get(4) } },
+          cond = is_not_tool_window
+        },
+        -- Rendered only while the signs are diffed against something other than the index — a
+        -- `:GitBase` revision, or the commit an interactive rebase is parked on.
+        {
+          require("scripts/gitsigns_base").status,
+          color = { fg = colours.get(colours.yellow), gui = "bold" },
+          cond = function()
+            return is_not_tool_window() and require("scripts/gitsigns_base").status() ~= nil
+          end,
+        },
       },
-      lualine_c = { filename_section },
-      lualine_x = { M.build_lsp_spinner(), 'diagnostics', { 'filetype', colored = true } },
+      lualine_c = {
+        filename_section,
+        {
+          -- function()
+          --   return "🤖 " .. codecompanion_details()
+          -- end,
+          codecompanion_details,
+          cond = function()
+            return vim.bo.filetype == "codecompanion"
+          end
+        }
+      },
+      lualine_x = {
+        {
+          M.build_lsp_spinner,
+          cond = is_not_tool_window,
+        },
+        'diagnostics',
+        {
+          'filetype',
+          colored = true,
+          cond = is_not_tool_window,
+        },
+      },
       lualine_y = {
         { M.build_ai_spinner() },
         { 'progress' }
@@ -217,7 +287,14 @@ local function build()
       lualine_a = {},
       lualine_b = {},
       lualine_c = { filename_section },
-      lualine_x = { { 'filetype', colored = false }, line_location_section },
+      lualine_x = {
+        {
+          'filetype',
+          colored = false,
+          cond = is_not_tool_window,
+        },
+        line_location_section
+      },
       lualine_y = {},
       lualine_z = {}
     },
