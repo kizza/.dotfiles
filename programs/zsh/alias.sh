@@ -34,6 +34,10 @@ function set_colour {
 
 function code { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
 
+function swin {
+  aerospace focus --window-id "$(aerospace list-windows --all | fzf | cut -d' ' -f1)"
+}
+
 # Jump to a git worktree via fzf
 fwt() {
   local selection
