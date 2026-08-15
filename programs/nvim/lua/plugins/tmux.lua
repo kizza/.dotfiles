@@ -16,7 +16,7 @@ return {
       { "<leader>rt", "<cmd>VimuxTogglePane<cr>" },
     },
     init = function()
-      vim.g.VimuxPromptString  = "Run: "
+      vim.g.VimuxPromptString = "Run: "
     end
   },
 }
