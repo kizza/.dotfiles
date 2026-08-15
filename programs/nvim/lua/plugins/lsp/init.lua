@@ -234,6 +234,26 @@ function M.start_servers()
   })
   vim.lsp.enable('ruby_lsp')
 
+  vim.lsp.config('herb_ls', {
+    on_attach = function(client, bufnr)
+      -- Don't format presently (adds too many line breaks)
+      print("herb_ls is connected!")
+      print(vim.inspect(client.server_capabilities))
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+      M.on_attach(client, bufnr)
+    end
+  })
+  -- vim.lsp.enable('herb_ls')
+
+  vim.lsp.config('copilot_language_server', {
+    on_attach = function(client, bufnr)
+      print("Copilot LSP is connected!")
+      M.on_attach(client, bufnr)
+    end
+  })
+  vim.lsp.enable('copilot_language_server')
+
   local runtime_path = vim.split(package.path, ';')
   table.insert(runtime_path, 'lua/?.lua')
   table.insert(runtime_path, 'lua/?/init.lua')
