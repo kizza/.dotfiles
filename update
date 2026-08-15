@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+set -eo pipefail
+
+# nix flake update nixpkgs
+nix flake update nixpkgs-edge
