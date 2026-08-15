@@ -197,9 +197,18 @@ function M.start_servers()
     vim.lsp.enable('solargraph')
   end
 
+
   -- Debug active clients (and their properties)
   -- lua print(vim.inspect(vim.lsp.get_active_clients()))
   vim.lsp.config('ruby_lsp', {
+    cmd = function(dispatchers, config)
+      -- see ~/.local/share/nvim/lazy/nvim-lspconfig/lsp/ruby_lsp.lua
+      return vim.lsp.rpc.start(
+        { "env", "TLW_SKIP_1PASSWORD=1", 'ruby-lsp' },
+        dispatchers,
+        config and config.root_dir and { cwd = config.cmd_cwd or config.root_dir }
+      )
+    end,
     -- on_attach = function(client, bufnr)
     --   client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
     --   M.on_attach(client, bufnr)
