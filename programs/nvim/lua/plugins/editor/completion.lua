@@ -12,15 +12,19 @@ M.dependencies = {
   "ray-x/cmp-treesitter",
   {
     "L3MON4D3/LuaSnip",
-    init = function()
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
+    -- init = function()
+    -- end,
+    config = function()
+      require("luasnip.loaders.from_lua").lazy_load({ paths = "./snippets" })
+      require("luasnip.loaders.from_snipmate").lazy_load({ paths = "./snippets" })
+      require('luasnip').filetype_extend("ruby", { "rails" })
       vim.api.nvim_set_keymap("i", "<C-n>", "<Plug>luasnip-next-choice", {})
       vim.api.nvim_set_keymap("s", "<C-n>", "<Plug>luasnip-next-choice", {})
       vim.api.nvim_set_keymap("i", "<C-p>", "<Plug>luasnip-prev-choice", {})
       vim.api.nvim_set_keymap("s", "<C-p>", "<Plug>luasnip-prev-choice", {})
-    end,
-    config = function()
-      require("luasnip.loaders.from_lua").lazy_load({ paths = "./snippets" })
-      require("luasnip.loaders.from_snipmate").lazy_load({ paths = "./snippets" })
     end
   },
   "saadparwaiz1/cmp_luasnip",
