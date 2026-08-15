@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+COPILOT_CLI_SESSION=1 gh copilot "$@"
+
