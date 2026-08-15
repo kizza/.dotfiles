@@ -1,13 +1,14 @@
 local M = {
   "neovim/nvim-lspconfig",
-  lazy = false,
+  -- lazy = false,
   dependencies = {
-    -- { import = "plugins.lsp.nvim-lint" },
+    { import = "plugins.lsp.nvim-lint" },
     { import = "plugins.lsp.conform" },
     { import = "plugins.lsp.mason" },
     -- { import = "plugins.lsp.null-ls" },
     -- { import = "plugins.lsp.ale" },
   },
+  event = { 'BufReadPre', 'BufNewFile' },
   opts = {
     document_highlight = { enabled = false },
   },
