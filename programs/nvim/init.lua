@@ -25,6 +25,9 @@ require("lazy").setup("plugins", {
     path = "~/Code/kizza/nvim",
     fallback = true, -- Fallback to git when local plugin doesn't exist
   },
+  ui = {
+    border = "single",
+  },
   checker = { enabled = true },
   change_detection = { notify = false },
   performance = {

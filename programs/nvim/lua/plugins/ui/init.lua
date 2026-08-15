@@ -33,17 +33,23 @@ return {
     end
   },
   {
+    -- Show the current function/class context at the top of the window
     "nvim-treesitter/nvim-treesitter-context",
-    enabled = false,
+    enabled = true,
     event = "VeryLazy",
     opts = {
-      enable = true
+      enable = true,
+      line_numbers = false,
+      max_lines = 2,
     },
     config = function(_, opts)
       require 'treesitter-context'.setup(opts)
-      vim.cmd [[
-        hi TreesitterContextBottom cterm=underline
-      ]]
+      require("highlights").register(function()
+        local theme = require("colours")
+        local bg = 18
+        theme.hi("TreesitterContext", { bg = bg })
+        theme.hi("TreesitterContextLineNumber", { bg = bg })
+      end)
     end
   },
   -- {  Using snacks
@@ -184,6 +190,18 @@ return {
       }
     end
   },
+  -- {
+  --   'tzachar/highlight-undo.nvim',
+  --   opts = {
+  --       hlgroup = "HighlightUndo",
+  --       duration = 300,
+  --       pattern = {"*"},
+  --       ignored_filetypes = { "neo-tree", "fugitive", "TelescopePrompt", "mason", "lazy" },
+  --       -- ignore_cb is in comma as there is a default implementation. Setting
+  --       -- to nil will mean no default os called.
+  --       -- ignore_cb = nil,
+  --   },
+  -- },
   {
     -- Highlight undo/redo changes (like yank text does)
     "y3owk1n/undo-glow.nvim",
