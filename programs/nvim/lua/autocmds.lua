@@ -72,6 +72,9 @@ require("colours").create_user_command()
 -- Discard buffers flagged as discardable
 require("scripts/discardable_buffers").create_discard_on_buf_enter_autocmd()
 
+-- Paint `REVIEW:` markers purple, and expose :ReviewMarkers
+require("scripts/review_markers").setup()
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),

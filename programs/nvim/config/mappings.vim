@@ -150,9 +150,12 @@ command! GitFile execute("silent !gitfile ".expand("%:.")." ".line("."))
 command! GitSha echom "Copied sha" <bar> execute("silent !linesha ".expand("%")." ".line("."))
 command! GitFixup :lua require("scripts/create_fixup_commit").show()<CR>
 command! Blame execute("silent Gitsigns blame")
+command! ReviewMarkerAdd :lua require("scripts/review_markers").insert()
 
 " nnoremap <silent> <leader>gs :GFiles?<CR> Using snacks now
 nnoremap <silent> <leader>gc :GitContext<CR>
+nnoremap <silent> <leader>gr :ReviewMarkerAdd<CR>
+nnoremap <silent> <leader>gR :ReviewMarkers<CR>
 nnoremap <silent> <leader>gf :GitFile<CR>
 vnoremap <silent> <leader>gf :<C-U> execute("silent !gitfile ".expand("%:.")." ".line("'<")." ".line("'>"))<CR>
 nnoremap <silent> <leader>gb :GitSha<CR>
