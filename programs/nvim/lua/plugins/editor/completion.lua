@@ -31,6 +31,10 @@ M.dependencies = {
   -- "SirVer/ultisnips",
   -- "quangnguyen30192/cmp-nvim-ultisnips",
   {
+    -- "kizza/cmp-rg-lsp",
+    dir = "~/Code/kizza/nvim/cmp-rg-lsp",
+  },
+  {
     'tzachar/cmp-tabnine',
     build = './install.sh',
     config = function()
@@ -219,25 +223,27 @@ function M.sources(cmp)
     {
       { name = "luasnip" },
       -- { name = "ultisnips" },
-      {
-        name = "rg_lsp",
-        option = {},
-        patterns = {
-          -- require("cmp-rg-lsp.builtins").ruby,
-          {
-            kind = cmp.lsp.CompletionItemKind.Keyword,
-            pattern = '^\\s*(def|scope|class|module|attribute)\\s+(self\\.|:)?(\\w*%s\\w+(\\?|!)?)',
-            match = 3,
-            filetype = { "ruby" },
-          },
-          -- {
-          --   kind = cmp.lsp.CompletionItemKind.Property,
-          --   pattern = '^#\\s*(\\w*%s\\w+)+\\s+:',
-          --   match = 1,
-          --   filetype = { "ruby" },
-          -- }
-        }
+      { name = "grep_lsp", option = {},
       },
+      -- {
+      --   name = "rg_lsp",
+      --   option = {},
+      --   patterns = {
+      --     -- require("cmp-rg-lsp.builtins").ruby,
+      --     {
+      --       kind = cmp.lsp.CompletionItemKind.Keyword,
+      --       pattern = '^\\s*(def|scope|class|module|attribute)\\s+(self\\.|:)?(\\w*%s\\w+(\\?|!)?)',
+      --       match = 3,
+      --       filetype = { "ruby" },
+      --     },
+      --     -- {
+      --     --   kind = cmp.lsp.CompletionItemKind.Property,
+      --     --   pattern = '^#\\s*(\\w*%s\\w+)+\\s+:',
+      --     --   match = 1,
+      --     --   filetype = { "ruby" },
+      --     -- }
+      --   }
+      -- },
       { name = "cmp_tabnine" },
       { name = "nvim_lsp" },
       { name = "buffer" },
