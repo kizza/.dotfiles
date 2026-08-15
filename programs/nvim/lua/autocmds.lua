@@ -69,6 +69,9 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 require("colours").create_user_command()
 
+-- Discard buffers flagged as discardable
+require("scripts/discardable_buffers").create_discard_on_buf_enter_autocmd()
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
