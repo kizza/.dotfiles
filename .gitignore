@@ -10,3 +10,7 @@ theme/dist/*
 # Dolt database files (added by bd init)
 .dolt/
 *.db
+
+# Scratch host probe — never commit a LAN address
+test.sh
+info
