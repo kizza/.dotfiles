@@ -75,6 +75,10 @@ require("scripts/discardable_buffers").create_discard_on_buf_enter_autocmd()
 -- Paint `REVIEW:` markers purple, and expose :ReviewMarkers
 require("scripts/review_markers").setup()
 
+-- Own the revision gitsigns diffs against: `:GitBase` for the session, and following the commit
+-- under the knife during an interactive rebase.
+require("scripts/gitsigns_base").setup()
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
