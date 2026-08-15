@@ -7,6 +7,7 @@ alias capture_unicode="xxd -psd"
 alias fastcop="since_master | grep \\.rb$ | xargs ls 2>/dev/null | xargs rubocop --force-exclusion"
 alias fasterb="since_master | grep \\.erb$ | xargs ls 2>/dev/null | xargs erb_lint"
 alias crystalball="bundle exec crystalball"
+
 # Piper tts (python3 -m pip install --user piper-tts)
 alias piper='$(python3 -m site --user-base)/bin/piper'
 piper-say() {
@@ -19,7 +20,6 @@ piper-say() {
       -
 }
 
-
 function fastspec {
   FILES=$(since_master | grep \._spec.rb$ | xargs ls 2>/dev/null)
   heading "Running rspec with..."
@@ -28,6 +28,7 @@ function fastspec {
 }
 
 function set_colour {
+  # COLOUR=$(echo "$2" | sed 's/../&\//g;s/.$//')
   printf '\033Ptmux;\033\033]4;%d;rgb:%s\033\033\\\033\\' $@;
 }
 
