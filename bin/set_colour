@@ -1,0 +1,10 @@
+#!/bin/sh
+
+INDEX=$1
+COLOUR=$(echo "$2" | sed 's/../&\//g;s/.$//')
+
+put_template() { printf '\033Ptmux;\033\033]4;%d;rgb:%s\033\033\\\033\\' $@; }
+
+put_template $(($INDEX)) $COLOUR
+
+echo $INDEX $COLOUR

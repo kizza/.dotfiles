@@ -10,6 +10,11 @@ local function apply_theme()
   vim.cmd("highlight clear")
   vim.cmd("doautocmd ColorSchemePre")
 
+  -- lua/base16-colorscheme.lua:140 uses BASE16_THEME directly (as an internal theme) if not in TMUX
+  if (vim.env.HERDR_ENV) then
+    vim.env.TMUX = true
+  end
+
   local theme_name = get_theme_name()
   local base16_studio_path = "~/base16-studio"
   local theme_file = vim.fn.expand(base16_studio_path .. "/themes/vim/" .. theme_name .. ".nvim")
