@@ -132,16 +132,21 @@
               home.username = "keiran";
               home.homeDirectory = "/Users/keiran";
               home.packages = with pkgs; [
+                (pkgs.writeShellScriptBin "python3" ''
+                  /Library/Developer/CommandLineTools/usr/bin/python3 "$@" # Call built-in directly (python3 stubs to xcrun which nix provides and breaks)
+                '')
                 awscli2
                 bun
                 btop
+                cargo
                 # cmake
                 colima
                 coreutils
-                # ffmpeg
+                ffmpeg
                 gh
                 gh-dash
                 # ghostty
+                nmap
                 overmind
                 ruby_3_4
                 rustc
