@@ -56,6 +56,10 @@
         You are QA. Run security checks (grep for secrets, basic static analysis) and spelling (use aspell or similar if available). Report issues only — no fixes. Flag anything blocking.
       '';
     };
+    # The same directory Claude Code reads (see claude.nix) — both agents expect
+    # <dir>/<name>/SKILL.md, so one copy serves both and a new skill lands in
+    # each of them at once.
+    skills = ./agentic/skills;
     commands = {
       commit = ''
         ---
