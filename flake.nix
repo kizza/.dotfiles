@@ -9,6 +9,15 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Deliberately NOT following our nixpkgs: hunk pulls in bun2nix, whose
+    # flake-parts/treefmt-nix wiring eagerly evaluates every system it declares
+    # — including x86_64-darwin, which nixpkgs 26.11 throws on. Pin hunk to the
+    # last release that still supports x86_64-darwin until bun2nix drops it.
+    hunk = {
+      url = "github:modem-dev/hunk";
+      inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+    };
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
