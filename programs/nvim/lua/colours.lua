@@ -162,7 +162,7 @@ function M.create_user_command()
     -- Split the command args into group name and attributes
     local args = vim.split(opts.args, "%s+", { trimempty = true })
     if #args < 1 then
-      vim.notify("Usage: Hi <group> [fg=<color>] [bg=<color>] [italic] [bold] ...", vim.log.levels.ERROR)
+      vim.notify("Usage: Hi <group> [fg=<color>] [bg=<color>] [italic] [bold] [strikethrough]...", vim.log.levels.ERROR)
       return
     end
 
@@ -188,6 +188,8 @@ function M.create_user_command()
         attributes.undercurl = true
       elseif arg == "reverse" then
         attributes.reverse = true
+      elseif arg == "strikethrough" then
+        attributes.strikethrough = true
       elseif arg == "bold" then
         attributes.bold = true
         -- Add more attributes as needed (underline, etc.)
