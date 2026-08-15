@@ -83,7 +83,7 @@
             ./home.nix
             ./programs/aerospace.nix
             ./programs/claude.nix
-            ./programs/agent-safehouse.nix
+            # ./programs/agent-safehouse.nix
             # ./programs/beads.nix
             ./programs/jankyborders.nix
             ./programs/sketchybar
