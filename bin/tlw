@@ -9,7 +9,7 @@ tmux rename-session "Lookout"
 # Ensure services are running
 if [ ! "$(colima list | grep Running)" ]; then
   heading "Starting colima..."
-  colima start --cpu 1 --memory 2 --disk 100
+  colima start --cpu 2 --memory 4 --disk 150
   donetick "Colima started"
 fi
 
@@ -24,7 +24,8 @@ heading "Booting backend..."
 tmux send-keys 'clear' C-m
 tmux rename-window "Backend"
 tmux send-keys "cd $DIR" C-m
-tmux send-keys 'overmind start -f Procfile.dev' C-m
+# tmux send-keys 'overmind start -f Procfile.dev' C-m
+tmux send-keys 'overmind start -f Procfile.dev -l web,js,css' C-m
 # tmux send-keys 'bin/webpack-dev-server' C-m
 # tmux send-keys 'bin/webpack --watch --colours' C-m
 

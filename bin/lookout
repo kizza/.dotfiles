@@ -1,0 +1,32 @@
+#!/usr/bin/env zsh
+
+DIR=~/Code/lookout
+[ ! -d "$DIR" ] && DIR=~/Code/lookout
+
+cd "$DIR"
+tmux rename-session "Lookout"
+
+# Ensure services are running
+if [ ! "$(colima list | grep Running)" ]; then
+  heading "Starting colima..."
+  colima start --cpu 1 --memory 2 --disk 40
+  donetick "Colima started"
+fi
+
+if [ ! "$(docker ps | grep lookout-postgres)" ]; then
+  heading "Starting docker..."
+  docker compose up -d
+  donetick "Docker started"
+fi
+
+# Backend
+tmux send-keys 'clear' C-m
+tmux rename-window "Backend"
+tmux send-keys "cd $DIR" C-m
+tmux send-keys 'overmind start -f Procfile.dev -l web,js,css' C-m
+
+# Vim
+tmux new-window
+tmux rename-window "Code"
+tmux send-keys 'clear' C-m
+tmux send-keys "cd $DIR" C-m
