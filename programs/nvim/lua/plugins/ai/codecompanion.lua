@@ -2,6 +2,8 @@ local fmt = string.format
 
 return {
   "olimorris/codecompanion.nvim",
+  build = false,
+  -- version = "v17.33.0",
   event = "VeryLazy",
   opts = {
     display = {
@@ -9,7 +11,7 @@ return {
         width = 80,
         height = 10,
         prompt = "Prompt ",                   -- Prompt used for interactive LLM calls
-        provider = "default",                 -- Can be "default", "telescope", "mini_pick" or "snacks". If not specified, the plugin will autodetect installed providers.
+        provider = "snacks",                  -- Can be "default", "telescope", "mini_pick" or "snacks". If not specified, the plugin will autodetect installed providers.
         opts = {
           show_default_actions = true,        -- Show the default actions in the action palette?
           show_default_prompt_library = true, -- Show the default prompt library in the action palette?
@@ -80,15 +82,27 @@ return {
         end,
       }
     },
-    strategies = {
+    interactions = {
       chat = {
-        adapter = "claude",
+        -- adapter = {
+        --   name = "copilot",
+        --   model = "claude-sonnet-4.5"
+        -- }
+        adapter = {
+          name = "claude_code",
+        }
       },
       inline = {
-        adapter = "claude",
+        adapter = {
+          name = "claude_code",
+          -- model = "claude-opus-4.7"
+        }
       },
       cmd = {
-        adapter = "claude",
+        adapter = {
+          name = "claude_code",
+          -- model = "claude-opus-4.7"
+        }
       }
     },
     prompt_library = {
@@ -280,6 +294,7 @@ Replace the CURRENT EXACT NAME with the best alternative at the PRECISE location
     -- Style highlights
     require("highlights").register(function()
       local colours = require("colours")
+      colours.hi("CodeCompanionChatEditorContext", { fg = 6, bg = 0 }) -- eg. {buffer}
       colours.hi("CodeCompanionChatVariable", { fg = 6, bg = 0 })
     end)
   end
