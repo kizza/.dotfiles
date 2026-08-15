@@ -24,6 +24,64 @@ function gdb() {
     >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches
 }
 
+# Remove the worktrees sitting on merged branches, then delete those branches.
+# The list opens in nvim first, exactly like gdb — delete a line to keep that worktree.
+# Pass -f to also remove worktrees holding uncommitted work.
+function prune_worktrees() {
+  local force
+  [[ "$1" == "-f" || "$1" == "--force" ]] && force="--force"
+
+  git fetch --prune || return 1
+
+  local list=/tmp/merged-worktrees
+  merged_worktrees >"$list"
+
+  if [[ ! -s "$list" ]]; then
+    donetick "No worktrees are sitting on merged branches"
+    return
+  fi
+
+  nvim "$list" || return 1
+
+  # Never name a local `path` in zsh — it is tied to the PATH array and blows away command lookup
+  local worktree_path
+  for worktree_path in "${(f)$(<$list)}"; do
+    remove_worktree "$worktree_path" "$force"
+  done
+
+  git worktree prune
+}
+alias gdw="prune_worktrees"
+
+# Every linked worktree, skipping the main one — git always lists it first
+function worktrees() {
+  git worktree list --porcelain | awk '/^worktree /{ print $2 }' | tail -n +2
+}
+
+# True when a worktree is on a branch already merged into trunk
+function worktree_merged() {
+  local branch=$(git -C "$1" branch --show-current)
+  [[ -n "$branch" ]] && git merge-base --is-ancestor "$branch" $(trunk)
+}
+
+function merged_worktrees() {
+  local worktree_path
+  for worktree_path in "${(f)$(worktrees)}"; do
+    worktree_merged "$worktree_path" && echo "$worktree_path"
+  done
+}
+
+# Remove a worktree and its branch. Refuses a dirty worktree without --force, and a locked one either
+# way (git wants -f -f), so a worktree another agent is live in is never yanked.
+function remove_worktree() {
+  local worktree_path="$1" force="$2"
+  local branch=$(git -C "$worktree_path" branch --show-current)
+
+  donetick "Removing worktree $worktree_path ($branch)"
+  git worktree remove $force "$worktree_path" || return 1
+  git branch -d "$branch"
+}
+
 function ir() {
   git rebase -i $(rebase_to)
 }

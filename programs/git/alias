@@ -101,3 +101,11 @@
     echo "Removing $selected..."; \
     git worktree remove \"$selected\"; \
   }; f"
+
+  # @usage git cd-worktree with/branch-name
+  cd-worktree = "!f() { \
+    selected=$(git worktree list --porcelain | awk '/^worktree/ {print $2}' | fzf --height 40% --reverse --prompt=\"Select worktree: \"); \
+    [ -z \"$selected\" ] && exit 0; \
+    echo "Cd into $selected..."; \
+    echo "$selected"; \
+  }; f"
