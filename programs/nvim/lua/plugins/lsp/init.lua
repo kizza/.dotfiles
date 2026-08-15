@@ -308,11 +308,25 @@ function M.start_servers()
     on_attach = function(client, bufnr)
       -- I don't like this one formatting
       client.server_capabilities.documentFormattingProvider = false
+
+      -- Define a command to organize imports
+      vim.api.nvim_buf_create_user_command(bufnr, "OrganiseImports", function()
+        vim.lsp.buf.execute_command {
+          command = "_typescript.organizeImports",
+          arguments = { vim.api.nvim_buf_get_name(0) },
+        }
+        -- vim.lsp.buf.code_action {
+        --   context = { only = { "source.organizeImports" }, diagnostics = {} },
+        --   apply = true,
+        -- }
+      end, { desc = "Organise imports using ts_ls" })
+
       M.on_attach(client, bufnr)
     end,
     commands = {
       OrganiseImports = {
         function()
+          -- vim.lsp.buf.code_action { ??
           vim.lsp.buf.execute_command {
             command = "_typescript.organizeImports",
             arguments = { vim.api.nvim_buf_get_name(0) },
