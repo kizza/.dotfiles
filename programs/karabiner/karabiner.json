@@ -8,6 +8,167 @@
         },
         "rules": [
           {
+            "description": "Disable Ctrl+Cmd+Enter so it can be used in Aerospace",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "return_or_enter",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_command",
+                      "left_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "vk_none"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Prefix: Ctrl+W then window/workspace commands",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "_",
+                  "modifiers": {
+                    "mandatory": [
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "set_variable": {
+                      "name": "ctrl_w_prefix",
+                      "value": 1
+                    }
+                  }
+                ],
+                "to_delayed_action": {
+                  "to_if_canceled": [
+                    {
+                      "set_variable": {
+                        "name": "ctrl_w_prefix",
+                        "value": 0
+                      }
+                    }
+                  ],
+                  "to_if_invoked": []
+                },
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "ctrl_w_prefix",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "1"
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/keiran/.local/bin/aerospace workspace 1"
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "ctrl_w_prefix",
+                      "value": 0
+                    }
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "ctrl_w_prefix",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "2"
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/keiran/.local/bin/aerospace workspace 2"
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "ctrl_w_prefix",
+                      "value": 0
+                    }
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "ctrl_w_prefix",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "z"
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/keiran/.local/bin/aerospace fullscreen"
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "ctrl_w_prefix",
+                      "value": 0
+                    }
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "ctrl_w_prefix",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "delete_or_backspace"
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/keiran/.local/bin/aerospace flatten-workspace-tree"
+                  }
+                ],
+                "to_after_key_up": [
+                  {
+                    "set_variable": {
+                      "name": "ctrl_w_prefix",
+                      "value": 0
+                    }
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
             "description": "Caps Lock to Escape on single press, Control on press and hold.",
             "manipulators": [
               {
