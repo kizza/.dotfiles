@@ -35,7 +35,16 @@ return {
             :call VimuxRunCommand("HEADLESS=false rspec ".expand("%").":".line("."))
           ]]
         end,
-        desc = "Test file",
+        desc = "Test headless",
+      },
+      {
+        "<leader>tr",
+        function()
+          vim.cmd [[
+            :call VimuxRunCommand("RECORD_SCREEN=true rspec ".expand("%").":".line("."))
+          ]]
+        end,
+        desc = "Record test",
       },
     },
     config = function()
