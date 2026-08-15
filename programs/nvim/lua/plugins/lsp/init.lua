@@ -78,41 +78,41 @@ function M.disable_syntax_highlighting()
   })
 end
 
-function M.format_asynchronously(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
+-- function M.format_asynchronously(bufnr)
+--   bufnr = bufnr or vim.api.nvim_get_current_buf()
 
-  vim.lsp.buf_request(
-    bufnr,
-    "textDocument/formatting",
-    vim.lsp.util.make_formatting_params({}),
-    function(err, res, ctx)
-      if err then
-        local err_msg = type(err) == "string" and err or err.message
-        -- you can modify the log message / level (or ignore it completely)
-        vim.notify("lsp formatting: " .. err_msg, vim.log.levels.WARN)
-        return
-      end
+--   vim.lsp.buf_request(
+--     bufnr,
+--     "textDocument/formatting",
+--     vim.lsp.util.make_formatting_params({}),
+--     function(err, res, ctx)
+--       if err then
+--         local err_msg = type(err) == "string" and err or err.message
+--         -- you can modify the log message / level (or ignore it completely)
+--         vim.notify("lsp formatting: " .. err_msg, vim.log.levels.WARN)
+--         return
+--       end
 
-      -- don't apply results if buffer is unloaded or has been modified
-      if not vim.api.nvim_buf_is_loaded(bufnr) or vim.api.nvim_buf_get_option(bufnr, "modified") then
-        return
-      end
+--       -- don't apply results if buffer is unloaded or has been modified
+--       if not vim.api.nvim_buf_is_loaded(bufnr) or vim.api.nvim_buf_get_option(bufnr, "modified") then
+--         return
+--       end
 
-      if res then
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        if client.name == "ts_ls" then
-          return
-        end
+--       if res then
+--         local client = vim.lsp.get_client_by_id(ctx.client_id)
+--         if client.name == "ts_ls" then
+--           return
+--         end
 
-        -- print(vim.inspect(client))
-        vim.lsp.util.apply_text_edits(res, bufnr, client and client.offset_encoding or "utf-16")
-        vim.api.nvim_buf_call(bufnr, function()
-          vim.cmd("silent noautocmd update")
-        end)
-      end
-    end
-  )
-end
+--         -- print(vim.inspect(client))
+--         vim.lsp.util.apply_text_edits(res, bufnr, client and client.offset_encoding or "utf-16")
+--         vim.api.nvim_buf_call(bufnr, function()
+--           vim.cmd("silent noautocmd update")
+--         end)
+--       end
+--     end
+--   )
+-- end
 
 function M.on_attach(client, bufnr)
   -- print("Attached " .. client.name)
@@ -375,8 +375,8 @@ end
 function M.format()
   if M.has_lsp_formatter() then
     -- vim.lsp.buf.format { id = client.id, async = true }
+    vim.notify("Formatting via lsp")
     vim.lsp.buf.format { async = true }
-    -- vim.notify("Formatted via lsp")
   else
     vim.notify("Formatting via confirm", vim.log.levels.INFO, { title = "LSP" })
     require("conform").format()
@@ -396,7 +396,6 @@ function M.config(_, opts)
     M.format,
     { bang = true, range = true, desc = 'Format using lsp' }
   )
-
   vim.keymap.set({ 'n', 'x' }, '<leader>df', '<cmd>Format<cr>')
 
   vim.diagnostic.config({
@@ -432,4 +431,5 @@ function M.config(_, opts)
   -- vim.cmd [[ autocmd! CursorHold * lua vim.diagnostic.open_float() ]]
   -- end
 end
+
 return M
