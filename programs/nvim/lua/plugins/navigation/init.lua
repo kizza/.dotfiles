@@ -4,7 +4,7 @@ return {
   {
     "kizza/actionmenu.nvim",
     branch = "v2",
-    dev = true,
+    -- dev = true,
     enabled = true,
     event = "VeryLazy",
     opts = {
@@ -15,6 +15,7 @@ return {
   {
     "kizza/aikido-tabs.nvim",
     lazy = false,
+    dev = true,
     enabled = true,
     config = function(_, opts)
       require("aikido-tabs").setup(opts)
@@ -65,8 +66,8 @@ return {
       require("flash").setup(opts)
 
       local colours = require("colours")
-      colours.hi("FlashLabel", { fg = 7, bg = colours.darken(3, 0.5) })
-      vim.cmd [[hi FlashLabel guifg=#FFFFFF]]
+      colours.hi("FlashLabel", { fg = 7, bg = colours.darken(3, 0.8) })
+      vim.cmd [[hi FlashLabel guifg=yellow]]
       -- vim.cmd("hi FlashLabel guifg=#FF2FCF guibg=black")
       colours.hi("FlashCursor", { link = "FlashLabel" })
     end,
@@ -96,7 +97,7 @@ return {
         desc = "Remote Flash",
       },
       {
-        "R",
+        "<C-/>",
         mode = { "o", "x" },
         function()
           require("flash").treesitter_search()
@@ -115,6 +116,7 @@ return {
   },
   {
     "kizza/jump-from-treesitter.nvim",
+    dev = true,
     keys = {
       { "gd", ":call jump_from_treesitter#jump()<CR>", desc = "Jump from treesitter" },
     },
@@ -236,7 +238,7 @@ return {
   {
     -- The OG fuzzy finder
     "junegunn/fzf",
-    enabled = true,
+    enabled = false,
     dependencies = {
       "junegunn/fzf.vim",
       'nvim-telescope/telescope.nvim', -- for highlight groups (TelescopeSelection)
