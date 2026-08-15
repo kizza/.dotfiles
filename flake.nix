@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-edge.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -16,6 +17,7 @@
 
   outputs = {
     nixpkgs,
+    nixpkgs-edge,
     home-manager,
     nixgl,
     ...
@@ -31,11 +33,22 @@
         inherit system;
         config.allowUnfreePredicate = allowUnfree;
       };
+
+      mkEdgePkgs = system: import nixpkgs-edge {
+        inherit system;
+        config.allowUnfreePredicate = allowUnfree;
+      };
     in
     {
       homeConfigurations = {
         "keiran@Keirans-MacBook-Pro.local" = home-manager.lib.homeManagerConfiguration rec {
           pkgs = mkPkgs "aarch64-darwin";
+
+          # Pass edge packages downward
+          extraSpecialArgs = {
+            edgePkgs = mkEdgePkgs "aarch64-darwin";
+          };
+
           modules = [
             {
               home.username = "keiran";
