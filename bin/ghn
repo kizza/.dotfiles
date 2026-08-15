@@ -49,7 +49,7 @@ gh api "/notifications?participating=true&since=${SINCE}" --jq '
   "[" + $mapping.type + "] " +
   .subject.title + " #" + $number + "." +
   " (subtitle=" + $mapping.topic + " (" + $repo + ")" +
-  "; sound=hero" +
+  "; sound=blow" +
   "; url=" + $html_url +
   "; meta.gh_id=" + .id +
   "; meta.gh_updated=" + .updated_at + ")"
