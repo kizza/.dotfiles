@@ -6,3 +6,7 @@ theme/temp.png
 theme/built/*
 theme/dist/*
 !theme/dist/.gitkeep
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
