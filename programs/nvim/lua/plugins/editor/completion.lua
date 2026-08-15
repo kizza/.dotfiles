@@ -131,6 +131,16 @@ function M.opts()
       ["<Tab>"] = cmp.mapping({
         c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
         i = function(fallback)
+          -- Intercept copilot and accept its suggestion if present
+          if vim.fn['copilot#Enabled']() == 1 and vim.fn['copilot#GetDisplayedSuggestion']().text ~= "" then
+            vim.api.nvim_feedkeys(
+              vim.api.nvim_replace_termcodes("<Plug>(copilot-accept-line)", true, true, true),
+              "n",
+              true
+            )
+            return
+          end
+
           if cmp.visible() then
             -- cmp.select_next_item()
             cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
