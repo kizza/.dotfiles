@@ -64,6 +64,26 @@
         "type": "github"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782989906,
+        "narHash": "sha256-8mCB97XqpWhUzB9aTAYMLFJCmF3FSRXujiKsvqE5iag=",
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "rev": "cf3769feb9837c6040820c3e6096c5cc2907adc0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -191,6 +211,7 @@
     },
     "root": {
       "inputs": {
+        "herdr": "herdr",
         "home-manager": "home-manager",
         "hunk": "hunk",
         "nixgl": "nixgl",
