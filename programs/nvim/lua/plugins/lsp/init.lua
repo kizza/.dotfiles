@@ -47,6 +47,24 @@ function M.set_diagnostic_autocmds()
   -- autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()
 end
 
+function M.notify_multiple_clients()
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("NotifyMultipleClients", { clear = true }),
+    callback = function(e)
+      local client = vim.lsp.get_client_by_id(e.data.client_id)
+      if client then
+        local all_clients = vim.lsp.get_clients({ name = client.name, bufnr = e.buf })
+        if #all_clients > 1 then
+          vim.notify("Multiple " .. client.name .. " clients spawned!", vim.log.levels.WARN,
+            { title = "LSP" })
+          client:stop()
+          return -- or stop the newer client: vim.lsp.stop_client(e.data.client_id)
+        end
+      end
+    end,
+  })
+end
+
 function M.disable_syntax_highlighting()
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("DisableSemanticHighlighting", { clear = true }),
@@ -54,6 +72,7 @@ function M.disable_syntax_highlighting()
       local client = vim.lsp.get_client_by_id(e.data.client_id)
       if client then
         client.server_capabilities.semanticTokensProvider = nil -- Not as good as treesitter
+        client.server_capabilities.documentHighlightProvider = nil
       end
     end,
   })
@@ -323,10 +342,11 @@ function M.format()
 end
 
 function M.config(_, opts)
+  M.disable_syntax_highlighting()
+  M.notify_multiple_clients()
   M.start_servers()
   M.set_diagnostic_bindings()
   -- M.set_diagnostic_autocmds()
-  M.disable_syntax_highlighting()
 
   vim.api.nvim_create_user_command(
     "Format",
@@ -369,5 +389,4 @@ function M.config(_, opts)
   -- vim.cmd [[ autocmd! CursorHold * lua vim.diagnostic.open_float() ]]
   -- end
 end
-
 return M
