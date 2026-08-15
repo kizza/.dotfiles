@@ -17,8 +17,11 @@
     # Note: this becomes a read-only store symlink, so future permission/hook
     # changes go through Nix + `switch`, not the live file.
     settings = {
-      model = "opus[1m]";
       theme = "auto";
+
+      # Keep Claude out of the commit trailer — no "Co-Authored-By: Claude" on
+      # commits it writes.
+      includeCoAuthoredBy = false;
 
       permissions.allow = [
         "Bash(~/.dotfiles/bin/piper_say *)"
