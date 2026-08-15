@@ -32,7 +32,6 @@
     stateVersion = "22.05";
     packages = with pkgs; [
       _1password-cli
-      cargo
       cloudflared
       coreutils
       delta
@@ -45,7 +44,6 @@
       git-secrets
       htop
       jq
-      pnpm
       tree-sitter
       watch
       yarn
