@@ -21,6 +21,33 @@ return {
     end
   },
   {
+    'bloznelis/before.nvim',
+    config = function()
+      local before = require('before')
+      before.setup()
+
+      -- Jump to previous entry in the edit history
+      vim.keymap.set('n', 'g.', before.jump_to_last_edit, {})
+
+      -- Jump to next entry in the edit history
+      vim.keymap.set('n', 'g,', before.jump_to_next_edit, {})
+
+      -- Look for previous edits in quickfix list
+      vim.keymap.set('n', '<leader>g,', before.show_edits_in_quickfix, {})
+
+      -- Look for previous edits in telescope (needs telescope, obviously)
+      -- vim.keymap.set('n', '<leader>oe', before.show_edits_in_telescope, {})
+    end
+  },
+  -- {
+  --  nb. Seemed to be caching gitcommit buffer cursor locations
+  --   "olimorris/persisted.nvim",
+  --   event = "BufReadPre", -- Ensure the plugin loads only when a buffer has been loaded
+  --   opts = {
+  --     -- Your config goes here ...
+  --   },
+  -- },
+  {
     "folke/flash.nvim",
     enabled = true,
     event = "VeryLazy",
