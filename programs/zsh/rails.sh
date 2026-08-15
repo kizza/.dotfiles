@@ -22,7 +22,7 @@ function keep_up() {
 }
 
 function freshen_migrations() {
-  MIGRATIONS=$(since_master | egrep '^db/migrate')
+  MIGRATIONS=$(since_master | egrep '^db/(migrate|data)')
   if [ -z "$MIGRATIONS" ]; then
     echo "No migrations to freshen"
     return 0
