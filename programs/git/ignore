@@ -3,3 +3,6 @@
 .kizza
 *.crt
 *.key
+
+# Per-worktree brief and running log, written by the `worktrees` skill. Never committed.
+prd.md
