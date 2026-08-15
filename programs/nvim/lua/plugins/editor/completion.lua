@@ -8,7 +8,7 @@ M.dependencies = {
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-cmdline",
-  "hrsh7th/cmp-nvim-lsp-signature-help",
+  -- "hrsh7th/cmp-nvim-lsp-signature-help",
   "ray-x/cmp-treesitter",
   {
     "L3MON4D3/LuaSnip",
@@ -78,14 +78,14 @@ function M.opts()
       -- completion = cmp.config.window.bordered(),
       -- documentation = cmp.config.window.bordered(),
     },
-    performance = {
-      -- debounce = 60,
-      -- throttle = 30,
-      -- fetching_timeout = 500,
-      debounce = 100,
-      throttle = 60,
-      fetching_timeout = 500,
-    },
+    -- performance = {
+    --   -- debounce = 60,
+    --   -- throttle = 30,
+    --   -- fetching_timeout = 500,
+    --   debounce = 100,
+    --   throttle = 60,
+    --   fetching_timeout = 500,
+    -- },
     sources = M.sources(cmp),
     -- sources = cmp.config.sources(
     --   {
@@ -369,7 +369,7 @@ function M.highlight()
   local blue = colours.blue
   local yellow = colours.yellow
 
-  hi("CmpItemAbbr", { bg = nil })
+  hi("CmpItemAbbr", { bg = nil }) -- This big hangs on sometimes, blocking the selected bg colour going through
   hi("CmpItemAbbrMatch", { fg = magenta })
   hi("CmpItemAbbrMatchFuzzy", { fg = cyan })
   hi("CmpItemMenu", { fg = 8, italic = true })
