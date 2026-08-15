@@ -20,10 +20,13 @@ let
     "com.apple.Preview"
     "com.apple.TextEdit"
     "com.apple.finder"
+    "com.getcleanshot.app-setapp"
     "com.google.chrome.for.testing"
     "com.macpaw.CleanMyMac-setapp"
     "com.microsoft.Excel"
     "com.microsoft.teams2"
+    "com.postmanlabs.mac"
+    "com.runningwithcrayons.Alfred-Preferences"
     "md.obsidian"
   ];
 
@@ -44,6 +47,8 @@ in
       keepAlive = false;
     };
     settings = {
+      config-version = 2; # https://nikitabobko.github.io/AeroSpace/guide#config-version
+      persistent-workspaces = ["1" "2" "3" "4" "5"];
       after-startup-command = [
         "exec-and-forget ~/.local/bin/sketchybar" # Start sketchybar
       ];
