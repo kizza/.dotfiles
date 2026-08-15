@@ -48,3 +48,9 @@ function v {
 function fresh {
   ~/.dotfiles/switch && notify "Fresh/!" "Your dotfiles are now fresh"
 }
+
+# Agent safehouse
+SAFEHOUSE_APPEND_PROFILE="$HOME/.config/agent-safehouse/local-overrides.sb"
+safe() { safehouse --add-dirs-ro=~/Code --append-profile="$SAFEHOUSE_APPEND_PROFILE" "$@"; }
+safekeys() { safe --env-pass=PATH,OPENAI_API_KEY,ANTHROPIC_API_KEY,GEMINI_API_KEY "$@"; }
+safeopencode() { OPENCODE_PERMISSION='{"*":"allow"}' safekeys opencode "$@"; }
