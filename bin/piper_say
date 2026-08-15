@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if pgrep -xq "MSTeams"; then
+  echo "No vocalisation, as teams is running (don't want to interrupt meetings!)"
+  exit 0
+fi
+
+VOICE="${PIPER_VOICE:-$HOME/.config/piper/voices/alba-medium.onnx}"
+PLAY_CMD="ffplay -autoexit -nodisp -loglevel quiet -f s16le -ar 22050 -ch_layout mono -"
+PIPER_BIN="$(python3 -m site --user-base)/bin/piper"
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [options] [text...]
+
+Read text aloud using Piper TTS.
+
+Options:
+  -v, --voice PATH   ONNX voice file (default: \$PIPER_VOICE or alba-medium)
+  -l, --voices       List available voices
+  -h, --help         Show this help
+
+If no text is given, reads from stdin.
+EOF
+  exit 0
+}
+
+list_models() {
+  local voices="${HOME}/.config/piper/voices"
+  if [[ -d "$voices" ]]; then
+    ls "$voices"/*.onnx 2>/dev/null | sed 's|.*/||; s|\.onnx$||' || true
+  fi
+  exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage ;;
+    -l|--voices) list_models ;;
+    -v|--voice) VOICE="$2"; shift 2 ;;
+    --) shift; break ;;
+    -*) echo "Unknown option: $1" >&2; usage; exit 1 ;;
+    *) break ;;
+  esac
+done
+
+if [[ ! -f "$VOICE" ]]; then
+  echo "Voice not found: $VOICE" >&2
+  exit 1
+fi
+
+if [[ ! -x "$PIPER_BIN" ]]; then
+  echo "piper binary not found at $PIPER_BIN" >&2
+  echo "Install with: python3 -m pip install --user piper-tts" >&2
+  exit 1
+fi
+
+if [[ $# -gt 0 ]]; then
+  printf '%s' "$*" | "$PIPER_BIN" --model "$VOICE" --output-raw | $PLAY_CMD
+else
+  cat | "$PIPER_BIN" --model "$VOICE" --output-raw | $PLAY_CMD
+fi
