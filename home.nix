@@ -30,6 +30,12 @@
 
   home = {
     stateVersion = "22.05";
+    sessionPath = [
+      "$HOME/.volta/bin"
+    ];
+    sessionVariables = {
+      VOLTA_HOME = "$HOME/.volta";
+    };
     packages = with pkgs; [
       _1password-cli
       cloudflared
@@ -45,6 +51,7 @@
       htop
       jq
       tree-sitter
+      volta
       watch
       yarn
       zoxide
