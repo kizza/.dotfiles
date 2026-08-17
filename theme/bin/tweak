@@ -14,7 +14,7 @@ if [ -f $theme ]; then
     | sed 's/\///g' \
     | sed 's/"//g' \
   )
-  yarn tweak "$colors"
+  npm run --silent tweak -- "$colors"
 else
   printf "No theme file %s found\n" $theme
 fi;
