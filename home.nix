@@ -53,7 +53,7 @@
       tree-sitter
       volta
       watch
-      yarn
+      yarn-berry # Yarn 4, matching the packageManager pin in the lookout repo
       zoxide
     ];
   };
