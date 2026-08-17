@@ -1,6 +1,11 @@
 { pkgs, edgePkgs, ... }:
 
 {
+  programs.zsh.envExtra = ''
+    # Prevents session database being named opencode-stable.db
+    export OPENCODE_DISABLE_CHANNEL_DB="true"
+  '';
+
   programs.opencode = {
     enable = true;
     package = edgePkgs.opencode; # Use edge packages for latest
