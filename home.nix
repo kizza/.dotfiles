@@ -47,7 +47,7 @@
       fastfetch
       fd
       fzf
-      git-secrets
+      gitleaks
       htop
       jq
       tree-sitter
