@@ -4,6 +4,7 @@
 [core]
   excludesfile = ~/.gitignore
   editor = nvim
+  hooksPath = ~/.config/git/hooks
 [pager]
   diff = delta
   log = delta
@@ -21,15 +22,7 @@
 [pretty]
   custom = "%C(magenta)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(italic blue)%an%Creset"
   other = "%C(magenta)%h%Creset %s %C(green)(%ar)%Creset %C(italic blue)%an"
-[secrets]
-  providers = git secrets --aws-provider
-  patterns = (A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}
-  patterns = (\"|')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)(\"|')?\\s*(:|=>|=)\\s*(\"|')?[A-Za-z0-9/\\+=]{40}(\"|')?
-  patterns = (\"|')?(AWS|aws|Aws)?_?(ACCOUNT|account|Account)_?(ID|id|Id)?(\"|')?\\s*(:|=>|=)\\s*(\"|')?[0-9]{4}\\-?[0-9]{4}\\-?[0-9]{4}(\"|')?
-  allowed = AKIAIOSFODNN7EXAMPLE
-  allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 [init]
-  templateDir = ~/.git-secrets
   defaultBranch = main
 [rebase]
   autosquash = true

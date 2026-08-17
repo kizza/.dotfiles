@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Scans staged changes for secrets before every commit, in every repo
+# (wired in globally via core.hooksPath — see programs/git/default.nix).
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks not found on PATH, skipping secret scan" >&2
+  exit 0
+fi
+
+gitleaks protect --staged --redact --verbose
