@@ -11,6 +11,6 @@
   };
 
   home.packages = [
-    nixgl.packages.${pkgs.system}.nixGLIntel
+    nixgl.packages.${pkgs.stdenv.hostPlatform.system}.nixGLIntel
   ];
 }
