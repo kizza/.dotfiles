@@ -37,9 +37,6 @@
       VOLTA_HOME = "$HOME/.volta";
     };
     packages = with pkgs; [
-      _1password-cli
-      cloudflared
-      coreutils
       delta
       docker
       entr
