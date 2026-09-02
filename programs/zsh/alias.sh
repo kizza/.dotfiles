@@ -68,7 +68,7 @@ function v {
 }
 
 function fresh {
-  ~/.dotfiles/switch && notify "Fresh/!" "Your dotfiles are now fresh"
+  ~/.dotfiles/switch && notify "Fresh!" "Your dotfiles are now fresh"
 }
 
 # Agent safehouse

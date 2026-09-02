@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 
-# ls /System/Library/Sounds (for sound names)
-osascript -e "display notification \"$2\" with title \"$1\" sound name \"Purr\""
+case "$(uname -s)" in
+  Darwin)
+    # ls /System/Library/Sounds (for sound names)
+    osascript -e "display notification \"$2\" with title \"$1\" sound name \"Purr\""
+    ;;
+  Linux)
+    notify-send "$1" "$2"
+    ;;
+esac
