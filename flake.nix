@@ -176,6 +176,12 @@
 
         "keiran@debby" = home-manager.lib.homeManagerConfiguration rec {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+          # Pass edge packages downward
+          extraSpecialArgs = {
+            edgePkgs = mkEdgePkgs "x86_64-linux";
+          };
+
           modules = [
             {
               home.username = "keiran";
@@ -185,14 +191,17 @@
               ];
             }
             ./home.nix
+            ./programs/opencode.nix
           ];
         };
 
         "keiran@machina" = home-manager.lib.homeManagerConfiguration rec {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
+          # Pass edge packages downward
           extraSpecialArgs = {
             inherit nixgl; # Pass nixgl to nixgl.nix
+            edgePkgs = mkEdgePkgs "x86_64-linux";
           };
 
           modules = [
@@ -224,6 +233,7 @@
             ./programs/nixgl.nix
             ./programs/hyprlnd.nix
             ./programs/ghostty-wrapped.nix
+            ./programs/opencode.nix
           ];
         };
 
