@@ -135,6 +135,7 @@
                 (pkgs.writeShellScriptBin "python3" ''
                   /Library/Developer/CommandLineTools/usr/bin/python3 "$@" # Call built-in directly (python3 stubs to xcrun which nix provides and breaks)
                 '')
+                _1password-cli
                 awscli2
                 bun
                 btop
