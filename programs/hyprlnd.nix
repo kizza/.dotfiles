@@ -3,6 +3,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "lua";
 
     package = config.lib.nixGL.wrap pkgs.hyprland;
 
@@ -48,21 +49,32 @@
 
       bind = [
         "CTRL,SPACE,exec,rofi -show drun"
-        "SUPER,T,exec,nixGLIntel ghostty"
-        "SUPER,B,exec,firefox"
-        "SUPER,H,exec,firefox,https://chatgpt.com"
-        "SUPER,N,exec,notify-send hello"
-        "SUPER,Q,killactive"
-        "SUPER,A,exec,gnome-terminal"
-        "SUPER,M,exit"
+        "SUPER,RETURN,exec,nixGLIntel ghostty"
+        "SUPER SHIFT,B,exec,firefox"
+        "SUPER SHIFT,H,exec,firefox,https://chatgpt.com"
+        "SUPER SHIFT,N,exec,notify-send hello"
+        "SUPER SHIFT,Q,killactive"
+        "SUPER SHIFT,M,exit"
         "ALT,h,movefocus,l"
         "ALT,l,movefocus,r"
         "ALT,k,movefocus,u"
         "ALT,j,movefocus,d"
+
+        # Forward macOS-style Command shortcuts to the focused application.
         "SUPER,A,sendshortcut,CTRL,A"
         "SUPER,C,sendshortcut,CTRL,C"
         "SUPER,V,sendshortcut,CTRL,V"
         "SUPER,X,sendshortcut,CTRL,X"
+        "SUPER,Z,sendshortcut,CTRL,Z"
+        "SUPER SHIFT,Z,sendshortcut,CTRL,SHIFT,Z"
+        "SUPER,F,sendshortcut,CTRL,F"
+        "SUPER,S,sendshortcut,CTRL,S"
+        "SUPER,N,sendshortcut,CTRL,N"
+        "SUPER,O,sendshortcut,CTRL,O"
+        "SUPER,P,sendshortcut,CTRL,P"
+        "SUPER,W,sendshortcut,CTRL,W"
+        "SUPER,T,sendshortcut,CTRL,T"
+        "SUPER,Q,sendshortcut,CTRL,Q"
       ];
     };
   };
