@@ -19,6 +19,9 @@
     settings = {
       theme = "auto";
 
+      # Default model for new sessions
+      model = "claude-opus-5[1m]";
+
       # Keep Claude out of the commit trailer — no "Co-Authored-By: Claude" on
       # commits it writes.
       includeCoAuthoredBy = false;
