@@ -1,7 +1,8 @@
-{ pkgs, edgePkgs, ... }:
+{ edgePkgs, ... }:
 
 {
-  home.packages = with pkgs; [
+  # Use edge nix to align with claude
+  home.packages = with edgePkgs; [
     claude-agent-acp
   ];
 
