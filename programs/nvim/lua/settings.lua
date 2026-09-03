@@ -12,7 +12,8 @@ vim.keymap.del('n', 'grt')
 local opt = vim.opt
 
 opt.autoread = true -- Reload file when edited externally
--- opt.clipboard = "unnamedplus" -- Sync with system clipboard
+-- opt.clipboard = "unnamedplus" -- Sync with system clipboard, so `"+y` is always
+-- deliberate. Over ssh that yank has to cross the wire itself: see `scripts/clipboard`.
 -- opt.cmdheight = 0   -- Don't show bar below statusline
 opt.completeopt = "menu,menuone,noselect"
 -- opt.conceallevel = 3 -- Hide * markup for bold and italic

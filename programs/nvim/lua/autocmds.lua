@@ -72,6 +72,9 @@ require("colours").create_user_command()
 -- Discard buffers flagged as discardable
 require("scripts/discardable_buffers").create_discard_on_buf_enter_autocmd()
 
+-- Send `"+y` to the clipboard of the machine you are sitting at, not the one nvim runs on
+require("scripts/clipboard").setup()
+
 -- Paint `REVIEW:` markers purple, and expose :ReviewMarkers
 require("scripts/review_markers").setup()
 
