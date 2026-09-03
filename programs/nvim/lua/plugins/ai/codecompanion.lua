@@ -80,7 +80,17 @@ return {
             },
           })
         end,
-      }
+      },
+      acp = {
+        -- Resolving to nil drops the key entirely so the keychain login is used.
+        extend = {
+          claude_code = {
+            env = {
+              CLAUDE_CODE_OAUTH_TOKEN = function() return nil end,
+            },
+          },
+        },
+      },
     },
     interactions = {
       chat = {
