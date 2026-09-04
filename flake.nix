@@ -214,7 +214,7 @@
 
                 services.ollama = {
                   enable = true;
-                  host = "127.0.0.1";
+                  host = "172.17.0.1"; # docker host
                 };
 
                 home.packages = with pkgs; [
