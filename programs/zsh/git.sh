@@ -82,6 +82,56 @@ function remove_worktree() {
   git branch -d "$branch"
 }
 
+# Each worktree as "branch<tab>path" — fzf shows the branch, cut takes the path. Porcelain separates
+# entries with a blank line, so flush there; a detached worktree has no branch line to read.
+function worktree_choices() {
+  git worktree list --porcelain | awk '
+    /^worktree / { worktree_path = $2; branch = "" }
+    /^branch /   { branch = $2; sub("refs/heads/", "", branch) }
+    /^detached/  { branch = "(detached)" }
+    /^$/         { if (worktree_path) printf "%s\t%s\n", branch, worktree_path; worktree_path = "" }
+    END          { if (worktree_path) printf "%s\t%s\n", branch, worktree_path }
+  '
+}
+
+# Fzf the worktrees and cd into the one picked
+function cd-worktree() {
+  local worktree_path=$(worktree_choices | fzf --height 40% --reverse --prompt="Cd to worktree: " | cut -f2)
+
+  [[ -n "$worktree_path" ]] && cd "$worktree_path"
+}
+
+# Fzf the worktrees and remove the one picked, branch and all. Git refuses while a worktree still holds
+# modified or untracked files — rather than force the delete, offer to cd there and judge the work by hand.
+function rm-worktree() {
+  # The main worktree is always listed first and can never be removed
+  local worktree_path=$(worktree_choices | tail -n +2 | fzf --height 40% --reverse --prompt="Remove worktree: " | cut -f2)
+  [[ -z "$worktree_path" ]] && return
+
+  local branch=$(git -C "$worktree_path" branch --show-current)
+  local main_worktree=$(worktree_choices | head -n 1 | cut -f2)
+
+  # Removing the worktree you are standing in yanks the ground out from under the shell, so step back
+  # to the main one first — origin takes you home again if the removal is refused and you walk away
+  local origin=$PWD
+  [[ "$PWD" == "$worktree_path" || "$PWD" == "$worktree_path"/* ]] && cd "$main_worktree"
+
+  local failure
+  if failure=$(git worktree remove "$worktree_path" 2>&1); then
+    donetick "Removed worktree $worktree_path ($branch)"
+    git branch -d "$branch"
+    return
+  fi
+
+  echo "${RED}${CROSS}${RESET} $failure"
+  [[ "$failure" != *"modified or untracked files"* ]] && return 1
+
+  echo -n "Cd into $worktree_path to clean it up? (y/n) " && read response
+  [[ "$response" =~ ^[Yy]$ ]] || { cd "$origin"; return 1; }
+
+  cd "$worktree_path" && git status --short --untracked-files=all
+}
+
 function ir() {
   git rebase -i $(rebase_to)
 }
