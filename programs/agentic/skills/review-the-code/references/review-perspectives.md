@@ -94,11 +94,25 @@ Review the following diff against the base branch.
 Focus on:
 - Unclear naming: variables, functions, or types whose names don't convey their purpose
 - Confusing control flow: deeply nested conditions, inverted logic, goto-like patterns
-- Verbose comments: where content goes beyond a short, succinct foothold for future developers
+- Verbose comments: rambling where a trailing few words or one sentence would carry it; preamble
+  before the point; a note on every line; anything restating what the code plainly says. Judge
+  against the `## Comments` rules in `~/.claude/CLAUDE.md`
+- Stale comments: a comment the changed code no longer matches
 - Missing context: code that requires knowledge not present in the file to understand
 - Over-complexity: code doing something simple in a complicated way
 - Misleading code: names or structures that suggest one thing but do another
 - Dead code: unreachable branches, unused variables, commented-out code introduced in the diff
+
+If the diff touches any test file, read the `test-clarity` skill
+(`~/.claude/skills/test-clarity/SKILL.md`) and review those files against it. A reviewer must
+be able to judge each scenario from one screen. In particular:
+- Examples that can't be read alone — setup hoisted above them, or a helper they must chase
+- Setup that runs a service, job or workflow to reach a state it could simply assert into being
+- State written by hand where the fixture layer already has a name for it
+- Setup computed from "now" where a literal anchor plus a named period would read as a calendar
+- A comment on every setup line, or setup that proves not load-bearing
+- A safety assertion in its own example, away from the operation it guards
+- At the end-to-end tier, judge the inverse: a missing named helper for an irreducible journey step
 
 Do NOT flag:
 - Code that is complex because the problem is complex (necessary complexity)

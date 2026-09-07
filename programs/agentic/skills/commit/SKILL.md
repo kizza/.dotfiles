@@ -15,6 +15,7 @@ Review the uncommitted changes, determine how they naturally group into a set of
 * Do not create commits for incidental fixes made while developing the branch (typos, formatting, small corrections).
 * Create separate commits when a change solves a different problem, represents an important design decision, or would reasonably be reverted independently.
 - Specs covering a change MUST always be within the commit that they are covering, they are a coherent and logic change.
+- Before committing, any test file in the tree gets a `test-clarity` read — each example judgeable from one screen, preconditions stated rather than produced, no helper for a single call site. Fold the cleanup into the commit that owns the test, never a follow-up.
 * Each commit should be understandable in isolation and answer:
   * What changed?
   * Why did it change?
