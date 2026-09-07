@@ -38,22 +38,7 @@ function swin {
   aerospace focus --window-id "$(aerospace list-windows --all | fzf | cut -d' ' -f1)"
 }
 
-# Jump to a git worktree via fzf
-fwt() {
-  local selection
-  selection=$(git worktree list --porcelain \
-    | awk '
-      /^worktree/ { path=$2 }
-      /^branch/   {
-        sub("refs/heads/", "", $2)
-        printf "%s\t%s\n", $2, path
-      }
-    ' \
-    | fzf \
-    | cut -f2)
-
-  [[ -n "$selection" ]] && cd "$selection"
-}
+alias fwt="cd-worktree"
 
 # Fuzzy find directory files with "v" otherwise open "v ."
 function v {
