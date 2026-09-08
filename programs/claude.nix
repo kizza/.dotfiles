@@ -23,6 +23,10 @@
       # Default model for new sessions
       model = "claude-opus-5[1m]";
 
+      # Compact at a fixed 400k of context rather than letting Claude pick the window ("auto").
+      # Token count, not the /autocompact shorthand — 400 there means 400k here.
+      autoCompactWindow = 400000;
+
       # Keep Claude out of the commit trailer — no "Co-Authored-By: Claude" on
       # commits it writes.
       includeCoAuthoredBy = false;
