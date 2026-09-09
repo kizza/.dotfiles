@@ -18,9 +18,6 @@
 -- describing a diff other than the one they appear to.
 local M = {}
 
--- A root commit has no parent, so diff it against the empty tree to keep it reading as added.
-local EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-
 -- What `:GitBase` chose, passed to gitsigns as typed — it understands `main`, `HEAD~1`, `~`, `^` and
 -- bare shas alike. Nil means the index, gitsigns' own default.
 local chosen_base = nil
@@ -38,7 +35,13 @@ local function git_output(...)
   return vim.trim(completed.stdout)
 end
 
+-- The revision gitsigns was last handed, so a buffer that attaches too late to have read it can be
+-- pointed at the same one. Nil means the index, and costs the re-point nothing.
+local applied_base = nil
+
 local function change_base(revision)
+  applied_base = revision
+
   local gitsigns_loaded, gitsigns = pcall(require, "gitsigns")
   if gitsigns_loaded then
     gitsigns.change_base(revision, true) -- `true` being every buffer, including ones opened later
@@ -87,22 +90,65 @@ local function stopped_on_edit()
   return directory ~= nil and vim.uv.fs_stat(vim.fs.joinpath(directory, "amend")) ~= nil
 end
 
-function M.sync()
-  if stopped_on_edit() then
-    -- A root commit has no parent, so diff it against the empty tree to keep it reading as added.
-    local has_parent = git_output("rev-parse", "--verify", "--quiet", "HEAD~1")
-    change_base(has_parent and "HEAD~1" or EMPTY_TREE)
+-- The revision the rebase wants signs pointed at, or nil when none is parked on an `edit`.
+local function rebase_base()
+  if not stopped_on_edit() then
+    return nil
+  end
 
-    local head = git_output("log", "-1", "--format=%h %s")
-    if head and head ~= (rebase_commit and rebase_commit.head) then
-      rebase_commit = { head = head, short = head:match("^%S+") }
-      vim.notify(head, vim.log.levels.INFO, { title = "Reviewing commit — signs show its own diff" })
-    end
+  -- A root commit has no parent, so diff it against the empty tree to keep it reading as added.
+  local EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+  return git_output("rev-parse", "--verify", "--quiet", "HEAD~1") and "HEAD~1" or EMPTY_TREE
+end
+
+local function announce_rebase_commit()
+  local head = git_output("log", "-1", "--format=%h %s")
+  if head and head ~= (rebase_commit and rebase_commit.head) then
+    rebase_commit = { head = head, short = head:match("^%S+") }
+    vim.notify(head, vim.log.levels.INFO, { title = "Reviewing commit — signs show its own diff" })
+  end
+end
+
+function M.sync()
+  local base = rebase_base()
+
+  if base then
+    change_base(base)
+    announce_rebase_commit()
   elseif rebase_commit then
     rebase_commit = nil
     change_base(chosen_base)
     vim.notify("Signs back to " .. (chosen_base or "the index"), vim.log.levels.INFO, { title = "Rebase finished" })
   end
+end
+
+-- The base gitsigns should start life with, for `gitsigns.setup { base = ... }`, so buffers opened
+-- from then on attach already pointed at it. Announcing is left to `M.sync()`, which runs a tick
+-- later with the notify plugin up.
+function M.initial()
+  applied_base = rebase_base() or chosen_base
+  return applied_base
+end
+
+-- Coalesces the burst of attaches at startup into one re-point, since the pass is editor-wide anyway.
+local reapply_pending = false
+
+-- For gitsigns' `on_attach`. Every buffer open before gitsigns loads attaches against the index
+-- however the base is set, because gitsigns' own `plugin/gitsigns.lua` calls `setup()` first: ours
+-- runs second, and by then `setup()` has already kicked off those attaches, each of which read the
+-- base before we supplied it. Re-pointing as they attach is what saves reloading the buffer you land
+-- in — the first file of `nvim $(git committed)`. Scheduled because the cache entry the re-point
+-- works through is only created once `on_attach` has returned.
+function M.reapply_on_attach()
+  if not applied_base or reapply_pending then
+    return
+  end
+
+  reapply_pending = true
+  vim.schedule(function()
+    reapply_pending = false
+    change_base(applied_base)
+  end)
 end
 
 -- The branch being replayed, since `--show-current` is empty while a rebase has HEAD detached — and
