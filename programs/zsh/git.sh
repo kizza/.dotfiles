@@ -96,11 +96,80 @@ function worktree_choices() {
   '
 }
 
+# Every local branch that could move into a worktree, newest first, as "branch<tab>worktreepath". Trunk is
+# out, and so is anything already sitting in a linked worktree — but the branch the main worktree is on
+# stays in, because popping that one out is the whole point; it only has to step aside first.
+function branch_choices() {
+  git branch --sort=-committerdate --format='%(refname:short)%09%(worktreepath)' \
+    | awk -F'\t' -v trunk="$(trunk)" -v linked="$(worktrees)" '
+        BEGIN       { n = split(linked, paths, "\n"); for (i = 1; i <= n; i++) if (paths[i]) in_worktree[paths[i]] = 1 }
+        $1 != trunk && !($2 in in_worktree)
+      '
+}
+
+# herdr talks over its socket from any terminal, so this holds whether or not a UI is attached. Never gate
+# on HERDR_ENV — that only exists inside a herdr pane. Started headless there is nothing on screen until
+# `herdr` attaches.
+function herdr_running() {
+  herdr status 2>/dev/null | grep -q 'status: running' && return
+
+  herdr server >/dev/null 2>&1 &
+  until herdr status 2>/dev/null | grep -q 'status: running'; do sleep 0.3; done
+}
+
 # Fzf the worktrees and cd into the one picked
 function cd-worktree() {
   local worktree_path=$(worktree_choices | fzf --height 40% --reverse --prompt="Cd to worktree: " | cut -f2)
 
   [[ -n "$worktree_path" ]] && cd "$worktree_path"
+}
+
+# Fzf the branches that could move into a worktree and pop the one picked into a herdr worktree. Name a
+# branch to skip the picker. One that already exists is checked out as it stands; one that doesn't is cut
+# from origin's trunk — a worktree is somewhere a branch visits, not where it has to be born.
+function to-worktree() {
+  git rev-parse --git-dir >/dev/null 2>&1 || return 1
+  local repo_root=$(git tree-root)
+  local branch="$1"
+
+  if [[ -z "$branch" ]]; then
+    branch=$(branch_choices | fzf --height 40% --reverse --delimiter=$'\t' --with-nth=1 \
+      --prompt="Branch into worktree: " | cut -f1)
+    [[ -z "$branch" ]] && return
+  fi
+
+  # Git won't check the same branch out twice, so the main worktree steps aside — back to trunk, which is
+  # where it wants to sit anyway while the work happens elsewhere
+  if [[ "$branch" == "$(git -C "$repo_root" branch --show-current)" ]]; then
+    # Untracked files ride along harmlessly; tracked changes would be left behind on trunk
+    if [[ -n "$(git -C "$repo_root" status --porcelain --untracked-files=no)" ]]; then
+      echo "${RED}${CROSS}${RESET} $repo_root is on $branch with uncommitted changes — commit or stash them first"
+      return 1
+    fi
+    git -C "$repo_root" checkout $(trunk) || return 1
+  fi
+
+  # --base only applies to a branch herdr has to create; it is ignored for one that already exists
+  local base
+  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
+    git -C "$repo_root" fetch origin || return 1
+    base="--base origin/$(trunk)"
+  fi
+
+  herdr_running || return 1
+
+  local failure
+  if ! failure=$(herdr worktree create --cwd "$repo_root" --branch "$branch" ${=base} --no-focus --json 2>&1); then
+    echo "${RED}${CROSS}${RESET} $failure"
+    return 1
+  fi
+
+  # Read the path back off git rather than herdr's json — worktree_choices already speaks porcelain
+  local worktree_path=$(worktree_choices | awk -F'\t' -v b="$branch" '$1 == b { print $2 }')
+  worktree-provision "$worktree_path" "$repo_root"
+
+  donetick "$branch is now in $worktree_path"
+  echo "  ${ITALIC_START}cd-worktree to go there, herdr to review it${ITALIC_END}"
 }
 
 # A removed worktree leaves its branch behind on purpose — that is the point of popping one out, the branch
