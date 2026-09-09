@@ -71,8 +71,10 @@ function merged_worktrees() {
   done
 }
 
-# Remove a worktree and its branch. Refuses a dirty worktree without --force, and a locked one either
-# way (git wants -f -f), so a worktree another agent is live in is never yanked.
+# Remove a worktree and its branch. Only ever called on branches already merged into trunk, which is why
+# it takes the branch with it where rm-worktree deliberately does not. Refuses a dirty worktree without
+# --force, and a locked one either way (git wants -f -f), so a worktree another agent is live in is never
+# yanked.
 function remove_worktree() {
   local worktree_path="$1" force="$2"
   local branch=$(git -C "$worktree_path" branch --show-current)
@@ -101,15 +103,30 @@ function cd-worktree() {
   [[ -n "$worktree_path" ]] && cd "$worktree_path"
 }
 
-# Fzf the worktrees and remove the one picked, branch and all. Git refuses while a worktree still holds
-# modified or untracked files — rather than force the delete, offer to cd there and judge the work by hand.
+# A removed worktree leaves its branch behind on purpose — that is the point of popping one out, the branch
+# becomes checkoutable in the main worktree again. Merged work is the one case worth asking about.
+function release_branch() {
+  local branch="$1"
+  [[ -z "$branch" ]] && return
+
+  if git merge-base --is-ancestor "$branch" $(trunk) 2>/dev/null; then
+    echo -n "$branch is merged into $(trunk). Delete it? (y/n) " && read response
+    [[ "$response" =~ ^[Yy]$ ]] && { git branch -d "$branch"; return }
+  fi
+
+  donetick "$branch is free to check out"
+}
+
+# Fzf the worktrees and remove the one picked, leaving its branch behind to be checked out in the main
+# worktree. Git refuses while a worktree still holds modified or untracked files — rather than force the
+# delete, offer to cd there and judge the work by hand.
 function rm-worktree() {
   # The main worktree is always listed first and can never be removed
   local worktree_path=$(worktree_choices | tail -n +2 | fzf --height 40% --reverse --prompt="Remove worktree: " | cut -f2)
   [[ -z "$worktree_path" ]] && return
 
   local branch=$(git -C "$worktree_path" branch --show-current)
-  local main_worktree=$(worktree_choices | head -n 1 | cut -f2)
+  local main_worktree=$(git tree-root)
 
   # Removing the worktree you are standing in yanks the ground out from under the shell, so step back
   # to the main one first — origin takes you home again if the removal is refused and you walk away
@@ -118,8 +135,8 @@ function rm-worktree() {
 
   local failure
   if failure=$(git worktree remove "$worktree_path" 2>&1); then
-    donetick "Removed worktree $worktree_path ($branch)"
-    git branch -d "$branch"
+    donetick "Removed worktree $worktree_path"
+    release_branch "$branch"
     return
   fi
 
