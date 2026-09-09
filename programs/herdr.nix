@@ -34,6 +34,8 @@
 
         # New tab (tmux: prefix c)
         new_tab = "prefix+c";
+        rename_tab = "prefix+,";
+        rename_workspace = "prefix+$";
 
         # Pane splits (tmux: prefix " and prefix %)
         split_horizontal = "prefix+quote";
