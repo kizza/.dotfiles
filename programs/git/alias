@@ -82,6 +82,9 @@
     GIT_SEQUENCE_EDITOR=\"perl -i -pe s/^pick/edit/\" git rebase -i \"$base\"; \
   }; f"
 
+  # Sites a worktree beside the main checkout, at <repo>-<branch>. An existing branch is checked out as it
+  # stands; -b is only for a name git has never seen. The plain-git escape hatch — `to-worktree` is the
+  # herdr flow, and neither one deletes a branch on the way back out.
   # @usage git add-worktree with/branch-name
   add-worktree = "!f() { \
     branch=\"$1\"; \
@@ -89,9 +92,14 @@
       echo \"Usage: git add-worktree <branch-name>\"; \
       return 1; \
     fi; \
-    repo=$(basename \"$PWD\"); \
+    root=$(git tree-root); \
+    repo=$(basename \"$root\"); \
     safe_branch=$(echo \"$branch\" | tr '/' '-'); \
-    path=\"../${repo}-${safe_branch}\"; \
-    git worktree add \"$path\" -b \"$branch\"; \
+    worktree=\"${root}/../${repo}-${safe_branch}\"; \
+    if git show-ref --verify --quiet \"refs/heads/$branch\"; then \
+      git worktree add \"$worktree\" \"$branch\"; \
+    else \
+      git worktree add \"$worktree\" -b \"$branch\"; \
+    fi; \
   }; f"
 
