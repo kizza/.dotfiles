@@ -4,7 +4,9 @@
 --
 -- `:GitBase <revision>` sets it for the whole editor — every buffer already open and every buffer
 -- opened afterwards — because a base that only applied to the buffer under the cursor would have the
--- signs mean something different in each window. Bare `:GitBase` puts it back to the index.
+-- signs mean something different in each window. Bare `:GitBase` puts it back to the index. Any
+-- revision is accepted, but completion offers only the two worth having: the default branch, for
+-- everything the branch has changed, and the branch tip, for everything not yet in it.
 --
 -- The rebase follow takes over while an interactive rebase is parked on an `edit`: HEAD *is* the
 -- commit under the knife then, so pointing gitsigns at that commit's parent makes every sign, hunk
@@ -65,19 +67,24 @@ function M.reset()
   vim.notify("Signs back to the index", vim.log.levels.INFO, { title = "Base reset" })
 end
 
+local function rebase_directory()
+  local directory = git_output("rev-parse", "--git-path", "rebase-merge")
+  if not directory then
+    return nil
+  end
+
+  if not vim.startswith(directory, "/") then
+    directory = vim.fs.joinpath(vim.fn.getcwd(), directory)
+  end
+
+  return vim.uv.fs_stat(directory) and directory
+end
+
 -- Git writes the `amend` marker only when it stops on an `edit`. It is absent during a conflict
 -- stop, where HEAD is the last commit successfully applied and its parent is the wrong base.
 local function stopped_on_edit()
-  local rebase_directory = git_output("rev-parse", "--git-path", "rebase-merge")
-  if not rebase_directory then
-    return false
-  end
-
-  if not vim.startswith(rebase_directory, "/") then
-    rebase_directory = vim.fs.joinpath(vim.fn.getcwd(), rebase_directory)
-  end
-
-  return vim.uv.fs_stat(vim.fs.joinpath(rebase_directory, "amend")) ~= nil
+  local directory = rebase_directory()
+  return directory ~= nil and vim.uv.fs_stat(vim.fs.joinpath(directory, "amend")) ~= nil
 end
 
 function M.sync()
@@ -98,15 +105,42 @@ function M.sync()
   end
 end
 
-local function complete_revision(argument_lead)
-  local refs = git_output("for-each-ref", "--format=%(refname:short)", "refs/heads", "refs/remotes")
-  if not refs then
-    return {}
+-- The branch being replayed, since `--show-current` is empty while a rebase has HEAD detached — and
+-- detached is exactly where `git review-commits` leaves you.
+local function current_branch()
+  local directory = rebase_directory()
+  local head_name = directory and vim.fs.joinpath(directory, "head-name")
+  if head_name and vim.uv.fs_stat(head_name) then
+    local branch = vim.trim(vim.fn.readfile(head_name)[1] or "")
+    if branch ~= "" then
+      return (branch:gsub("^refs/heads/", ""))
+    end
   end
 
-  return vim.tbl_filter(function(ref)
-    return vim.startswith(ref, argument_lead)
-  end, vim.split(refs, "\n", { trimempty = true }))
+  local branch = git_output("branch", "--show-current")
+  return branch ~= "" and branch or nil
+end
+
+-- Whatever `origin/HEAD` points at, falling back the way `git review-commits` does.
+local function default_branch()
+  local origin_head = git_output("symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD")
+  if origin_head then
+    return (origin_head:gsub("^origin/", ""))
+  end
+
+  return git_output("rev-parse", "--verify", "--quiet", "main") and "main" or "master"
+end
+
+-- The two bases worth offering, in the order you reach for them. Anything else can still be typed.
+local function complete_revision(argument_lead)
+  local candidates = {}
+  for _, revision in ipairs({ default_branch(), current_branch() }) do
+    if revision and not vim.tbl_contains(candidates, revision) and vim.startswith(revision, argument_lead) then
+      table.insert(candidates, revision)
+    end
+  end
+
+  return candidates
 end
 
 function M.setup()
