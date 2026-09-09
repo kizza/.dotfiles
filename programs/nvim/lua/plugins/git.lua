@@ -45,8 +45,14 @@ return {
     event = "VeryLazy",
     config = function()
       require('gitsigns').setup {
+        -- Whatever `:GitBase` or a parked rebase wants, so buffers opened from here attach already
+        -- pointed at it rather than being re-pointed a tick later.
+        base = require("scripts/gitsigns_base").initial(),
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
+
+          -- Buffers open before gitsigns loads read the base too early to see the one above.
+          require("scripts/gitsigns_base").reapply_on_attach()
 
           local function map(mode, l, r, opts)
             opts = opts or {}
