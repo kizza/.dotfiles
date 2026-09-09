@@ -73,6 +73,13 @@ herdr worktree create --cwd "$REPO_ROOT" --branch "$BRANCH" --base origin/main -
 
 Let herdr choose the path (`~/.herdr/worktrees/<repo>/<slug>`) — it owns the directory lifecycle.
 
+Two things about `create` that are easy to get wrong:
+
+- `--base` applies only to a branch that doesn't exist yet. Given an **existing** branch, `--branch`
+  alone checks it out where it stands and `--base` is ignored — so never pass a base you don't mean.
+- It fails outright (`fatal: '<branch>' is already used by worktree at …`) if the branch is currently
+  checked out in the main worktree. That one has to step aside first; `to-worktree` does this for you.
+
 Then read back `path` and `open_workspace_id` by re-querying, rather than assuming the shape of the
 create response:
 
@@ -92,7 +99,7 @@ Light by default:
 worktree-provision "$WORKTREE_PATH" "$REPO_ROOT"
 ```
 
-`~/.dotfiles/bin/worktree-provision` is the one implementation. It copies
+`~/.dotfiles/bin/worktree-provision` is the one implementation, shared with `to-worktree`. It copies
 `.envrc.overrides` and `.envrc.secrets` if the main worktree has them (copied, not symlinked —
 `bin/worktree-setup` hard-fails on a symlink), symlinks `.claude/settings.local.json` so new approvals
 reach every worktree at once, and runs `direnv allow`. Without that last step `.envrc.secrets` never
@@ -161,6 +168,20 @@ newly created or reused.
 Shared-test-database collisions between concurrent agents are an **accepted** tradeoff: light
 provisioning is the priority, and a confusing spec failure is re-runnable. `prd.md` already tells
 each agent how to recognise and escalate it.
+
+## By hand, without an agent
+
+When the point is just to move a branch between the main checkout and a worktree — no card, no agent,
+no `prd.md` — the shell functions in `programs/zsh/git.sh` do the whole round trip:
+
+```bash
+to-worktree [branch]   # existing branch into a herdr worktree, provisioned lite; fzf when unnamed
+cd-worktree            # fzf a worktree and go there
+rm-worktree            # fzf a worktree away; the branch survives, ready to check out in the main tree
+```
+
+`to-worktree` is steps 0, 4 and 5 in one command, so it does not report a workspace id and cannot feed
+step 7. Launching an agent still means walking the steps above.
 
 ## Hard limits
 
