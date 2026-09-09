@@ -86,27 +86,17 @@ print(w["path"], w.get("open_workspace_id",""))'
 
 ## 5. Provision — lite
 
-Light by default. Copy only what exists (this skill is repo-agnostic), and **symlink the allowlist**
-so it never goes stale:
+Light by default:
 
 ```bash
-cd "$WORKTREE_PATH"
-
-# Copied — bin/worktree-setup owns these and hard-fails on a symlink (FileUtils.cp_r "same file").
-for f in .envrc.overrides .envrc.secrets; do
-  [ -f "$REPO_ROOT/$f" ] && [ ! -e "$f" ] && cp "$REPO_ROOT/$f" ./
-done
-
-# Symlinked — live, so new approvals reach every worktree at once.
-if [ -f "$REPO_ROOT/.claude/settings.local.json" ]; then
-  mkdir -p .claude
-  ln -sfn "$REPO_ROOT/.claude/settings.local.json" .claude/settings.local.json
-fi
-
-# Required: without this .envrc.secrets never loads, so there is no RAILS_MASTER_KEY
-# and bin/rails / rspec fail outright.
-direnv allow . 2>/dev/null || true
+worktree-provision "$WORKTREE_PATH" "$REPO_ROOT"
 ```
+
+`~/.dotfiles/bin/worktree-provision` is the one implementation. It copies
+`.envrc.overrides` and `.envrc.secrets` if the main worktree has them (copied, not symlinked —
+`bin/worktree-setup` hard-fails on a symlink), symlinks `.claude/settings.local.json` so new approvals
+reach every worktree at once, and runs `direnv allow`. Without that last step `.envrc.secrets` never
+loads, so there is no `RAILS_MASTER_KEY` and `bin/rails` / `rspec` fail outright.
 
 Lite deliberately skips `bin/worktree-setup run`, so there is **no `node_modules`**. Pure-Ruby specs
 are fine; asset-compiling specs and `bin/dev` need escalation — see the `worktree-isolation` skill.
