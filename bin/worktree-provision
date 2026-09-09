@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Lite provisioning for a fresh worktree: enough for pure-Ruby specs, and no further. Deliberately does
+# not run bin/worktree-setup, so there is no node_modules and the test database stays shared — see the
+# worktree-isolation skill to escalate. Repo-agnostic: copies only what the main worktree actually has.
+#
+#   worktree-provision <worktree-path> [<main-worktree-path>]
+
+set -euo pipefail
+
+worktree_path="${1:?Usage: worktree-provision <worktree-path> [<main-worktree-path>]}"
+repo_root="${2:-$(dirname "$(git -C "$worktree_path" rev-parse --path-format=absolute --git-common-dir)")}"
+
+cd "$worktree_path"
+
+# Copied rather than linked — bin/worktree-setup hard-fails on a symlink here (FileUtils.cp_r "same file")
+for config in .envrc.overrides .envrc.secrets; do
+  if [ -f "$repo_root/$config" ] && [ ! -e "$config" ]; then
+    cp "$repo_root/$config" ./
+  fi
+done
+
+# Symlinked so new approvals reach every worktree at once
+if [ -f "$repo_root/.claude/settings.local.json" ]; then
+  mkdir -p .claude
+  ln -sfn "$repo_root/.claude/settings.local.json" .claude/settings.local.json
+fi
+
+# Without this .envrc.secrets never loads, so there is no RAILS_MASTER_KEY and bin/rails fails outright
+direnv allow . 2>/dev/null || true
