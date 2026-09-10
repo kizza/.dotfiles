@@ -117,6 +117,7 @@
             # ./programs/beads.nix
             ./programs/herdr.nix
             ./programs/jankyborders.nix
+            ./programs/morning-task.nix
             ./programs/sketchybar
             # ./programs/java.nix
             ./programs/irb.nix
