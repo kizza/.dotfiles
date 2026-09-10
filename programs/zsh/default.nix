@@ -15,6 +15,8 @@
     syntaxHighlighting = {
       enable = true;
     };
+    completionInit = "autoload -U compinit && compinit -u"; # @see compaudit (for other nix users)
+
     initContent = ''
         ${builtins.readFile ./base-16.sh}
         ${builtins.readFile ./brew.sh}
