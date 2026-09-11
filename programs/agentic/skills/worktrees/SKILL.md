@@ -145,15 +145,31 @@ When reusing an existing worktree (step 2), append a new `## Log` entry instead 
 
 ## 7. Launch the agent
 
+`agent start` adopts an **existing** pane sitting at its shell prompt — it does not create one, and
+it does not carry the brief. Step 4 already left a pane in the new workspace, cwd'd into the
+worktree, so find it and adopt it:
+
 ```bash
-herdr agent start "$SHORT_NAME" \
-  --cwd "$WORKTREE_PATH" \
-  --workspace "$WORKSPACE_ID" \
-  --no-focus \
-  -- claude "Read ./prd.md and begin."
+PANE_ID=$(herdr pane list --workspace "$WORKSPACE_ID" | python3 -c '
+import json,sys
+print(json.load(sys.stdin)["result"]["panes"][0]["pane_id"])')
+
+herdr agent start "$SHORT_NAME" --kind claude --pane "$PANE_ID"
+herdr agent prompt "$SHORT_NAME" "Read ./prd.md and begin."
 ```
 
-`SHORT_NAME` is the branch's last segment. `--no-focus` so Keiran isn't yanked between workspaces.
+`SHORT_NAME` is the branch's last segment, and becomes the agent's address for every command in
+*Reviewing* below. `pane list` emits JSON with no `--json` flag, unlike `worktree list`.
+
+Three things the two-call shape implies:
+
+- **No `--cwd`.** The adopted pane is already in the worktree; `agent start` has no say in it, so a
+  pane in the wrong directory yields an agent in the wrong directory. Read `cwd` back off the
+  response rather than trusting it.
+- **No `--no-focus`, and none needed** — adopting a pane doesn't pull Keiran's focus across.
+- **`start` only proves the agent is ready for input.** Until `agent prompt` lands it is an idle
+  `claude` staring at an empty prompt, which looks identical to a finished one on the board. Add
+  `--wait --until working` to the prompt when a fan-out needs to know the brief actually took.
 
 An agent must be started **through herdr** to be reviewable — the `herdr-agent-state.sh`
 `SessionStart` hook needs `HERDR_ENV`, `HERDR_SOCKET_PATH` and `HERDR_PANE_ID`, which only exist in
@@ -201,7 +217,12 @@ Keiran always decides `prd.md`'s fate and when a worktree dies. Escalating provi
 herdr workspace list                          # every workspace and its agent status
 herdr agent list                              # agents, their cwd, idle/working/blocked
 herdr agent read <name> --source recent --lines 120
-herdr agent send <name> "<follow-up>"         # literal text into a running agent
+herdr agent prompt <name> "<follow-up>"       # literal text into a running agent
+herdr agent wait <name> --until blocked --timeout 600000
 ```
 
-`blocked` means an agent hit a permission prompt for something outside the allowlist.
+`blocked` means an agent hit a permission prompt for something outside the allowlist. A prompt sent
+to an already-blocked agent is **rejected** rather than queued, so clear the prompt first.
+
+`agent prompt` is the follow-up channel — there is no `agent send`. `agent send-keys` exists but is
+for raw key presses (dismissing a dialog), not text.

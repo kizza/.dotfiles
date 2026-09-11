@@ -18,11 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    herdr = {
-      url = "github:ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nixgl = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,7 +30,6 @@
     home-manager,
     nixgl,
     hunk,
-    herdr,
     ...
   }:
     let
@@ -62,7 +56,6 @@
 
           # Pass edge packages downward
           extraSpecialArgs = {
-            inherit herdr; # Pass herdr to herdr.nix
             edgePkgs = mkEdgePkgs "aarch64-darwin";
           };
 
@@ -115,7 +108,7 @@
             ./programs/claude.nix
             # ./programs/agent-safehouse.nix
             # ./programs/beads.nix
-            ./programs/herdr.nix
+            ./programs/herdr
             ./programs/jankyborders.nix
             ./programs/morning-task.nix
             ./programs/sketchybar
