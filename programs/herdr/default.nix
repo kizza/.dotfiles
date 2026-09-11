@@ -15,6 +15,21 @@ in
         sidebar_max_width = 220;
         toast.delivery = "herdr";
         sound.enabled = true;
+        sidebar.agents.rows = [
+          [
+            "state_icon"
+            {
+              token = "tab";
+              fg = "#A3B8EF";
+              dim = false;
+            }
+            "machine"
+            {
+              token = "workspace";
+              bold = false;
+            }
+          ]
+        ];
       };
       theme = {
         name = "terminal";
