@@ -51,14 +51,42 @@ local function claim_clipboard()
   }
 end
 
+-- Only these three say a session arrived over the wire. Matching `SSH_` at large catches
+-- `SSH_AUTH_SOCK`, which launchd's ssh-agent puts in the environment of every tmux server on a Mac
+-- — enough to make a local session claim the clipboard and answer `"+p` with nothing.
+local ssh_session_variables = { SSH_CONNECTION = true, SSH_CLIENT = true, SSH_TTY = true }
+
+local function nvim_has_ssh_environment()
+  for variable in pairs(ssh_session_variables) do
+    if vim.env[variable] then
+      return true
+    end
+  end
+
+  return false
+end
+
 local function tmux_has_ssh_environment()
   if not vim.env.TMUX or vim.fn.executable("tmux") ~= 1 then
     return false
   end
 
-  local ssh_environment = vim.fn.system({ "tmux", "show-environment", "-g" })
+  local tmux_environment = vim.fn.system({ "tmux", "show-environment", "-g" })
 
-  return vim.v.shell_error == 0 and ssh_environment:match("SSH_") ~= nil
+  if vim.v.shell_error ~= 0 then
+    return false
+  end
+
+  -- Line by line, because `show-environment` also lists variables it has *unset* as `-NAME`.
+  for line in tmux_environment:gmatch("[^\n]+") do
+    local variable = line:match("^([%w_]+)=")
+
+    if variable and ssh_session_variables[variable] then
+      return true
+    end
+  end
+
+  return false
 end
 
 local function has_local_clipboard_display()
@@ -66,7 +94,7 @@ local function has_local_clipboard_display()
 end
 
 local function should_claim_clipboard()
-  if vim.env.SSH_TTY or vim.env.SSH_CONNECTION or tmux_has_ssh_environment() then
+  if nvim_has_ssh_environment() or tmux_has_ssh_environment() then
     return true
   end
 
