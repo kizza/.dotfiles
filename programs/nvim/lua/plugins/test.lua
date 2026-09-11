@@ -1,10 +1,22 @@
+-- Inside herdr the runner pane is herdr's own; vimux only knows how to talk to tmux.
+local function run_in_runner(command)
+  if vim.env.HERDR_ENV then
+    require("scripts.herdr").run(command)
+  else
+    vim.fn.VimuxRunCommand(command)
+  end
+end
+
+local function rspec_at_cursor(prefix)
+  return prefix .. " rspec " .. vim.fn.expand("%") .. ":" .. vim.fn.line(".")
+end
+
 return {
   {
     "vim-test/vim-test",
     dependencies = { "preservim/vimux" },
     event = "VeryLazy",
     keys = {
-      -- { "<leader>tn", "<cmd>TestNearest<cr>", desc = "Test nearest" },
       {
         "<leader>tn",
         function()
@@ -27,28 +39,38 @@ return {
         end,
         desc = "Test file",
       },
-      -- { "<leader>tf", "<cmd>TestFile<cr>", desc = "Test file" },
       {
         "<leader>th",
         function()
-          vim.cmd [[
-            :call VimuxRunCommand("HEADLESS=false rspec ".expand("%").":".line("."))
-          ]]
+          run_in_runner(rspec_at_cursor("HEADLESS=false"))
         end,
         desc = "Test headless",
       },
       {
         "<leader>tr",
         function()
-          vim.cmd [[
-            :call VimuxRunCommand("RECORD_SCREEN=true rspec ".expand("%").":".line("."))
-          ]]
+          run_in_runner(rspec_at_cursor("RECORD_SCREEN=true"))
         end,
         desc = "Record test",
       },
+      {
+        "<leader>tz",
+        function()
+          require("scripts.herdr").zoom()
+        end,
+        desc = "Zoom test runner",
+      },
+      {
+        "<leader>tq",
+        function()
+          require("scripts.herdr").close()
+        end,
+        desc = "Close test runner",
+      },
     },
     config = function()
-      vim.g["test#strategy"] = "vimux"
+      vim.g["test#custom_strategies"] = { herdr = require("scripts.herdr").run }
+      vim.g["test#strategy"] = vim.env.HERDR_ENV and "herdr" or "vimux"
       vim.g["test#javascript#mocha#options"] = "--require ts-node/register --exit"
     end,
   },
