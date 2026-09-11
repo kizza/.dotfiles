@@ -10,8 +10,10 @@ local function apply_theme()
   vim.cmd("highlight clear")
   vim.cmd("doautocmd ColorSchemePre")
 
-  -- lua/base16-colorscheme.lua:140 uses BASE16_THEME directly (as an internal theme) if not in TMUX
-  if (vim.env.HERDR_ENV) then
+  -- lua/base16-colorscheme.lua:140 uses BASE16_THEME directly (as an internal theme) if not in TMUX.
+  -- Restored below: a lasting $TMUX sends every tmux-aware plugin off to a tmux that isn't there.
+  local claimed_tmux = vim.env.HERDR_ENV ~= nil
+  if claimed_tmux then
     vim.env.TMUX = true
   end
 
@@ -24,6 +26,10 @@ local function apply_theme()
   else
     -- vim.notify("Colourscheme " .. theme_name)    -- os.getenv("BASE16_THEME"))
     vim.cmd("colorscheme base16-" .. theme_name) -- fallback
+  end
+
+  if claimed_tmux then
+    vim.env.TMUX = nil
   end
 
   vim.cmd("doautocmd ColorScheme")
