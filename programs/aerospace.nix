@@ -18,6 +18,7 @@ let
   floatingApps = [
     "com.1password.1password"
     "com.apple.Preview"
+    "com.apple.QuickTimePlayerX"
     "com.apple.TextEdit"
     "com.apple.finder"
     "com.getcleanshot.app-setapp"
@@ -28,6 +29,7 @@ let
     "com.postmanlabs.mac"
     "com.runningwithcrayons.Alfred-Preferences"
     "md.obsidian"
+    "ru.keepcoder.Telegram"
   ];
 
   # Helper function to create floating window rules
