@@ -48,6 +48,13 @@ in
         cp -r ${tintedShell}/. $DIR
         find "$DIR" -type d -exec chmod 755 {} \;
         find "$DIR" -type f -exec chmod 644 {} \;
+
+        # Recreating the directory dangles the active theme symlink, which points inside it.
+        # base16-studio owns that link, so have it lay the theme back down — otherwise the next
+        # thing to read the theme without an interactive shell first (sketchybar at boot) gets nothing.
+        if [ -x "$HOME/base16-studio/bin/relink" ]; then
+          "$HOME/base16-studio/bin/relink" || true
+        fi
       '';
     };
   };

@@ -53,7 +53,7 @@ workspace_icons=(
 )
 
 # Populate aerospace workspaces
-for sid in $(~/.local/bin/aerospace list-workspaces --all); do
+for sid in $(aerospace list-workspaces --all); do
   apps=$(aerospace list-windows --workspace "$sid" | cut -d'|' -f2)
   icon="${workspace_icons[$sid - 1]}" # zero-based index
 
@@ -89,7 +89,7 @@ for sid in $(~/.local/bin/aerospace list-workspaces --all); do
     label.y_offset=0 \
     label.padding_left=5 \
     label.padding_right=0 \
-    click_script="~/.local/bin/aerospace workspace $sid" \
+    click_script="aerospace workspace $sid" \
     script="$CONFIG_DIR/plugins/aerospace.sh $sid"
 done
 
