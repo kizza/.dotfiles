@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
   FG="0xFFFFFFFF"

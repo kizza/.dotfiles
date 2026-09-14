@@ -2,7 +2,13 @@
 # ZSH_THEME="kizza"
 
 function theme {
-  ~/base16-studio/bin/theme
+  ~/base16-studio/bin/theme "$@" && restartBar
+}
+
+# Sketchybar reads the palette into its environment once, at launch, so a theme change needs the
+# bar brought back through the wrapper rather than merely redrawn
+function restartBar {
+  (start-sketchybar >/dev/null 2>&1 &)
 }
 
 # Set my terminal/tmux/vim theme to "light" or "dark"
@@ -11,9 +17,9 @@ function setTheme {
   tmux source-file ~/.tmux-theme.conf
 }
 
-alias dark="~/base16-studio/bin/theme dark"
-alias light="~/base16-studio/bin/theme light"
-alias brown="~/base16-studio/bin/theme brown"
+alias dark="theme dark"
+alias light="theme light"
+alias brown="theme brown"
 
 # alias brown="base16_mocha && setTheme"
 # alias chalk="base16_chalk && setTheme"

@@ -1,17 +1,28 @@
 { config, pkgs, lib, ... }:
 
-# Make link available as eneded
-# ln -s $(which aerospace) ~/.local/bin/aerospace
-
 let
-  # A verbose script to execute, to change the border colour based on state
+  # SwipeAeroSpace reads the AeroSpace socket once, at launch, and sits there disconnected if it
+  # loses the race — which it did as a login item, by about a second. Starting it from
+  # after-startup-command below is the only point at which the server is known to be listening.
+  startSwipeAerospace = pkgs.writeShellScriptBin "start-swipe-aerospace" ''
+    /usr/bin/pkill -x SwipeAeroSpace || true
+    sleep 0.5 # Let the old instance go before open considers relaunching it
+
+    exec /usr/bin/open -a /Applications/SwipeAeroSpace.app
+  '';
+
+  # A verbose script to execute, to change the border colour based on state. Absolute paths because
+  # AeroSpace runs this through launchd's PATH, which carries neither the nix profile nor ~/.local/bin
+  aerospaceBin = "${pkgs.aerospace}/bin/aerospace";
+  bordersBin = "${pkgs.jankyborders}/bin/borders";
+
   updateBordersColour = builtins.replaceStrings ["\n" "\\"] [" " ""] ''
     exec-and-forget \
-    FS=$(aerospace list-windows --focused --format "%{window-is-fullscreen}"); \
-    LAYOUT=$(aerospace list-windows --focused --format "%{window-layout}"); \
-    if [ "$FS" = "true" ]; then borders active_color=0xffffffff; \
-    elif [ "$LAYOUT" = "floating" ]; then borders active_color=0xffD699B6; \
-    else borders active_color=0xff7FBBB3; fi
+    FS=$(${aerospaceBin} list-windows --focused --format "%{window-is-fullscreen}"); \
+    LAYOUT=$(${aerospaceBin} list-windows --focused --format "%{window-layout}"); \
+    if [ "$FS" = "true" ]; then ${bordersBin} active_color=0xffffffff; \
+    elif [ "$LAYOUT" = "floating" ]; then ${bordersBin} active_color=0xffD699B6; \
+    else ${bordersBin} active_color=0xff7FBBB3; fi
   '';
 
   # Define apps that should float
@@ -51,8 +62,10 @@ in
     settings = {
       config-version = 2; # https://nikitabobko.github.io/AeroSpace/guide#config-version
       persistent-workspaces = ["1" "2" "3" "4" "5"];
+      # Everything downstream of the window manager starts here, where the server is up
       after-startup-command = [
-        "exec-and-forget ~/.local/bin/sketchybar" # Start sketchybar
+        "exec-and-forget ${config.sketchybar.start}/bin/start-sketchybar"
+        "exec-and-forget ${startSwipeAerospace}/bin/start-swipe-aerospace"
       ];
       workspace-to-monitor-force-assignment = {
         "1" = "main"; # Code
@@ -61,11 +74,10 @@ in
         "4" = "main";
         "5" = "secondary"; # Secondary monitor (non-main).
       };
-      # nb. ln -s $(which sketchybar) ~/.local/bin/sketchybar
       exec-on-workspace-change = [
-        "/bin/zsh"
+        "/bin/sh"
         "-c"
-        "~/.local/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
+        "${pkgs.sketchybar}/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
       ];
       on-focus-changed = [updateBordersColour];
       accordion-padding = 240;
