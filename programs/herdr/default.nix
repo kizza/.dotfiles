@@ -8,9 +8,9 @@ in
     enable = true;
     package = edgePkgs.herdr; # Use edge packages for latest
     settings = {
+      onboarding = false;
       ui = {
         agent_panel_sort = "spaces";
-        # agent_panel_sort = "priority";
         sidebar_width = 32;
         sidebar_max_width = 220;
         toast.delivery = "herdr";
@@ -19,10 +19,16 @@ in
           [
             "state_icon"
             {
-              token = "tab";
+              dim = false;
               fg = "#A3B8EF";
+              token = "terminal_title_stripped";
+            }
+            {
+              token = "tab";
               dim = false;
             }
+          ]
+          [
             "machine"
             {
               token = "workspace";
