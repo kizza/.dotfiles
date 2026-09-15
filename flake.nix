@@ -50,6 +50,11 @@
       };
     in
     {
+      # The CLI from the locked input, so `switch` needs nothing pre-installed.
+      packages = nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-linux" ] (system: {
+        inherit (home-manager.packages.${system}) home-manager;
+      });
+
       homeConfigurations = {
         "keiran@Keirans-MacBook-Pro.local" = home-manager.lib.homeManagerConfiguration rec {
           pkgs = mkPkgs "aarch64-darwin";

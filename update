@@ -2,5 +2,20 @@
 
 set -eo pipefail
 
-# nix flake update nixpkgs
-nix flake update nixpkgs-edge
+export NIX_CONFIG="warn-dirty = false"
+
+flake=~/.dotfiles
+
+# Bare moves every input, --edge moves just the edge pin.
+case ${1-} in
+  "")     inputs=() ;;
+  --edge) inputs=(nixpkgs-edge) ;;
+  *)
+    print -u2 -r -- "usage: update [--edge]"
+    print -u2 -r -- "  (no flags)  bump every input"
+    print -u2 -r -- "  --edge      bump nixpkgs-edge only"
+    exit 1
+    ;;
+esac
+
+nix flake update --flake "$flake" $inputs

@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+set -eo pipefail
+
+# Set here too, so this works before nix.conf has it.
+export NIX_CONFIG=$'warn-dirty = false\nexperimental-features = nix-command flakes'
+
+print -- "==> Collecting garbage, dropping past generations"
+nix-collect-garbage -d
+
+print -- "==> Deduplicating identical store paths"
+nix store optimise
+
+# Volumes hold real data, so this one asks.
+if command -v docker >/dev/null 2>&1 && docker system info >/dev/null 2>&1; then
+  print -n -- "==> Prune unused docker images, containers and volumes? [y/N] "
+  read -r reply
+  [[ $reply == [yY]* ]] && docker system prune -a --volumes -f
+else
+  print -- "==> Skipping docker, no daemon running"
+fi
