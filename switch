@@ -2,4 +2,10 @@
 
 set -eo pipefail
 
-NIX_CONFIG="warn-dirty = false" home-manager switch --flake ~/.dotfiles
+export NIX_CONFIG="warn-dirty = false"
+
+flake=~/.dotfiles
+
+# Runs from the flake, so a fresh machine needs nothing installed first.
+# - Named explicitly, or home-manager falls back to a bare $USER attribute and fails deeper.
+nix run "$flake#home-manager" -- switch --flake "$flake#$USER@$(hostname)"
