@@ -1,6 +1,21 @@
 { config, pkgs, lib, ... }:
 
 let
+  # `aerospace` on PATH is the CLI client; the server is the app bundle beside it, and the launchd
+  # agent below already owns that. Kickstarting the agent is the only start that keeps the ownership
+  # — `open`ing the bundle by hand goes through LaunchServices, leaving launchd reporting the job as
+  # not running while a server it can neither see nor stop is up.
+  startAerospace = pkgs.writeShellScriptBin "start-aerospace" ''
+    # Clear any server started outside launchd, which kickstart wouldn't replace
+    /usr/bin/pkill -x AeroSpace || true
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+      /usr/bin/pgrep -x AeroSpace >/dev/null 2>&1 || break
+      sleep 0.2
+    done
+
+    exec /bin/launchctl kickstart -k "gui/$(/usr/bin/id -u)/${config.launchd.agents.aerospace.config.Label}"
+  '';
+
   # SwipeAeroSpace reads the AeroSpace socket once, at launch, and sits there disconnected if it
   # loses the race — which it did as a login item, by about a second. Starting it from
   # after-startup-command below is the only point at which the server is known to be listening.
@@ -51,8 +66,8 @@ let
   };
 in
 {
-  # If server needs to be run manually
-  # open "$(dirname "$(dirname "$(readlink -f $(which aerospace))")")/Applications/Aerospace.app"
+  home.packages = [startAerospace]; # The supported way to start or restart the server by hand
+
   programs.aerospace = {
     enable = true;
     launchd = {
