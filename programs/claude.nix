@@ -31,6 +31,11 @@
       # commits it writes.
       includeCoAuthoredBy = false;
 
+      enabledPlugins = {
+        "i-have-adhd@i-have-adhd" = true;
+        "code-review-plugin@the-lookout-way" = true;
+      };
+
       permissions = {
         # Auto mode: a classifier judges each action against allow/soft_deny/hard_deny rulesets
         # rather than matching globs, so actions no explicit rule covers can proceed without a
