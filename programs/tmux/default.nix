@@ -19,7 +19,7 @@ in
 
       ${builtins.readFile ./tmux.conf}
     '';
-    newSession = true;
+    newSession = false; # writes `new-session -A -s 0` which will always look for a session 0
     plugins = [];
     terminal = "screen-256color";
   };
