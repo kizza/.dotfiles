@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+# On PATH so that agents and hooks reach it, not just an interactive shell. `nvim -l` runs the script
+# without sourcing the user config, which is why the CLI costs ~35ms rather than a full startup;
+# `--clean` keeps it that way and keeps shada out of it.
+exec nvim --clean -l ~/Code/kizza/nvim/remarks.nvim/lua/remarks/main.lua "$@"
