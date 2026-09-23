@@ -6,3 +6,6 @@
 
 # Per-worktree brief and running log, written by the `worktrees` skill. Never committed.
 prd.md
+
+# Local review remarks, read by the editor and by coding agents. Never committed.
+.remarks/
