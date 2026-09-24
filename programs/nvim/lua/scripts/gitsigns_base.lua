@@ -130,25 +130,34 @@ function M.initial()
   return applied_base
 end
 
--- Coalesces the burst of attaches at startup into one re-point, since the pass is editor-wide anyway.
-local reapply_pending = false
+-- Buffers re-pointed since gitsigns loaded, so each one costs at most one pass and a re-point can
+-- never answer the update it provoked.
+local repointed = {}
 
--- For gitsigns' `on_attach`. Every buffer open before gitsigns loads attaches against the index
--- however the base is set, because gitsigns' own `plugin/gitsigns.lua` calls `setup()` first: ours
--- runs second, and by then `setup()` has already kicked off those attaches, each of which read the
--- base before we supplied it. Re-pointing as they attach is what saves reloading the buffer you land
--- in — the first file of `nvim $(git committed)`. Scheduled because the cache entry the re-point
--- works through is only created once `on_attach` has returned.
-function M.reapply_on_attach()
-  if not applied_base or reapply_pending then
+-- Every buffer open before gitsigns loads attaches against the index however the base is set,
+-- because gitsigns' own `plugin/gitsigns.lua` calls `setup()` first: ours runs second, and by then
+-- attach has already read the base off a config we had not written to yet. Re-pointing those buffers
+-- is what saves reloading the one you land in — the first file of `nvim $(git committed)`.
+--
+-- It waits for gitsigns to announce the buffer, because until then there is nothing to re-point:
+-- `change_base` walks the cache, and an attach still in flight has left an entry there with no git
+-- object on it yet. A re-point that arrives in that window sets the revision and loses the diff,
+-- which is the worst of both — signs that claim the right base while showing the wrong one.
+local function repoint_late_attach(bufnr)
+  if not applied_base or not bufnr or repointed[bufnr] then
     return
   end
 
-  reapply_pending = true
-  vim.schedule(function()
-    reapply_pending = false
+  local cache_loaded, cache = pcall(require, "gitsigns.cache")
+  local entry = cache_loaded and cache.cache[bufnr]
+  if not entry or not entry.git_obj then
+    return
+  end
+
+  repointed[bufnr] = true
+  if entry.git_obj.revision ~= applied_base then
     change_base(applied_base)
-  end)
+  end
 end
 
 -- The branch being replayed, since `--show-current` is empty while a rebase has HEAD detached — and
@@ -219,6 +228,16 @@ function M.setup()
     group = vim.api.nvim_create_augroup("my_gitsigns_base_very_lazy", { clear = true }),
     pattern = "VeryLazy",
     callback = vim.schedule_wrap(M.sync),
+  })
+
+  -- gitsigns fires this per buffer once its cache entry is whole, which is the earliest moment a
+  -- buffer that attached before our base existed can be pointed at it.
+  vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("my_gitsigns_base_late_attach", { clear = true }),
+    pattern = "GitSignsUpdate",
+    callback = function(event)
+      repoint_late_attach(event.data and event.data.buffer)
+    end,
   })
 end
 
