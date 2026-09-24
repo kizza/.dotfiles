@@ -1,10 +1,22 @@
-{ pkgs, edgePkgs, ... }:
+{ config, pkgs, edgePkgs, ... }:
 
 {
   programs.zsh.envExtra = ''
     # Prevents session database being named opencode-stable.db
     export OPENCODE_DISABLE_CHANNEL_DB="true"
   '';
+
+  # Paddck's opencode adapter. Claude Code takes a hook command in its own settings (see
+  # claude.nix); opencode has no shell hooks, so the same job has to be done from inside opencode's
+  # process as a plugin — and because opencode fires an event per token, the plugin is also what
+  # decides which events are worth a subprocess. It calls the same `scripts/agents/state.sh` the
+  # Claude hook does, so both agents land in paddck through one seam.
+  #
+  # Linked rather than copied: editing the checkout takes effect on the next opencode start instead
+  # of the next `switch`, and there is no second copy to go stale.
+  home.file.".config/opencode/plugins/paddck.js".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/Code/kizza/paddck/scripts/agents/opencode.js";
 
   programs.opencode = {
     enable = true;

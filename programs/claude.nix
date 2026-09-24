@@ -1,10 +1,17 @@
-{ edgePkgs, ... }:
+{ config, edgePkgs, ... }:
 
 {
   # Use edge nix to align with claude
   home.packages = with edgePkgs; [
     claude-agent-acp
   ];
+
+  # Linked to the checkout rather than copied out of it. The hook is paddck's own file and changes
+  # with paddck; a copy here was a second spelling that went stale the first time the script grew an
+  # argument, and nothing said so — a hook that fails is a hook that exits 0.
+  home.file.".claude/hooks/paddck-agent-state.sh".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/Code/kizza/paddck/scripts/agents/state.sh";
 
   programs.claude-code = {
     enable = true;
@@ -85,6 +92,54 @@
                 command = "bash '/Users/keiran/.claude/hooks/herdr-agent-state.sh' session";
                 timeout = 10;
               }
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        Notification = [
+          {
+            matcher = "permission_prompt|idle_prompt|agent_needs_input|elicitation_dialog|elicitation_url_dialog|agent_completed";
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        UserPromptSubmit = [
+          {
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        # A question is a tool call, and the only way paddck hears about one as it happens: the
+        # Notification behind it calls itself a permission prompt, a minute after the fact.
+        PreToolUse = [
+          {
+            matcher = "AskUserQuestion";
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        # Answered, and escaped out of. The pane wants the turn back either way.
+        PostToolUse = [
+          {
+            matcher = "AskUserQuestion";
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        PostToolUseFailure = [
+          {
+            matcher = "AskUserQuestion";
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
             ];
           }
         ];
@@ -106,6 +161,15 @@
                 command = "osascript -e 'display notification \"Claude is done\" with title \"Claude Code\"'";
                 async = true;
               }
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        SessionEnd = [
+          {
+            hooks = [
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
             ];
           }
         ];
