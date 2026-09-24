@@ -82,6 +82,22 @@ const I = (variant) => {
 // If window name is the same as the current command, hide it to save space
 const W = `#{?#{==:#{window_name},#{pane_current_command}},,#{window_name} }`;
 
+/**
+ * What the window is *for*, when paddck knows: the name the agent gave itself, or the prompt it was
+ * opened with. Agent windows are otherwise all named after the wrapper running in them, so the tabs
+ * read `.claude-wrapped` three times over. The daemon writes the label on the agent's pane and on
+ * its window, and tmux answers with the pane's first — so a tab names the agent you are sitting
+ * with, and the one working beside you when you are not. Unset, the window's own name gets its turn.
+ */
+const agentLabel = "#{=/24/\u{2026}:@paddck_label}";
+
+/** State in the sidebar's own shapes: amber asks for you, blue is busy, dim is spare. */
+const agentState = restoreFg =>
+  `#{?#{==:#{@paddck_state},waiting},#[fg=color16]\u{25c9},#{?#{==:#{@paddck_state},working},#[fg=green],#[fg=${restoreFg}]\u{25cb}}}#[fg=${restoreFg}]`;
+
+/** The label where there is one, and the window's own name beside its command icon where there is not. */
+const title = restoreFg => `#{?#{@paddck_label},${agentState(restoreFg)} ${agentLabel},${W}${icon(restoreFg)}}`;
+
 const buildTheme = ({
   active,
   background,
@@ -115,8 +131,8 @@ set -g status-right-length 150
 set -g status-right "${prefix}#[fg=${segment1},bg=${inactiveTabBg}]${separators.right}#[fg=${lightText},bg=${segment1}] ${time} #[fg=${segment2},bg=${segment1}]${separators.right}#[fg=${lightText},bg=${segment2}] ${date} #[fg=${segment3},bg=${segment2}]${separators.right}#[fg=colour18,bg=${segment3},bold] #S "
 
 # Window status
-set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}]${I()}#[fg=${inactiveTabFg}] ${W}${icon(inactiveTabFg)} ${dir} #{?window_zoomed_flag,${magnify} ,}"
-set -g window-status-current-format "#[fg=${inactiveTabBg}]${separators.left}#[fg=${activeTabFg}]${I('active')} ${W}${icon(activeTabFg)} ${dir}#[fg=${active}] #{?window_zoomed_flag,${magnify} ,}#[fg=${activeTabBg},bg=${inactiveTabBg}]${separators.left}"
+set -g window-status-format "#[fg=${inactiveTabFg}]#[bg=${inactiveTabBg}]${I()}#[fg=${inactiveTabFg}] ${title(inactiveTabFg)} ${dir} #{?window_zoomed_flag,${magnify} ,}"
+set -g window-status-current-format "#[fg=${inactiveTabBg}]${separators.left}#[fg=${activeTabFg}]${I('active')} ${title(activeTabFg)} ${dir}#[fg=${active}] #{?window_zoomed_flag,${magnify} ,}#[fg=${activeTabBg},bg=${inactiveTabBg}]${separators.left}"
 
 # Current window status
 set -g window-status-current-style bg=${activeTabBg},fg=${activeTabFg}

@@ -17,6 +17,9 @@ return {
     },
     init = function()
       vim.g.VimuxPromptString = "Run: "
+      -- Only ever adopt a pane vimux titled itself, so paddck's sidebar slot — or any other
+      -- neighbour in the window — is never mistaken for the runner.
+      vim.g.VimuxRunnerName = "test-runner"
     end
   },
 }
