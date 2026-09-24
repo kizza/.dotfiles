@@ -1,0 +1,271 @@
+#!/usr/bin/env zsh
+
+# Walks every commit since <upstream>, stopping on each with that commit applied so it can be
+# tailored in place. At each stop the editor opens on the commit's own files and, because the commit
+# is applied rather than rolled back, HEAD~1 is its parent — so gitsigns diffs against the committed
+# content and the amend keeps the message. Rebases onto the merge-base, not the branch tip, so a
+# moved upstream never re-parents the work.
+#
+# Quitting the editor is the signal that the commit is done; the prompt that follows is where the
+# pass is steered — continue and it amends, done takes the rest of the branch as reviewed and runs it
+# through unopened, stay leaves the rebase parked for you. Run the command again while a pass is
+# parked to pick it back up, and `--bare` to start the rebase and be left alone, which is all this
+# was before it drove.
+#
+# A conflict stop is presented too, on the files that actually conflict rather than the commit's,
+# because dropping out of the pass at the first one would put you back to typing the commands this
+# replaces.
+#
+# @usage git review-commits [upstream] [--bare]
+
+set -u
+
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RED=$(tput setaf 1)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+GREY=$(tput setaf 8)
+RESET=$(tput sgr0)
+TICK="\xE2\x9C\x94"
+CROSS="\xE2\x9C\x96"
+CHEVRON="‣"
+
+bare=0
+upstream=""
+
+for argument in "$@"; do
+  case "$argument" in
+    --bare) bare=1 ;;
+    -*) print -u2 "git review-commits: unknown option $argument"; exit 1 ;;
+    *) upstream="$argument" ;;
+  esac
+done
+
+rebase_directory() {
+  local directory
+  directory=$(git rev-parse --git-path rebase-merge 2>/dev/null) || return 1
+  [[ -d "$directory" ]] || return 1
+  print -r -- "$directory"
+}
+
+# Git writes the `amend` marker only when it stops on an `edit`. It is absent during a conflict stop,
+# where HEAD is the last commit applied rather than the one under review, and amending would fold the
+# resolution into the wrong commit.
+stopped_on_edit() {
+  local directory
+  directory=$(rebase_directory) || return 1
+  [[ -f "$directory/amend" ]]
+}
+
+default_upstream() {
+  local default
+  default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
+  default=${default#origin/}
+
+  if [[ -z "$default" ]]; then
+    git rev-parse --verify --quiet main >/dev/null 2>&1 && default=main || default=master
+  fi
+
+  print -r -- "$default"
+}
+
+# Git narrates every stop — "Stopped at …", "You can amend the commit now" — which is the noise this
+# pass exists to replace. Held back while the command succeeds, and shown in full the moment it fails,
+# because then it is the only account of what went wrong.
+run_quietly() {
+  local output command_status
+  output=$("$@" 2>&1)
+  command_status=$?
+  (( command_status )) && print -r -- "$output"
+  return $command_status
+}
+
+start_review() {
+  local base
+  base=$(git merge-base HEAD "${upstream:-$(default_upstream)}") || return 1
+  GIT_SEQUENCE_EDITOR="perl -i -pe s/^pick/edit/" run_quietly git rebase -i "$base"
+}
+
+# "[2/4] " while the rebase says where it is, and nothing when it doesn't.
+progress() {
+  local directory=$1
+  [[ -f "$directory/msgnum" && -f "$directory/end" ]] || return
+  printf "[%s/%s] " "$(<"$directory/msgnum")" "$(<"$directory/end")"
+}
+
+# The commit's own files, minus any it deleted — those would open as empty buffers and read as a
+# mistake rather than as a deletion.
+commit_files() {
+  local file
+  for file in ${(f)"$(git committed)"}; do
+    [[ -f "$file" ]] && print -r -- "$file"
+  done
+}
+
+# The first command left in the todo is where continuing lands; nothing left means this stop is the
+# last one and continuing finishes the pass.
+next_commit() {
+  local directory=$1 line command rest
+  [[ -f "$directory/git-rebase-todo" ]] || return 1
+
+  while IFS= read -r line; do
+    command=${line%% *}
+    [[ "$command" == (pick|p|edit|e|reword|r|fixup|f|squash|s) ]] || continue
+    rest=${line#* }
+    git log -1 --format='%h %s' "${rest%% *}" 2>/dev/null
+    return
+  done < "$directory/git-rebase-todo"
+
+  return 1
+}
+
+# "abc1234 Subject", the sha picked out.
+commit_label() {
+  local commit=$1
+  print -r -- "${MAGENTA}${commit%% *}${RESET} ${commit#* }"
+}
+
+# What continuing will do with the working tree — the one thing the heading can't say. On an `edit`
+# whatever is there is amended into the commit; on a conflict it is the commit.
+pending_summary() {
+  local conflicted=$1 changed noun
+  changed=$(git status --porcelain | wc -l | tr -d ' ')
+  (( changed == 1 )) && noun="file" || noun="files"
+
+  if (( conflicted )); then
+    (( changed )) && print -r -- "$changed $noun to commit as the resolution" || print -r -- "Nothing to commit"
+  else
+    (( changed )) && print -r -- "$changed $noun to amend" || print -r -- "Nothing to amend"
+  fi
+}
+
+# Whatever is in the tree belongs to the commit under review, and the message is already settled —
+# by the amend here, or by the commit the resolution completes — so nothing below should want an
+# editor. One opening now would read as a second review of a commit just finished. A refused
+# continue is left to the caller's loop, which re-reads the rebase and presents where it truly is.
+finish_stop() {
+  local conflicted=$1
+
+  if (( conflicted )); then
+    git add -A
+  elif [[ -n "$(git status --porcelain)" ]]; then
+    git add -A && git commit --amend --no-edit --quiet || exit 1
+  fi
+
+  GIT_EDITOR=true run_quietly git rebase --continue
+}
+
+if ! rebase_directory >/dev/null; then
+  start_review || exit 1
+elif [[ -n "$upstream" ]]; then
+  echo "${YELLOW}A review is already parked — resuming it, and ignoring '$upstream'.${RESET}"
+fi
+
+if (( bare )); then
+  exit 0
+fi
+
+unattended=0
+
+while rebase_directory >/dev/null; do
+  directory=$(rebase_directory)
+
+  # Two kinds of stop, and the difference is what quitting the editor means. On an `edit` the commit
+  # is already applied and whatever you leave behind is amended into it; on a conflict nothing is
+  # committed yet and what you leave behind is the resolution.
+  if stopped_on_edit; then
+    conflicted=0
+    note=""
+    files=(${(f)"$(commit_files)"})
+    current=$(git log -1 --format='%h %s')
+    heading="$(progress "$directory")$(commit_label "$current")"
+  else
+    conflicted=1
+    files=(${(f)"$(git diff --name-only --diff-filter=U)"})
+    current=$(git log -1 --format='%h %s' "$(<"$directory/stopped-sha")" 2>/dev/null)
+    heading="$(progress "$directory")${YELLOW}conflict${RESET} applying $(commit_label "$current")"
+    note="the resolution becomes the commit — git gives no second stop to review it"
+  fi
+  files=(${files:#})
+
+  echo
+  echo "${GREEN}${CHEVRON}${RESET} $heading"
+  [[ -n "$note" ]] && echo "  ${GREY}${note}${RESET}"
+
+  # `d` handed the rest of the branch to git — every commit left is taken as reviewed and passes
+  # through unopened. A conflict is the one thing that stops that: it wants a person, so the prompt
+  # comes back rather than a resolution being guessed at.
+  if (( unattended && ! conflicted )); then
+    finish_stop 0
+    continue
+  fi
+  unattended=0
+
+  reviewing=1
+  opening=1
+  while (( reviewing )); do
+    if (( opening )); then
+      opening=0
+
+      if (( ${#files} )); then
+        nvim "${files[@]}"
+      else
+        echo "  ${GREY}nothing to open here${RESET}"
+      fi
+    fi
+
+    next=$(next_commit "$directory")
+
+    if [[ -n "$next" ]]; then
+      question="Continue to $(commit_label "${next%.}")?"
+    else
+      question="Continue and finish the review?"
+    fi
+
+    echo
+    echo "  ${GREY}$(pending_summary "$conflicted").${RESET} $question"
+    printf "  ${GREEN}[c]ontinue${RESET}  ${CYAN}[d]one${RESET}  [r]eopen  ${YELLOW}[s]tay${RESET}  ${RED}[a]bort${RESET} ${GREY}\u203a${RESET} "
+
+    # A single keypress at a terminal, a whole line anywhere else — `read -k` wants a tty, and the
+    # pass should still be drivable from a pipe.
+    answer=""
+    if [[ -t 0 ]]; then
+      read -k 1 answer
+    else
+      read -r answer || exit 0
+      answer=${answer:-c}
+    fi
+    echo
+
+    case "$answer" in
+      r|R)
+        opening=1
+        ;;
+      s|S)
+        echo "Parked on $(git log -1 --format='%h %s'). ${GREY}git review-commits to resume.${RESET}"
+        exit 0
+        ;;
+      a|A)
+        run_quietly git rebase --abort
+        echo "${RED}${CROSS}${RESET} Review abandoned"
+        exit 0
+        ;;
+      d|D)
+        reviewing=0
+        unattended=1
+        finish_stop "$conflicted"
+        ;;
+      c|C|$'\n')
+        reviewing=0
+        finish_stop "$conflicted"
+        ;;
+      *)
+        echo "  ${GREY}c, d, r, s or a${RESET}"
+        ;;
+    esac
+  done
+done
+
+echo
+echo "${GREEN}${TICK}${RESET} Review complete"
