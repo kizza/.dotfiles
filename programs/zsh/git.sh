@@ -53,9 +53,14 @@ function prune_worktrees() {
 }
 alias gdw="prune_worktrees"
 
-# Every linked worktree, skipping the main one — git always lists it first
+# Every worktree path, the main checkout first — git always lists it first
+function worktree_paths() {
+  git worktree list --porcelain | awk '/^worktree /{ print $2 }'
+}
+
+# Every linked worktree, skipping the main one
 function worktrees() {
-  git worktree list --porcelain | awk '/^worktree /{ print $2 }' | tail -n +2
+  worktree_paths | tail -n +2
 }
 
 # True when a worktree is on a branch already merged into trunk
@@ -84,92 +89,152 @@ function remove_worktree() {
   git branch -d "$branch"
 }
 
-# Each worktree as "branch<tab>path" — fzf shows the branch, cut takes the path. Porcelain separates
-# entries with a blank line, so flush there; a detached worktree has no branch line to read.
-function worktree_choices() {
+# Each worktree as "path<tab>branch<tab>sha". Porcelain separates entries with a blank line, so flush
+# there; a worktree sitting on a detached head has no branch line to read.
+function worktree_entries() {
   git worktree list --porcelain | awk '
-    /^worktree / { worktree_path = $2; branch = "" }
+    /^worktree / { worktree_path = $2; branch = ""; sha = "" }
+    /^HEAD /     { sha = substr($2, 1, 10) }
     /^branch /   { branch = $2; sub("refs/heads/", "", branch) }
     /^detached/  { branch = "(detached)" }
-    /^$/         { if (worktree_path) printf "%s\t%s\n", branch, worktree_path; worktree_path = "" }
-    END          { if (worktree_path) printf "%s\t%s\n", branch, worktree_path }
+    /^$/         { if (worktree_path) printf "%s\t%s\t%s\n", worktree_path, branch, sha; worktree_path = "" }
+    END          { if (worktree_path) printf "%s\t%s\t%s\n", worktree_path, branch, sha }
   '
 }
 
-# Every local branch that could move into a worktree, newest first, as "branch<tab>worktreepath". Trunk is
-# out, and so is anything already sitting in a linked worktree — but the branch the main worktree is on
-# stays in, because popping that one out is the whole point; it only has to step aside first.
-function branch_choices() {
-  git branch --sort=-committerdate --format='%(refname:short)%09%(worktreepath)' \
-    | awk -F'\t' -v trunk="$(trunk)" -v linked="$(worktrees)" '
-        BEGIN       { n = split(linked, paths, "\n"); for (i = 1; i <= n; i++) if (paths[i]) in_worktree[paths[i]] = 1 }
-        $1 != trunk && !($2 in in_worktree)
-      '
+# Which worktrees hold uncommitted work. One status per worktree, all at once — run in turn they add up
+# to a pause before the picker opens. Tracked changes only: a status that walks untracked files costs
+# seven times as much, and the preview window shows them anyway.
+function worktree_dirty_paths() {
+  setopt local_options no_monitor no_notify
+
+  local worktree_path
+  for worktree_path in "${(f)$(worktree_paths)}"; do
+    ( [[ -n $(git -C "$worktree_path" status --porcelain --untracked-files=no 2>/dev/null) ]] &&
+        print -r -- "$worktree_path" ) &
+  done
+  wait
 }
 
-# herdr talks over its socket from any terminal, so this holds whether or not a UI is attached. Never gate
-# on HERDR_ENV — that only exists inside a herdr pane. Started headless there is nothing on screen until
-# `herdr` attaches.
-function herdr_running() {
-  herdr status 2>/dev/null | grep -q 'status: running' && return
+# "2 weeks ago" reads as a sentence; a column wants "2w"
+function compact_age() {
+  local count=${1%% *} unit=${${${1#* }%% *}%%,*}
 
-  herdr server >/dev/null 2>&1 &
-  until herdr status 2>/dev/null | grep -q 'status: running'; do sleep 0.3; done
+  case ${unit%s} in
+    second) print -- "${count}s" ;;
+    minute) print -- "${count}m" ;;
+    hour)   print -- "${count}h" ;;
+    day)    print -- "${count}d" ;;
+    week)   print -- "${count}w" ;;
+    month)  print -- "${count}mo" ;;
+    year)   print -- "${count}y" ;;
+    *)      print -- "$1" ;;
+  esac
+}
+
+# "ahead 6, behind 5" as "↑6 ↓5"
+function compact_track() {
+  local compacted=${${1//ahead /↑}//behind /↓}
+  print -- "${compacted//, / }"
+}
+
+# Where a worktree sits, dropping the leaf when it only repeats the branch name
+function worktree_location() {
+  local worktree_path=$1 slug=${2//\//-}
+
+  [[ ${worktree_path:t} == "$slug" ]] && worktree_path=${worktree_path:h}
+  print -- "${worktree_path/#$HOME/~}"
+}
+
+# One aligned, coloured line per worktree: the branch you are standing in is green, a worktree holding
+# uncommitted work carries a dot, and drift from upstream goes yellow when behind, red when the upstream
+# is gone. Newest commit first — the worktree you want is nearly always the one you touched last. Pass
+# --linked to drop the main checkout. Field one is the path, for the picker to cut back off.
+function worktree_rows() {
+  local linked_only=$1
+  local here=$(git rev-parse --show-toplevel 2>/dev/null)
+  local main_worktree=$(worktree_paths | head -1)
+
+  # One for-each-ref carries the age and the drift of every worktree at once — it knows where each branch
+  # is checked out, so nothing here has to walk the worktrees to find out. Branches checked out nowhere
+  # lead with an empty path, and "|" keeps a branch with no upstream from collapsing its empty column.
+  local key age track stamp
+  typeset -A branch_age branch_track branch_stamp dirty
+  while IFS='|' read -r key age track stamp; do
+    branch_age[$key]=$age branch_track[$key]=$track branch_stamp[$key]=$stamp
+  done < <(git for-each-ref refs/heads \
+    --format='%(worktreepath)|%(committerdate:relative)|%(upstream:track,nobracket)|%(committerdate:unix)' \
+    | grep '^/')
+
+  for key in "${(f)$(worktree_dirty_paths)}"; do dirty[$key]=1; done
+
+  local -a sortable
+  local entry entry_path branch sha marker branch_colour track_colour
+  local branch_width=0 track_width=0 age_width=0
+  typeset -A row_branch row_track row_age row_location
+
+  while IFS=$'\t' read -r entry_path branch sha; do
+    [[ "$linked_only" == "--linked" && "$entry_path" == "$main_worktree" ]] && continue
+
+    age=$(compact_age "${branch_age[$entry_path]}")
+    track=$(compact_track "${branch_track[$entry_path]}")
+    stamp=${branch_stamp[$entry_path]:-0}
+
+    # A detached worktree — mid-rebase, or parked on a commit — has no branch to hang its metadata off,
+    # so read that off the commit itself
+    if [[ "$branch" == "(detached)" ]]; then
+      branch="(detached) $sha"
+      age=$(compact_age "$(git show -s --format=%cr $sha)")
+      stamp=$(git show -s --format=%ct $sha)
+    fi
+
+    row_branch[$entry_path]=$branch
+    row_track[$entry_path]=$track
+    row_age[$entry_path]=$age
+    row_location[$entry_path]=$(worktree_location "$entry_path" "$branch")
+    sortable+=("$stamp"$'\t'"$entry_path")
+
+    (( ${#branch} > branch_width )) && branch_width=${#branch}
+    (( ${#track} > track_width )) && track_width=${#track}
+    (( ${#age} > age_width )) && age_width=${#age}
+  done < <(worktree_entries)
+
+  (( ${#sortable} )) || return
+
+  for entry in "${(@f)$(print -l -- "${sortable[@]}" | sort -rn)}"; do
+    entry_path=${entry#*$'\t'}
+
+    marker=" "
+    [[ -n ${dirty[$entry_path]} ]] && marker="${YELLOW}●${RESET}"
+
+    branch_colour=$BLUE
+    [[ "$entry_path" == "$here" ]] && branch_colour=$GREEN
+
+    track_colour=$GREEN
+    [[ ${row_track[$entry_path]} == *↓* ]] && track_colour=$YELLOW
+    [[ ${row_track[$entry_path]} == gone ]] && track_colour=$RED
+
+    print -r -- "$entry_path"$'\t'"$marker ${branch_colour}${(r:$branch_width:)row_branch[$entry_path]}${RESET}" \
+      "${track_colour}${(r:$track_width:)row_track[$entry_path]}${RESET}" \
+      "${GREY}${(r:$age_width:)row_age[$entry_path]}  ${row_location[$entry_path]}${RESET}"
+  done
+}
+
+# Fzf the worktrees and print the path of the one picked. Field one is that path and stays hidden — the
+# coloured columns after it are what you see and search, and the preview shows what is going on in there.
+function worktree_picker() {
+  worktree_rows "${@:2}" | fzf --ansi --height 60% --reverse --delimiter=$'\t' --with-nth=2.. \
+    --prompt="$1" \
+    --preview='git -C {1} -c color.status=always status --short --branch; echo; git -C {1} log --color --oneline -8' \
+    --preview-window=down,55%,border-top \
+    | cut -f1
 }
 
 # Fzf the worktrees and cd into the one picked
 function cd-worktree() {
-  local worktree_path=$(worktree_choices | fzf --height 40% --reverse --prompt="Cd to worktree: " | cut -f2)
+  local worktree_path=$(worktree_picker "Cd to worktree: ")
 
   [[ -n "$worktree_path" ]] && cd "$worktree_path"
-}
-
-# Fzf the branches that could move into a worktree and pop the one picked into a herdr worktree. Name a
-# branch to skip the picker. One that already exists is checked out as it stands; one that doesn't is cut
-# from origin's trunk — a worktree is somewhere a branch visits, not where it has to be born.
-function to-worktree() {
-  git rev-parse --git-dir >/dev/null 2>&1 || return 1
-  local repo_root=$(git tree-root)
-  local branch="$1"
-
-  if [[ -z "$branch" ]]; then
-    branch=$(branch_choices | fzf --height 40% --reverse --delimiter=$'\t' --with-nth=1 \
-      --prompt="Branch into worktree: " | cut -f1)
-    [[ -z "$branch" ]] && return
-  fi
-
-  # Git won't check the same branch out twice, so the main worktree steps aside — back to trunk, which is
-  # where it wants to sit anyway while the work happens elsewhere
-  if [[ "$branch" == "$(git -C "$repo_root" branch --show-current)" ]]; then
-    # Untracked files ride along harmlessly; tracked changes would be left behind on trunk
-    if [[ -n "$(git -C "$repo_root" status --porcelain --untracked-files=no)" ]]; then
-      echo "${RED}${CROSS}${RESET} $repo_root is on $branch with uncommitted changes — commit or stash them first"
-      return 1
-    fi
-    git -C "$repo_root" checkout $(trunk) || return 1
-  fi
-
-  # --base only applies to a branch herdr has to create; it is ignored for one that already exists
-  local base
-  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
-    git -C "$repo_root" fetch origin || return 1
-    base="--base origin/$(trunk)"
-  fi
-
-  herdr_running || return 1
-
-  local failure
-  if ! failure=$(herdr worktree create --cwd "$repo_root" --branch "$branch" ${=base} --no-focus --json 2>&1); then
-    echo "${RED}${CROSS}${RESET} $failure"
-    return 1
-  fi
-
-  # Read the path back off git rather than herdr's json — worktree_choices already speaks porcelain
-  local worktree_path=$(worktree_choices | awk -F'\t' -v b="$branch" '$1 == b { print $2 }')
-  worktree-provision "$worktree_path" "$repo_root"
-
-  donetick "$branch is now in $worktree_path"
-  echo "  ${ITALIC_START}cd-worktree to go there, herdr to review it${ITALIC_END}"
 }
 
 # A removed worktree leaves its branch behind on purpose — that is the point of popping one out, the branch
@@ -190,8 +255,8 @@ function release_branch() {
 # worktree. Git refuses while a worktree still holds modified or untracked files — rather than force the
 # delete, offer to cd there and judge the work by hand.
 function rm-worktree() {
-  # The main worktree is always listed first and can never be removed
-  local worktree_path=$(worktree_choices | tail -n +2 | fzf --height 40% --reverse --prompt="Remove worktree: " | cut -f2)
+  # The main worktree can never be removed, so it is not offered
+  local worktree_path=$(worktree_picker "Remove worktree: " --linked)
   [[ -z "$worktree_path" ]] && return
 
   local branch=$(git -C "$worktree_path" branch --show-current)
@@ -276,12 +341,41 @@ function build_fzf_preview {
   echo "$1 | bat --color=always --style=plain $2"
 }
 
+# Fuzzy find a branch and print its name alone. The list stays exactly as `git branch` renders it so the
+# markers survive on screen — `*` for the branch checked out here, `+` for one a worktree already holds —
+# and only the pick is stripped back to a name. A detached HEAD lists as `(HEAD detached at …)`, which is
+# no branch to hand back.
+function select_branch() {
+  local picked=$(git branch --sort=-committerdate \
+    | fzf --height=50% --info=hidden --reverse --prompt="$1" \
+          --preview="$(build_fzf_preview 'git log {-1} --oneline' '--language=gitoneline')" \
+    | sed 's/^[*+][[:space:]]*//; s/^[[:space:]]*//')
+
+  [[ -z "$picked" || "$picked" == \(* ]] && return 1
+  echo "$picked"
+}
+
 # Fuzzy find the branch to switch to
 function branch() {
-  BRANCH=$(git branch --sort=-committerdate | fzf --height=50% --info=hidden --reverse --preview="$(build_fzf_preview 'git log {-1} --oneline' '--language=gitoneline')" | awk '{$1=$1;print}')
-  if [ ! -z "$BRANCH" ]; then
-    git checkout "$BRANCH"
-  fi
+  local picked
+  picked=$(select_branch "Checkout: ") || return
+
+  git checkout "$picked"
+}
+
+# Check a branch out here even when a worktree already holds it. A branch is a single ref, so only one
+# tree may ever commit on it: grab pulls work into the main checkout to run and poke at, and the worktree
+# an agent is in stays where it gets committed.
+function grab() {
+  local picked
+  picked=$(select_branch "Grab (ignores other worktrees): ") || return
+
+  local holder=$(git branch --list "$picked" --format='%(worktreepath)')
+
+  git checkout --ignore-other-worktrees "$picked" || return 1
+
+  [[ -n "$holder" && "$holder" != "$(git rev-parse --show-toplevel)" ]] &&
+    echo "  ${ITALIC_START}also checked out in $holder — commit there, not here${ITALIC_END}"
 }
 
 # Open pr for the current branch
