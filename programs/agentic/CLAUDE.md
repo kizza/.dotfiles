@@ -19,14 +19,34 @@ A comment earns its place by carrying what the code cannot. Write it small, then
 
 - **Meaning immediately.** The first few words carry the point. No preamble, no restating the
   signature, no narrating what the next line plainly does.
-- **Two shapes, mostly.** A couple of words trailing the line they qualify, or one sentence above a
-  small block. Reach for anything longer only to record a real decision or trade-off.
+- **Two shapes, mostly.** A couple of words inline with what qualify, or one sentence above a
+  small block. Rarely reach for anything longer.
 - **Not on every line.** A note against each of four lines is noise — the reader stops telling
   signal from habit. Annotate the one or two that need it.
 - **Full width, not narrow.** Wrap around 120 columns; fewer dense lines read better than many
   fragments. Keep method comments succinct — the how and why in as few lines as it takes.
 - **A stale comment is worse than none.** If it no longer describes what happens, the code is the
   truth: rewrite the comment to match reality, or remove it.
+
+## Commit messages
+
+- **Subject is a label, at 50 columns hard.** Imperative, sentence case, no full stop. Name the
+  operation — `Extract`, `Introduce`, `Rename`, `Move`, `Use` — not the reasoning behind it.
+- **Name the artefact, spelled as the code spells it.** `Extract classification from
+  FundingSourceAdapter`, never "extract funding source adapter classification". Bare in the
+  subject, backticked in the body — and every code mention in the body is backticked. A domain word
+  used as prose stays lowercase (`sah`); inside an identifier it keeps its casing
+  (`Finance::SAH::ClaimCSVTotalsRow`).
+- **Body wraps at 72 columns.** The 120-column rule under Comments is for code, and does not reach
+  here. `textwidth=72` enforces it in the editor; a message written with `-m` or a heredoc bypasses
+  that, so wrap it yourself.
+- **Bullets beat paragraphs.** One line per decision or trade-off. Reach for prose only when the why
+  needs a sentence to hold together.
+- **A body only when it earns one.** What changed is the subject's job; the body carries why, and
+  what a reviewer would otherwise have to reconstruct.
+
+The `commit` skill under `programs/agentic/skills/` carries the grouping rules — which changes
+belong in which commit.
 
 ## Voice intent before gated work
 
@@ -58,6 +78,7 @@ Where rules conflict, ask what the reviewer needs to see, not what the runtime n
 - **Share setup only when every example needs it**, and don't extract helpers for a single
   call site. Duplication beats a reference the reader has to chase.
 - **Anchor time to a literal**, then derive periods by name; never make the reader simulate a clock.
+- **Avoid helper methods**: keep setup inline, or heavily consider factories and variants for composability
 - **Fewer tests, not more.**
 
 Documented in full as the `test-clarity` skill under `programs/agentic/skills/` — read it
