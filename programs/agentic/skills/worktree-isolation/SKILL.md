@@ -1,50 +1,53 @@
 ---
 name: worktree-isolation
 description: >
-  Give a lookout worktree its own Postgres and Redis via `bin/worktree-setup isolate`, when specs
-  interfere with each other, a branch adds a migration, or two runs need to overlap. Use on symptoms
-  as much as requests — inexplicable spec failures (missing seed data, foreign key violations, a
-  schema that doesn't match the branch), "the test database is shared", "specs are fighting each
-  other". Applies to any worktree however it was made: created by the `worktrees` skill, by hand, or
-  rooted under ~/.herdr/.
+  Give a worktree its own database and cache — its own Postgres databases and Redis logical DBs —
+  through the repo's worktree tooling, when specs interfere with each other, a branch adds a
+  migration, or two runs need to overlap. Use on symptoms as much as requests — inexplicable spec
+  failures (missing seed data, foreign key violations, a schema that doesn't match the branch), "the
+  test database is shared", "specs are fighting each other". Applies to any worktree however it was
+  made: created by the `worktrees` skill, by `git worktree add`, or by hand.
 ---
 
-# Isolating a lookout worktree
+# Isolating a worktree
 
 A worktree arrives provisioned but **not** isolated. This skill closes that last gap, and is the one
 escalation an agent may decide on for itself.
+
+Commands are written here as `bin/worktree-setup <command>` — use whatever the repo actually
+provides, and read its own worktree docs where it has them.
 
 ## The two tiers
 
 | Tier | How you get it | What it buys |
 |---|---|---|
-| provisioned | `bin/worktree-setup run` — automatic, via `.githooks/post-checkout` | `.envrc.overrides`, `.envrc.secrets`, gems, `node_modules`, own dev-server ports |
-| isolated | `bin/worktree-setup isolate` | own **dev + test Postgres databases**, own **Redis logical DBs** |
+| provisioned | `bin/worktree-setup run` — automatic, via `.githooks/post-checkout` | machine-local env files, dependencies, own dev-server ports |
+| isolated | `bin/worktree-setup isolate` | own **dev + test databases**, own **Redis logical DBs** |
 
-Per `doc/how_to/use_git_worktrees.md`: `run` sets `WORKTREE_SLOT`, `DEV_HTTP_PORT` and
-`DEV_HTTPS_PORT`. Only **`isolate`** sets `DEV_DATABASE_NAME`, `TEST_DATABASE_NAME` and
-`REDIS_DB_OFFSET`. Until then the worktree shares the main checkout's databases.
+`run` assigns the worktree its slot and its dev-server ports. Only **`isolate`** sets the dev and
+test database names and the cache's DB offset. Until then the worktree shares the main checkout's
+databases.
 
-Check which tier you are on with `direnv exec . bin/worktree-setup status` — `DEV DB` / `TEST DB` /
-`REDIS` rows appear only once isolated.
+Check which tier you are on with `direnv exec . bin/worktree-setup status` — the database and cache
+rows appear only once isolated.
 
-**A worktree that skipped the hook has neither tier.** No `.envrc.worktree`, no ports, possibly no
-`.envrc.secrets` — so `bin/rails` fails for want of `RAILS_MASTER_KEY`. Git honours exactly one
-`core.hooksPath`, so anything repointing it (beads has) silently disables every repo hook. Confirm
-with `git config --show-origin core.hooksPath`, restore with `git config core.hooksPath .githooks`,
-then `direnv exec . bin/worktree-setup run` to catch the worktree up. `isolate` does not depend on
-`run` having happened.
+**A worktree that skipped the hook has neither tier.** No per-worktree env file, no ports, possibly
+no secrets — so `bin/rails` fails for want of credentials before it starts. Git honours exactly one
+`core.hooksPath`, so anything repointing it silently disables every repo hook. Confirm with
+`git config --show-origin core.hooksPath`, restore with `git config core.hooksPath .githooks`, then
+`direnv exec . bin/worktree-setup run` to catch the worktree up. `isolate` does not depend on `run`
+having happened.
 
 ## When to escalate
 
-**The test database is shared.** `config/database.yml:27` defaults `TEST_DATABASE_NAME` to
-`lookout_test`, so every non-isolated worktree and the main checkout share one test database. Two
-things then break:
+**The test database is shared.** The test database name defaults to one value for the whole repo, so
+every non-isolated worktree and the main checkout point at a single test database. Two things then
+break:
 
-- `spec/support/database.rb:9` runs `DatabaseCleaner.clean_with(:truncation)` at `before(:suite)`.
-  A second rspec starting **truncates every table out from under** a run already in flight.
-- `spec/rails_helper.rb:73` calls `maintain_test_schema!`, so a branch with a new migration reloads
-  the schema — and anything else running is now testing against the wrong schema.
+- A suite that truncates at `before(:suite)` — `DatabaseCleaner.clean_with(:truncation)`, typically
+  — means a second rspec starting **truncates every table out from under** a run already in flight.
+- `maintain_test_schema!` reloads the schema when a branch carries a new migration, and anything
+  else running is now testing against the wrong schema.
 
 Escalate when specs fail in ways that make no sense: missing seed data, foreign key violations,
 materialized views that vanished, a schema that doesn't match the branch. **Do not debug the specs.**
@@ -52,39 +55,45 @@ materialized views that vanished, a schema that doesn't match the branch. **Do n
 Sequential use of a shared test database is fine; concurrency is what breaks it. So the trigger is
 not "this is a worktree" but "two runs will overlap" or "this branch changes the schema".
 
+**The main checkout counts as a sharer.** It has no per-worktree env, so it sits on the default
+development and test databases exactly like an unisolated worktree — and it is where Keiran runs his
+dev server, pulling branches in with `grab` to drive them by hand. A branch that adds a migration is
+therefore one he cannot safely grab: running it in the slot migrates the database every unisolated
+worktree reads, and trunk is then behind its own schema. Isolate that branch's worktree and say the
+branch carries a migration, rather than leaving it to be found in the slot.
+
 ## Doing it
 
 ```bash
 cd "$WORKTREE_PATH"
-direnv exec . bin/worktree-setup isolate   # own databases and Redis, dev seeded
+direnv exec . bin/worktree-setup isolate   # own databases and cache, dev seeded
 direnv exec . bin/worktree-setup status    # confirm what got assigned
 ```
 
 Run it under `direnv exec .` — outside the nix shell there is no project Ruby and it fails before it
-starts. Add `TLW_SKIP_1PASSWORD=1` in an agent shell, which cannot authorize `op` and otherwise waits
-out a 60s authorization timeout.
+starts. Where the env shells out to a credential manager, set its skip flag in an agent shell, which
+cannot authorize the prompt and otherwise waits out the full timeout for nothing.
 
 `isolate` is safe to re-run and skips if already isolated. It copies no files, so it never conflicts
-with anything symlinked into the worktree. It calls `prune` at the end, garbage-collecting databases
+with anything symlinked into the worktree. It prunes at the end, garbage-collecting databases
 belonging to worktrees that no longer exist.
 
-It also marks the dev database up to date with `db/data_schema.rb`, so existing data migrations are
-recorded as applied rather than left pending for the next `bin/update`. Data migrations the branch
-itself adds still show as pending, as they should.
+Where the repo tracks data migrations separately, isolate also marks the new dev database current
+with them, so existing ones are recorded as applied rather than left pending for the next update.
+Data migrations the branch itself adds still show as pending, as they should.
 
-Not every odd spec failure is the database. `Propshaft::MissingAssetError` on `public.css` is a
-worktree with no built assets, which isolation does not touch — symlink them from the main checkout
+Not every odd spec failure is the database. A missing-asset error is a worktree with no built
+assets, which isolation does not touch — symlink them from the main checkout
 (`ln -sfn "$REPO_ROOT"/app/assets/builds/* app/assets/builds/`) rather than precompiling. The
 `worktrees` skill covers it.
 
-## Footgun: never add a symlinked file to `.worktreeinclude`
+## Footgun: never list a symlinked file for copying
 
-`bin/worktree/run` copies its file list with `FileUtils.cp_r`, which raises
-`ArgumentError: same file` when source and destination are the same file — and `SYNC CONFIG` is a
-fatal step, so **`run` exits 1** for every worktree thereafter. Its list is `.envrc.overrides`,
-`.envrc.secrets`, `.worktreeinclude`, plus every path named inside `.worktreeinclude`.
+Setup scripts provision a worktree by copying a list of machine-local files into it. Copying with
+`FileUtils.cp_r` raises `ArgumentError: same file` when source and destination are the same file, and
+where that copy is a fatal step the whole setup **exits non-zero** for every worktree thereafter.
 
-So `.worktreeinclude` may name only real files. Anything symlinked into a worktree — a shared
+So the copy list may name only real files. Anything symlinked into a worktree — a shared
 `.claude/settings.local.json`, for instance — must stay out of it.
 
 ## Tearing down
@@ -92,14 +101,15 @@ So `.worktreeinclude` may name only real files. Anything symlinked into a worktr
 Only when Keiran explicitly asks:
 
 ```bash
-direnv exec . bin/worktree-setup teardown   # drops this worktree's databases, flushes its Redis DBs
+direnv exec . bin/worktree-setup teardown   # drops this worktree's databases, flushes its cache DBs
 ```
 
-Skipping teardown is harmless — `prune` collects stale resources on the next `isolate`. Removing the
-worktree directory itself is Keiran's call, never an agent's.
+Skipping teardown is harmless — a later `prune` collects stale resources. Removing the worktree
+directory itself is Keiran's call, never an agent's.
 
 ## Limits
 
-31 concurrent isolated worktrees (Redis `--databases 64`, two per slot). `bin/worktree-setup prune`
-reclaims slots from deleted worktrees. Each full `bin/dev` runs Puma, four Sidekiq workers and two
-asset watchers, so isolate freely but do not leave dev servers running.
+The ceiling is the cache's logical database count: Redis ships 64, and two per slot leaves 31
+concurrent isolated worktrees. `prune` reclaims slots from deleted worktrees. A full dev stack per
+worktree is several processes — app server, background workers, asset watchers — so isolate freely
+but do not leave dev servers running.
