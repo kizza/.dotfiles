@@ -13,6 +13,15 @@
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/Code/kizza/paddck/scripts/agents/state.sh";
 
+  # Ours rather than paddck's: what a finished turn should announce is a preference, not a fact
+  # about an agent. It is a file rather than an inline command because it reads the payload before
+  # it says anything, and a shell script that quotes JSON is not something to write through two
+  # layers of Nix escaping.
+  home.file.".claude/hooks/turn-done.sh" = {
+    source = ./agentic/hooks/turn-done.sh;
+    executable = true;
+  };
+
   programs.claude-code = {
     enable = true;
     package = edgePkgs.claude-code; # Use edge packages for latest
@@ -147,20 +156,23 @@
         Stop = [
           {
             hooks = [
-              # Speak the branch's last segment, not "claude" — with several worktree agents
-              # running at once, an anonymous "claude done" says nothing about which finished.
-              # `billing/duplicate-invoice-lines` speaks as "duplicate-invoice-lines done".
-              # Falls back to the directory name when detached or outside a repo.
-              {
-                type = "command";
-                command = "sh -c 'cd \"$CLAUDE_PROJECT_DIR\" 2>/dev/null; n=$(git branch --show-current 2>/dev/null | sed \"s|.*/||\"); [ -n \"$n\" ] || n=$(basename \"$PWD\"); ~/.dotfiles/bin/piper_say \"$n done\"'";
-                async = true;
-              }
-              {
-                type = "command";
-                command = "osascript -e 'display notification \"Claude is done\" with title \"Claude Code\"'";
-                async = true;
-              }
+              # Spoken and on screen, named after the branch rather than the agent — and silent
+              # while the turn has left subagents running. See the script for both halves.
+              {type = "command"; command = "/Users/keiran/.claude/hooks/turn-done.sh"; async = true;}
+              {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
+            ];
+          }
+        ];
+
+        # The other end of a background subagent. Stop says what a turn left running; this says what
+        # is still out as each one finishes, so the last of them is what hands the pane back.
+        # Paddck only, and not the announcement: this also fires for a subagent the turn *waited*
+        # for, where the payload looks identical and the turn is still going — paddck tells the two
+        # apart by what the pane already says, and a shell script has nothing to tell them with.
+        # There is deliberately no SubagentStart either: it fires mid-turn, and mid-turn is working.
+        SubagentStop = [
+          {
+            hooks = [
               {type = "command"; command = "/Users/keiran/.claude/hooks/paddck-agent-state.sh"; timeout = 10;}
             ];
           }
