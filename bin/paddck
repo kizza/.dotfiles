@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+# On PATH so that everything can reach it, not just an interactive shell. tmux runs a hook's command
+# under /bin/sh and an agent runs its hooks under whatever it was started with — neither has read
+# alias.sh, which is where this used to live and why `paddck refresh` answered 127 from every hook.
+exec ~/Code/kizza/paddck/scripts/paddck "$@"
