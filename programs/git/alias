@@ -28,9 +28,9 @@
   discardp = checkout -p --
   files = diff-tree --no-commit-id --name-only -r
   fixup = commit --fixup
-  main = checkout master
+  main = !git checkout $(git trunk)
   marker = commit --allow-empty -m
-  master = checkout master
+  master = !git checkout $(git trunk)
   pl = pull --rebase
   pu = push
   reabse = rebase
@@ -70,9 +70,11 @@
   trunk = "!git-trunk" # Trunk's name, --tip for the furthest forward of local and origin's
   trunk-base = "!git-trunk-base" # Where a branch left trunk
 
-  # Sites a worktree beside the main checkout, at <repo>-<branch>. An existing branch is checked out as it
-  # stands; -b is only for a name git has never seen. The plain-git escape hatch — `to-worktree` is the
-  # herdr flow, and neither one deletes a branch on the way back out.
+  # Sites a worktree at ~/Code/worktrees/<repo>/<slug>, the one root worktrees live under — never beside
+  # the main checkout, where a throwaway is indistinguishable from a real repo. An existing branch is
+  # checked out as it stands; a name git has never seen is cut fresh from the trunk furthest forward after
+  # a fetch, so a new branch never forks off whatever the main checkout was sitting on. Removing one
+  # leaves the branch.
   # @usage git add-worktree with/branch-name
   add-worktree = "!f() { \
     branch=\"$1\"; \
@@ -83,11 +85,12 @@
     root=$(git tree-root); \
     repo=$(basename \"$root\"); \
     safe_branch=$(echo \"$branch\" | tr '/' '-'); \
-    worktree=\"${root}/../${repo}-${safe_branch}\"; \
+    worktree=\"$HOME/Code/worktrees/${repo}/${safe_branch}\"; \
     if git show-ref --verify --quiet \"refs/heads/$branch\"; then \
       git worktree add \"$worktree\" \"$branch\"; \
     else \
-      git worktree add \"$worktree\" -b \"$branch\"; \
+      git fetch origin && \
+      git worktree add \"$worktree\" -b \"$branch\" \"$(git trunk --tip)\"; \
     fi; \
   }; f"
 
