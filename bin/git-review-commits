@@ -4,7 +4,7 @@
 # tailored in place. At each stop the editor opens on the commit's own files and, because the commit
 # is applied rather than rolled back, HEAD~1 is its parent — so gitsigns diffs against the committed
 # content and the amend keeps the message. Rebases onto the merge-base, not the branch tip, so a
-# moved upstream never re-parents the work.
+# moved upstream never re-parents the work. Without an upstream named it starts from `git trunk-base`.
 #
 # Quitting the editor is the signal that the commit is done; the prompt that follows is where the
 # pass is steered — continue and it amends, done takes the rest of the branch as reviewed and runs it
@@ -58,18 +58,6 @@ stopped_on_edit() {
   [[ -f "$directory/amend" ]]
 }
 
-default_upstream() {
-  local default
-  default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
-  default=${default#origin/}
-
-  if [[ -z "$default" ]]; then
-    git rev-parse --verify --quiet main >/dev/null 2>&1 && default=main || default=master
-  fi
-
-  print -r -- "$default"
-}
-
 # Git narrates every stop — "Stopped at …", "You can amend the commit now" — which is the noise this
 # pass exists to replace. Held back while the command succeeds, and shown in full the moment it fails,
 # because then it is the only account of what went wrong.
@@ -81,9 +69,16 @@ run_quietly() {
   return $command_status
 }
 
+# `git trunk-base` takes the fork point from whichever trunk is furthest forward, local or origin's, so
+# the pass covers the branch's own commits without a pull of trunk first. A named upstream is taken at
+# its word, and still through its merge-base.
 start_review() {
   local base
-  base=$(git merge-base HEAD "${upstream:-$(default_upstream)}") || return 1
+  if [[ -n "$upstream" ]]; then
+    base=$(git merge-base HEAD "$upstream") || return 1
+  else
+    base=$(git trunk-base) || return 1
+  fi
   GIT_SEQUENCE_EDITOR="perl -i -pe s/^pick/edit/" run_quietly git rebase -i "$base"
 }
 
