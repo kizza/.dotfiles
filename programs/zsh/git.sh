@@ -8,7 +8,7 @@ alias current="git am --show-current-patch" # During a rebase, shows the current
 alias pollshow="watch --color --no-title --interval 0.5 git show --color" # Show the current commit (to run beside rebases)
 alias gl="git l"
 alias gll="git log --pretty=format:\"%C(cyan)%h%Creset %an, %C(yellow)%ar: %C(Green)%s\" --stat"
-alias gdba="git fetch --prune && git branch | grep -vE '(master|master)$' >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
+alias gdba="git fetch --prune && git branch | grep -vE '(master|main)$' >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches"
 alias master="main"
 
 function gs() {
@@ -16,11 +16,11 @@ function gs() {
 }
 
 function since_master() {
-  git diff --name-only $(trunk) # Local only
+  git diff --name-only $(trunk_base)
 }
 
 function gdb() {
-  git fetch --prune && git branch --merged $(trunk) | grep -vE '(master|main)$' \
+  git fetch --prune && git branch --merged $(trunk_tip) | grep -vE '^\s*[*+]?\s*(master|main)$' \
     >/tmp/merged-branches && nvim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches
 }
 
@@ -66,7 +66,7 @@ function worktrees() {
 # True when a worktree is on a branch already merged into trunk
 function worktree_merged() {
   local branch=$(git -C "$1" branch --show-current)
-  [[ -n "$branch" ]] && git merge-base --is-ancestor "$branch" $(trunk)
+  [[ -n "$branch" ]] && git merge-base --is-ancestor "$branch" $(trunk_tip)
 }
 
 function merged_worktrees() {
@@ -243,7 +243,7 @@ function release_branch() {
   local branch="$1"
   [[ -z "$branch" ]] && return
 
-  if git merge-base --is-ancestor "$branch" $(trunk) 2>/dev/null; then
+  if git merge-base --is-ancestor "$branch" $(trunk_tip) 2>/dev/null; then
     echo -n "$branch is merged into $(trunk). Delete it? (y/n) " && read response
     [[ "$response" =~ ^[Yy]$ ]] && { git branch -d "$branch"; return }
   fi
@@ -287,11 +287,13 @@ function ir() {
   git rebase -i $(rebase_to)
 }
 
+# On a branch the rebase runs to the fork point — a whole-name match, so `main-menu-fixes` is a branch
+# like any other and not mistaken for trunk.
 function rebase_to() {
-  if git current | grep -qE "(main|master)"; then
+  if [[ "$(git current)" == "$(trunk)" ]]; then
     echo $(sha_for_fixup_commit)~1
   else
-    echo $(trunk)
+    echo $(trunk_base)
   fi
 }
 
@@ -329,8 +331,20 @@ function rebasewith() {
   fi
 }
 
+# Trunk's name, and where the branch left it — both from bin/git-trunk, so the shell, the git aliases and
+# git-review-commits never disagree about where work starts. `trunk_tip` is the furthest-forward trunk,
+# local or origin's, and is what "has this merged" wants; `trunk_base` is the fork point, and is what a
+# rebase or a diff wants.
 function trunk() {
-  git rev-parse --abbrev-ref origin/HEAD | sed 's/origin\///'
+  git trunk
+}
+
+function trunk_tip() {
+  git trunk --tip
+}
+
+function trunk_base() {
+  git trunk-base "$@"
 }
 
 function main() {
@@ -468,7 +482,7 @@ unstash() {
 stashrebase() {
   heading 'Stashing and rebasing...'
   git stash push -u -k -m 'Stashed for rebase' --quiet
-  git rebase -i --autosquash $(trunk)
+  git rebase -i --autosquash $(rebase_to)
   heading 'Unstashing...'
   git stash pop --quiet
   git reset --quiet
@@ -497,14 +511,14 @@ fixup() {
     return
   fi
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  if [[ "$BRANCH" = "master" || "$BRANCH" = "main" ]]; then
+  if [[ "$BRANCH" == "$(trunk)" ]]; then
     out=$(
       git log -n 50 --graph --color=always  --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
           --preview "echo {} | cut -d ' ' -f2 | xargs git show --color" --toggle-sort=\`)
   else
     out=$(
-      git log $(trunk).. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
+      git log $(trunk_base).. --graph --color=always --format="%C(auto)%h %s%d %C(black)%C(bold)%cr" "$@" |
       fzf --ansi --no-sort --reverse --query="$q" --tiebreak=index \
           --preview "echo {} | cut -d ' ' -f2 | xargs git show --color" --toggle-sort=\`)
   fi
