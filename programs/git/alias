@@ -67,6 +67,8 @@
   }; f"
 
   review-commits = "!git-review-commits" # Support git review-commits
+  trunk = "!git-trunk" # Trunk's name, --tip for the furthest forward of local and origin's
+  trunk-base = "!git-trunk-base" # Where a branch left trunk
 
   # Sites a worktree beside the main checkout, at <repo>-<branch>. An existing branch is checked out as it
   # stands; -b is only for a name git has never seen. The plain-git escape hatch — `to-worktree` is the

@@ -1,0 +1,26 @@
+#!/bin/zsh -f
+
+# Where a branch left trunk — the sha to rebase onto, diff against, or start a review from. Takes the
+# furthest-forward of the fork point from the local trunk and the one from origin's, so a local trunk
+# nobody has pulled stops dragging other people's commits into the pass, and an unpushed local trunk is
+# still honoured. A fork point is an ancestor of the branch either way: rebasing onto one replays your
+# own commits and can never re-parent the branch onto a trunk that has moved.
+#
+# @usage git trunk-base [ref]
+
+set -u
+
+ref=${1:-HEAD}
+trunk=$(git trunk) || exit 1
+
+base=""
+for candidate in "refs/heads/$trunk" "refs/remotes/origin/$trunk"; do
+  git rev-parse --verify --quiet "$candidate" >/dev/null || continue
+  fork=$(git merge-base "$ref" "$candidate" 2>/dev/null) || continue
+  [[ -z "$base" ]] || git merge-base --is-ancestor "$base" "$fork" || continue
+  base=$fork
+done
+
+[[ -n "$base" ]] || { print -u2 "git trunk-base: $ref shares no history with $trunk"; exit 1 }
+
+print -r -- "$base"
