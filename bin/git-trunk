@@ -1,0 +1,60 @@
+#!/bin/zsh -f
+
+# The trunk branch, named as a local ref — `main`, `master`, whatever origin's HEAD points at. Every
+# question of the form "where does my work start" goes through here, so one repo never answers it two
+# ways, and so a repo git has never been told the default of still answers.
+#
+# --tip prints the sha of whichever trunk is furthest forward, the local branch or origin's: a local
+# trunk carrying unpushed commits is ahead, one nobody has pulled in a week is behind, and neither
+# should be guessed at. Diverged, local wins — it is the trunk you actually have.
+#
+# @usage git trunk [--tip]
+
+set -u
+
+tip=0
+
+for argument in "$@"; do
+  case "$argument" in
+    --tip) tip=1 ;;
+    *) print -u2 "git trunk: unknown option $argument"; exit 1 ;;
+  esac
+done
+
+trunk=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
+trunk=${trunk#origin/}
+
+# origin/HEAD is only written at clone time and by `git remote set-head`, so a repo cloned before the
+# rename — or with no remote at all — never had one to read.
+if [[ -z "$trunk" ]]; then
+  for candidate in main master trunk; do
+    git show-ref --verify --quiet "refs/heads/$candidate" && { trunk=$candidate; break }
+    git show-ref --verify --quiet "refs/remotes/origin/$candidate" && { trunk=$candidate; break }
+  done
+fi
+
+[[ -n "$trunk" ]] || { print -u2 "git trunk: no trunk branch found"; exit 1 }
+
+if (( ! tip )); then
+  print -r -- "$trunk"
+  exit 0
+fi
+
+# Both shas in the one for-each-ref, and the merge-base only asked for when they actually differ — this
+# runs inside an fzf preview, where every extra git process is felt.
+typeset -A sha
+while read -r name object; do sha[$name]=$object; done < <(git for-each-ref \
+  --format='%(refname) %(objectname)' "refs/heads/$trunk" "refs/remotes/origin/$trunk")
+
+here=${sha[refs/heads/$trunk]:-}
+there=${sha[refs/remotes/origin/$trunk]:-}
+
+[[ -n "$here" ]] || { print -r -- "$there"; exit 0 }
+[[ -n "$there" ]] || { print -r -- "$here"; exit 0 }
+
+# Origin only takes it by strictly containing what is here
+if [[ "$here" != "$there" ]] && git merge-base --is-ancestor "$here" "$there"; then
+  print -r -- "$there"
+else
+  print -r -- "$here"
+fi
