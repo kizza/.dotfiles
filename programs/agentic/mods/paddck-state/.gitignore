@@ -1,0 +1,4 @@
+# Written by Claude Code each time it loads the mod, and extends the declarations under
+# `.claude-plugin/types/`, which are generated per build and ignored beside themselves. Tracking it
+# would commit a file pointing at one that is not there until a session has run.
+tsconfig.json
