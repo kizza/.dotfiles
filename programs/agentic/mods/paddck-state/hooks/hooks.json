@@ -1,0 +1,4 @@
+{
+  "description": "paddck's agent-state sensor",
+  "modules": ["./register.js"]
+}

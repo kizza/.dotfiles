@@ -1,0 +1,93 @@
+# paddck-state
+
+**What this Claude session is doing, told to paddck from inside it.**
+
+Paddck learns what an agent is up to from the pane options `paddck hook claude` writes. Until now
+the thing calling that was eight settings hooks, each one a shell script woken with its own payload
+and no memory of the last. This is the same job done by a mod — a module loaded once into the
+session that stays for the life of it — and paddck is untouched: what goes down the pipe is a Claude
+lifecycle event of exactly the shape `hook.ts` already reads.
+
+## Why a mod
+
+Three facts the old wiring had to infer, and now does not have to.
+
+**A finished subagent.** `SubagentStop` fires for a subagent the turn *waited* for and one it left
+running, and the two payloads are identical. Paddck told them apart by reading back what the pane
+already said, over tmux, on every one. The mod watched the foreground turn end, so it knows.
+
+**A standing permission prompt.** The old route was a `Notification` that arrives six seconds after
+the fact when you are away from the pane and a minute when you are not, and that calls a question
+and a tool waiting to be approved by the same name — `permission_prompt`. The mod reads
+`tool.check`, which is the engine deciding, at the moment it decides.
+
+**Whether anything changed at all.** Every hook firing was a `bash` and a `bun`, most of them to
+conclude that the pane already said what they were about to write. The mod holds the last thing it
+said and spends a subprocess only on a transition.
+
+## What it listens to
+
+| Event | Why this one | What paddck is told |
+| --- | --- | --- |
+| `session.start` | Before the first prompt. Not raised again by `/clear`, `/resume` or `/branch`, which is why identity is read per message rather than cached. | `SessionStart` |
+| `turn.start` | A turn beginning. A subagent's run raises none, so every one of these is the foreground. | `UserPromptSubmit` |
+| `agent.spawn` | A subagent starting. Counted, because the payload that used to carry the count was `Stop`'s. | nothing |
+| `turn.complete` | The foreground's is the resting point — whatever is still running then is what the turn left behind. A subagent's says nothing until the foreground has already stopped. | `Stop`, with the running count |
+| `tool.call` on `AskUserQuestion` | A question, as it is asked, and the far side of it in the same hook — answered, escaped out of or failed, the turn has it back either way. | `PreToolUse` then `PostToolUse` |
+| `tool.check` | A permission prompt, at the moment the engine decides to show one. | `Notification` |
+| `tool.call` | The far side of that prompt: the call has run, so the turn is moving again. | `UserPromptSubmit` |
+| `session.end` | `e.reason` separates a real ending from `/clear` and `/resume`. | `SessionEnd` |
+
+**No `classic.*` events.** The obvious design hooks `classic.SessionStart` and `classic.Stop` and
+reuses the settings hooks' payloads. It does not work: the built-in guard bypasses those events for
+a mod at user tier — `classic.SessionStart bypassed by cc-plugin-sec-default (tier user); beneath
+runs` — so they never arrive, silently. Every signal here is mod-native for that reason.
+
+**Everything on `$` is awaited.** `$.env.get` returns a promise like the rest, and a promise is
+truthy, so a missing `await` does not fail: it spells `[object Promise]` into a path and the error
+goes to the catch in `tell`. That cost an afternoon.
+
+## What it does not do
+
+**It does not touch tmux.** Paddck remains the only writer of pane options, and this remains a
+sender of the vocabulary it already reads. Nothing here knows what a pane is.
+
+**It says nothing new yet.** `$.session.usage()` would give a context-window percentage per row, and
+`$.session.messages()` would retire the transcript scraping under `providers/agents/claude/transcript/`.
+Both are worth having and neither is sent, because paddck has nowhere to put them — a field nobody
+reads is not a feature. They are the next change, on paddck's side first.
+
+**It is Claude's only.** opencode reaches paddck through its own plugin and `scripts/agents/state.sh`,
+and that seam is unchanged.
+
+## Running it
+
+Two gates, and only the first is a version. Mods want Claude Code **2.1.287 or later**; below that
+a mod is not loaded and says nothing about it. Above it, whether a mod loads is also decided by a
+switch Anthropic serves per process, which no local setting overrides. Measured here over thirteen
+runs it served off three times, so roughly one session in five starts with no sender at all and
+paddck's row holds whatever it last knew.
+
+The cure is a new process: the switch is rolled afresh each time, and `claude --resume` picks the
+conversation up and rolls again. The row going quiet is the symptom; this is the confirmation:
+
+```bash
+claude -p "hi" --debug-file /tmp/d.log
+grep "hooks module paddck-state" /tmp/d.log
+```
+
+`claude plugin test` is not the check — it reports that mods can load without asking the server, so
+it says yes while the switch is serving no.
+
+Loaded from the checkout rather than installed from a marketplace, for the same reason the paddck
+hook is a symlink: what you edit is what the next session loads, with no `switch` in between.
+
+To see it working, open a session in tmux and watch the pane:
+
+```bash
+tmux show-options -p | grep paddck
+```
+
+`@paddck_state` should read `working` during a turn, `idle` when it ends with nothing outstanding,
+`working` when it ends with subagents still running, and `question` while one is on screen.
+Everything the mod sends is also in paddck's own log at `~/.config/paddck/hooks.log`.

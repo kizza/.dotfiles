@@ -1,0 +1,6 @@
+{
+  "name": "paddck-state",
+  "version": "0.1.0",
+  "description": "Tells paddck what this Claude session is doing, from inside the session rather than from eight shell hooks",
+  "author": { "name": "Keiran O'Leary" }
+}
