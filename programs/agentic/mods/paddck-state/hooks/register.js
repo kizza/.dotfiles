@@ -20,12 +20,15 @@
  *   - Every mods API call is asynchronous, `$.env.get` included. It returns a promise, and a
  *     promise is truthy, so forgetting to await one does not fail: it spells "[object Promise]"
  *     into a path and the error is swallowed by the catch below.
+ *   - A mod cannot see a permission prompt. `tool.check` fires *before the mode settles an ask*,
+ *     and `tool.call`'s `next(e)` spans the prompt and the tool's own run together — so there is no
+ *     moment here that means *the human answered*, and `waiting` is not a state this file can tell.
+ *     That one is Claude's `Notification`, through a settings hook. See `permissionChecks`.
  */
 
 /** Claude's spelling for the state paddck should land on. See `outcomeFor` in paddck's `hook.ts`. */
 const resting = "Stop"
 const working = "UserPromptSubmit"
-const asking = "Notification"
 const questioning = "PreToolUse"
 const answered = "PostToolUse"
 const started = "SessionStart"
@@ -46,11 +49,28 @@ let outstanding = 0
 /** The foreground turn has ended. What makes a finishing subagent mean something, or nothing. */
 let isResting = false
 
-/** A permission prompt is standing, and a tool call is held behind it. */
-let isAsking = false
-
-/** A question is open. It outranks a permission prompt, which Claude words identically. */
+/** A question is open — the one thing on this side of the fence that really does hold for a human. */
 let isQuestioning = false
+
+/**
+ * What the engine decided about each tool call this turn, counted rather than acted on.
+ *
+ * `ask` does not mean anybody was asked. It means the call went to *the mode's decider*, which in
+ * auto mode is a classifier that answers in a second and shows nobody anything — so a turn of
+ * fourteen asks and no prompt at all is the ordinary case, and reading `ask` as *a human is wanted*
+ * is what used to paint a working pane amber for the length of every tool call it made.
+ *
+ * It rides along on the events below so paddck's diagnosis file can say what the engine decided
+ * beside what the pane looked like, and is the record that keeps this from being re-inferred.
+ */
+const permissionChecks = { allow: 0, ask: 0, deny: 0 }
+
+/**
+ * The soonest Claude raises `Notification` for a prompt that is standing: six seconds when you are
+ * away from the pane, a minute or more when you are sitting in it. A tool call that came back
+ * faster than this was never prompted, which is what lets the common case stay free above.
+ */
+const promptFloorMilliseconds = 6_000
 
 export function register(on) {
   // Before the first prompt. Not raised again by `/clear`, `/resume` or `/branch` — the `turn.start`
@@ -69,6 +89,7 @@ export function register(on) {
   on("turn.start", async ($, e, next) => {
     outstanding = 0
     isResting = false
+    permissionChecks.allow = permissionChecks.ask = permissionChecks.deny = 0
 
     await tell($, { hook_event_name: working })
 
@@ -127,28 +148,51 @@ export function register(on) {
   })
 
   /**
-   * A permission prompt, at the moment the engine decides to show one. This is the event the old
-   * wiring had no access to: it waited on a `Notification` that arrives six seconds late when you
-   * are away from the pane and a minute late when you are not, calls itself `permission_prompt`
-   * whether it is a question or a tool waiting to be approved, and by then is usually answered.
+   * What the engine decided, counted and not otherwise acted on — this hook deliberately says
+   * nothing to paddck.
+   *
+   * It used to. An `ask` here was sent on as a `Notification`, on the reading that the engine had
+   * decided to show a prompt. It has not: `ask` means the call goes to the mode's decider, and
+   * under auto mode that is a classifier nobody sees. So every tool call raised a prompt that was
+   * never shown, and the pane read *waiting for you* for as long as the call took to run — which,
+   * for a spec run, is a minute of a working agent asking to be rescued.
+   *
+   * There is no repair available here, only the tally. The moment a human answers a prompt is not
+   * observable from a mod: `tool.check` resolves before the mode settles, and `tool.call`'s
+   * `next(e)` covers the prompt and the tool's own run as one span, so nothing distinguishes *they
+   * approved it* from *it finished*. Claude's `Notification` is the only honest signal for that and
+   * it reaches paddck by the settings hook beside this mod — see `claude.nix`.
    */
   on("tool.check", async ($, e, next) => {
     const decided = await next(e)
-    if (decided?.decision !== "ask" || isQuestioning) return decided
-
-    isAsking = true
-    await tell($, { hook_event_name: asking, notification_type: "permission_prompt" })
+    if (decided?.decision in permissionChecks) permissionChecks[decided.decision] += 1
 
     return decided
   })
 
-  // The far end of that prompt: the call has run, so the turn is moving again.
+  /**
+   * A call has run, so the turn is moving. Which only needs saying when something else said
+   * otherwise — and the something else is now a writer this file cannot hear: the `Notification`
+   * settings hook, which puts the pane amber for a prompt that really stood.
+   *
+   * That is what `regardless` is for. `announced` records what *this mod* last sent, so a pane the
+   * hook turned amber still matches the `working` the mod last sent and would be deduped into
+   * silence — leaving the row asking for a human who answered a minute ago.
+   *
+   * The length of the call is what settles it, and cheaply. Claude raises that notification six
+   * seconds after the fact at the very earliest, so a call that came back faster than that cannot
+   * have had one and cannot have left the pane amber: it dedupes as before and costs nothing. Only
+   * a call slow enough to have been prompted pays for a subprocess, which is the handful a session
+   * really is prompted on plus the long ones, where one `tmux set-option` against a minute of
+   * waiting is not a cost worth counting.
+   */
   on("tool.call", async ($, e, next) => {
+    const startedAt = Date.now()
     const result = await next(e)
-    if (!isAsking) return result
 
-    isAsking = false
-    await tell($, { hook_event_name: working })
+    if (!isQuestioning) {
+      await tell($, { hook_event_name: working }, { regardless: Date.now() - startedAt >= promptFloorMilliseconds })
+    }
 
     return result
   })
@@ -180,9 +224,9 @@ export function register(on) {
  * A hook is a bystander to the session it observes: a failure here loses one update, and that is
  * cheaper than anything it could do about it.
  */
-async function tell($, event) {
+async function tell($, event, { regardless } = {}) {
   const signature = `${event.hook_event_name}:${event.tool_name ?? ""}:${outstanding}`
-  if (signature === announced) return
+  if (signature === announced && !regardless) return
 
   announced = signature
 
@@ -196,6 +240,7 @@ async function tell($, event) {
       stdin: JSON.stringify({
         session_id: await $.session.id(),
         cwd: await $.session.cwd(),
+        permission_checks: { ...permissionChecks },
         ...event,
       }),
       timeoutMs: 5000,
@@ -222,6 +267,5 @@ function forgetTheTurn() {
   liveAgents = 0
   outstanding = 0
   isResting = false
-  isAsking = false
   isQuestioning = false
 }
