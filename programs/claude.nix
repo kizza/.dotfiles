@@ -12,6 +12,12 @@ let
     the `paddck-state` mod under `agentic/mods`. They do the same job and must never both do it —
     two writers racing on one pane option is a row that flickers between two truths.
 
+    With one exception, and it is a real one rather than a hedge: `Notification` stays either way.
+    A standing permission prompt is the one moment a mod cannot observe at all — `tool.check`
+    resolves before the mode settles it, and `tool.call` spans the prompt and the tool's own run
+    together — so there is nothing for the mod to race with. The entry carries its own account of
+    this where it is declared.
+
     Set by hand, and it has to be. The obvious move is to derive it from the package version, and
     that is wrong: the version is necessary and not sufficient. Whether a mod loads is also decided
     by a switch Anthropic serves per process — `the rollout switch served off` in the debug log —
@@ -47,15 +53,17 @@ let
     than removing the pin and a different judgement: that one waits on nixpkgs, this one waits on
     you. Until then the hooks are worth their keep — one line back to a sender that works.
 
-      1. delete this binding, `paddckHook` and `paddckHooks`
+      1. delete this binding and `paddckHooks` — but *not* `paddckHook`, which `Notification` keeps
       2. drop the two `++ paddckHooks` below, on SessionStart and Stop
-      3. delete the whole `// lib.optionalAttrs (!paddckViaMod) { … }` group of seven hook entries
+      3. delete the whole `// lib.optionalAttrs (!paddckViaMod) { … }` group of six hook entries,
+         and settle `Notification`'s matcher to the narrow spelling
       4. make `env.CLAUDE_CODE_PLUGIN_DIRS` unconditional — it is the only reason `settings` is
          spliced with `//` rather than written as one attrset
-      5. delete the `~/.claude/hooks/paddck-agent-state.sh` link: nothing else reads it
+      5. keep the `~/.claude/hooks/paddck-agent-state.sh` link — `Notification` is still reaching
+         paddck through it
 
-    What stays either way: `turn-done.sh` on Stop and herdr's hook on SessionStart, which are not
-    paddck's; and `PermissionRequest`, which is the visual notification.
+    What stays either way: paddck's own `Notification`, above; `turn-done.sh` on Stop and herdr's
+    hook on SessionStart, which are not paddck's; and `PermissionRequest`, the visual notification.
   */
   paddckViaMod = true;
 
@@ -212,21 +220,48 @@ in
             ] ++ paddckHooks;
           }
         ];
-      }
-      # The seven that exist only to carry paddck's hook, and so the seven that go when the mod has
-      # the job. They leave as whole entries rather than as empty matchers: a `Notification` key
-      # holding nothing is a question a later reader has to answer.
-      // lib.optionalAttrs (!paddckViaMod) {
-        # The late one. It arrives six seconds after the question it describes when you are away
-        # from the pane and a minute when you are not, and calls a question and a tool waiting to be
-        # approved by the same name. The mod reads `tool.check` instead, where the engine decides.
+
+        /*
+          The one moment paddck cannot learn from inside the session, and so the one hook that stays
+          whichever sender has the job: a permission prompt that is really standing, waiting on a
+          human.
+
+          The mod used to answer this off `tool.check` and it was wrong to. `ask` there does not
+          mean a prompt was shown — it means the call went to *the mode's decider*, which under auto
+          mode is a classifier that answers in a second and shows nobody anything. So every tool
+          call turned the pane amber for as long as it took to run. Nor can the reading be repaired
+          where it was made: `tool.check` resolves before the mode settles, and `tool.call`'s
+          `next(e)` spans the prompt and the tool's own run as one, so a mod has no moment that
+          means *the human answered*.
+
+          This event has both, at the cost of arriving late — six seconds after the fact when you
+          are away from the pane, a minute when you are not. Late and true beats immediate and
+          wrong, and the mod clears it on the far side; see `register.js` on `promptFloorMilliseconds`.
+
+          Narrowed to the types that mean a human is wanted *now*. `idle_prompt` and
+          `agent_completed` are left out deliberately: both describe a turn that has ended, the mod
+          already says so from `turn.complete`, and it says it better — `idle_prompt` reaches an
+          agent that stopped with subagents still running, which is the one state that is not idle
+          at all.
+        */
         Notification = [
           {
-            matcher = "permission_prompt|idle_prompt|agent_needs_input|elicitation_dialog|elicitation_url_dialog|agent_completed";
+            # Wider without the mod, because then there is nothing better saying a turn has ended:
+            # `idle_prompt` and `agent_completed` go back to carrying their own weight.
+            matcher =
+              if paddckViaMod then
+                "permission_prompt|agent_needs_input|elicitation_dialog|elicitation_url_dialog"
+              else
+                "permission_prompt|idle_prompt|agent_needs_input|elicitation_dialog|elicitation_url_dialog|agent_completed";
             hooks = [ paddckHook ];
           }
         ];
-
+      }
+      # The six that exist only to carry paddck's hook, and so the six that go when the mod has the
+      # job. They leave as whole entries rather than as empty matchers: a `PreToolUse` key holding
+      # nothing is a question a later reader has to answer.
+      //
+      lib.optionalAttrs (!paddckViaMod) {
         # The mod has `turn.start`, which is the same moment and raises nothing for a subagent.
         UserPromptSubmit = [ { hooks = [ paddckHook ]; } ];
 

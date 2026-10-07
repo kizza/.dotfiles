@@ -10,20 +10,48 @@ lifecycle event of exactly the shape `hook.ts` already reads.
 
 ## Why a mod
 
-Three facts the old wiring had to infer, and now does not have to.
+Two facts the old wiring had to infer, and now does not have to.
 
 **A finished subagent.** `SubagentStop` fires for a subagent the turn *waited* for and one it left
 running, and the two payloads are identical. Paddck told them apart by reading back what the pane
 already said, over tmux, on every one. The mod watched the foreground turn end, so it knows.
 
-**A standing permission prompt.** The old route was a `Notification` that arrives six seconds after
-the fact when you are away from the pane and a minute when you are not, and that calls a question
-and a tool waiting to be approved by the same name — `permission_prompt`. The mod reads
-`tool.check`, which is the engine deciding, at the moment it decides.
-
 **Whether anything changed at all.** Every hook firing was a `bash` and a `bun`, most of them to
 conclude that the pane already said what they were about to write. The mod holds the last thing it
 said and spends a subprocess only on a transition.
+
+## What a mod cannot do, and what that cost
+
+There was a third claim here: that `tool.check` caught a permission prompt where the engine decides
+to show one, rather than waiting on a `Notification` six seconds late. It was wrong, and it is worth
+keeping the correction rather than the claim.
+
+`ask` is not *a prompt was shown*. The types say so plainly — the verdict is "run the tool, put it
+to **the mode's decider** (the dialog, the auto-mode classifier, a headless host), or refuse it" —
+and under auto mode that decider is a classifier that answers in about a second and shows nobody
+anything. So nearly every tool call reported `ask`, every one of them was sent on as a standing
+permission prompt, and the pane read *waiting for you* for as long as each call took to run. A
+minute-long spec run was a minute of a working agent asking to be rescued. Rows stopped being green.
+
+Nor can the reading be repaired where it was made. `tool.check` resolves *before the mode settles an
+ask*, and `tool.call`'s `next(e)` spans the prompt and the tool's own run as a single span — so
+there is no moment in this file that means *the human answered*, as distinct from *the call
+finished*. A timer armed on the ask and cancelled on the call would fire during every slow approved
+call.
+
+So the job went back to the one observer that has it: Claude's `Notification`, through a settings
+hook that stays alongside this mod — see `claude.nix`. Late and true beats immediate and wrong.
+
+What stays here is the tally. `tool.check` is still hooked, counts what the engine decided, and
+sends nothing: the counts ride along on the events the mod does send, and surface in paddck's
+diagnosis file beside a snapshot of the pane. A turn of fourteen asks against a pane nobody was
+prompted on is the whole of the evidence, and it is now impossible to lose.
+
+Clearing the amber is the mod's half of the bargain, and `announced` is the catch: it records what
+*this mod* last sent, so a pane the settings hook turned amber still matches the mod's last
+`working` and would be deduped into silence. The length of the call settles it. Claude raises that
+notification six seconds after the fact at the earliest, so a call that returned faster cannot have
+been prompted and dedupes as before; only a slower one sends `regardless`.
 
 ## What it listens to
 
@@ -34,8 +62,8 @@ said and spends a subprocess only on a transition.
 | `agent.spawn` | A subagent starting. Counted, because the payload that used to carry the count was `Stop`'s. | nothing |
 | `turn.complete` | The foreground's is the resting point — whatever is still running then is what the turn left behind. A subagent's says nothing until the foreground has already stopped. | `Stop`, with the running count |
 | `tool.call` on `AskUserQuestion` | A question, as it is asked, and the far side of it in the same hook — answered, escaped out of or failed, the turn has it back either way. | `PreToolUse` then `PostToolUse` |
-| `tool.check` | A permission prompt, at the moment the engine decides to show one. | `Notification` |
-| `tool.call` | The far side of that prompt: the call has run, so the turn is moving again. | `UserPromptSubmit` |
+| `tool.check` | What the engine decided, counted and not acted on. `ask` does not mean anybody was asked. | nothing; the tally rides along |
+| `tool.call` | The call has run, so the turn is moving again — said past the dedupe only when it ran long enough to have been prompted. | `UserPromptSubmit` |
 | `session.end` | `e.reason` separates a real ending from `/clear` and `/resume`. | `SessionEnd` |
 
 **No `classic.*` events.** The obvious design hooks `classic.SessionStart` and `classic.Stop` and
@@ -51,6 +79,9 @@ goes to the catch in `tell`. That cost an afternoon.
 
 **It does not touch tmux.** Paddck remains the only writer of pane options, and this remains a
 sender of the vocabulary it already reads. Nothing here knows what a pane is.
+
+**It does not report a standing permission prompt.** That is the settings `Notification` hook's, and
+the section above is why.
 
 **It says nothing new yet.** `$.session.usage()` would give a context-window percentage per row, and
 `$.session.messages()` would retire the transcript scraping under `providers/agents/claude/transcript/`.
@@ -89,5 +120,10 @@ tmux show-options -p | grep paddck
 ```
 
 `@paddck_state` should read `working` during a turn, `idle` when it ends with nothing outstanding,
-`working` when it ends with subagents still running, and `question` while one is on screen.
-Everything the mod sends is also in paddck's own log at `~/.config/paddck/hooks.log`.
+`working` when it ends with subagents still running, and `question` while one is on screen. It
+should read `waiting` only while a permission prompt is genuinely on screen — if it reads `waiting`
+through an ordinary tool call, this mod has gone back to believing `tool.check`.
+
+Everything the mod sends is also in paddck's own log at `~/.config/paddck/hooks.log`, and
+`touch ~/.config/paddck/diagnose` puts every state change beside a snapshot of the pane that caused
+it, under `~/.config/paddck/diagnosis/`. That is where the tally lands.
