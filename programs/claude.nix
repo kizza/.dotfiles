@@ -3,59 +3,9 @@
 let
   # Mods want Claude Code 2.1.287. Below it one is not loaded at all — quietly, with no error and no
   # hook ever running — which is the first of the two gates `paddckViaMod` below is set against.
-
-  /*
-    TEMPORARY. Names the release directly rather than waiting for nixpkgs to pin it.
-
-    The derivation is still nixpkgs' own, and `manifest` is an argument it already exposes — so this
-    changes which release is pulled down and nothing whatever about how. It reads three values out
-    of what it is given and no others: `version`, and the `binary` and `checksum` of the one
-    platform it is building for. Everything else upstream publishes in `manifest.zst.json` — the
-    other seven platforms, sizes, build date, SDK compatibility — nixpkgs never looks at, and Nix
-    never evaluates an attribute nobody asks for. So this is the whole of it.
-
-    It exists because the wait has two queues, not one: nixpkgs master is on 2.1.286 and
-    nixpkgs-unstable behind that on 2.1.283, while upstream has published 2.1.287. Waiting on both
-    of them to reach a release that is already out, to run a mod that is already written, is the
-    one cost here with nothing on the other side of it.
-
-    To move it to a later release, take the two values from upstream's own file:
-
-        curl -fsSL https://downloads.claude.ai/claude-code-releases/latest
-        curl -fsSL https://downloads.claude.ai/claude-code-releases/<version>/manifest.zst.json \
-          | jq '{version, darwin: .platforms."darwin-arm64" | {binary, checksum}}'
-
-    TO REMOVE IT, once unstable has caught up. Check with:
-
-        nix flake update nixpkgs-edge
-        nix eval --raw "github:nixos/nixpkgs/nixpkgs-unstable#claude-code.version"
-
-    Once that prints 2.1.287 or better, all three of these go together:
-
-      1. delete `pinClaudeToMods` and `claudePackage`, both in this `let`
-      2. put the package line back to what it was — the spelling is kept at its call site below
-      3. drop `lib` from this file's arguments if nothing else here has taken it up
-
-    `paddckViaMod` stays: it is the gate, not the workaround, and goes later and for a different
-    reason. See the note on it below.
-  */
-  pinClaudeToMods = true;
-
-  # darwin-arm64 alone, because that is the only platform this file is ever evaluated for — the
-  # Linux host does not import it. Another platform would fail loudly on a missing attribute rather
-  # than quietly build the wrong thing.
-  claudePackage =
-    if pinClaudeToMods
-    then edgePkgs.claude-code.override {
-      manifest = {
-        version = "2.1.287";
-        platforms.darwin-arm64 = {
-          binary = "claude.zst";
-          checksum = "2701dac04e02acbea7d7584fc35e04adddf6f24021d321e3ba7eb95994edcf96";
-        };
-      };
-    }
-    else edgePkgs.claude-code;
+  # The package was pinned to a named release while nixpkgs lagged that version; unstable has since
+  # caught up, so the pin is gone. To hydrate it, take `pinClaudeToMods` and `claudePackage` out of
+  # 3eea9cd5c5a5 — the comment there carries the recipe for naming a later release.
 
   /*
     Which of the two senders tells paddck what this session is doing: the settings hooks below, or
@@ -162,12 +112,7 @@ in
 
   programs.claude-code = {
     enable = true;
-    # Edge, or the manifest beside this file while edge is behind the release mods need. When the
-    # pin goes, this line goes back to exactly what it was and this comment goes with it:
-    #
-    #     package = edgePkgs.claude-code; # Use edge packages for latest
-    #
-    package = claudePackage;
+    package = edgePkgs.claude-code; # Use edge packages for latest
     skills = ./agentic/skills;
 
     # Global instructions loaded in every project (~/.claude/CLAUDE.md)
@@ -179,8 +124,8 @@ in
     settings = {
       theme = "auto";
 
-      # Default model for new sessions
-      model = "claude-opus-5[1m]";
+      # No `model` — new sessions take whatever default Claude Code ships, which is the recommended
+      # one. To pin a model again, lift the line out of 835583ae090a.
 
       # Compact at a fixed 400k of context rather than letting Claude pick the window ("auto").
       # Token count, not the /autocompact shorthand — 400 there means 400k here.
