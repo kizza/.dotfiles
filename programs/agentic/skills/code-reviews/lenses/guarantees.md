@@ -105,6 +105,20 @@ Every boundary is a place where a guarantee can be dropped, because what comes b
 - A schema changed on one side of a queue or an API without the other side, where both are deployed
   separately and old messages are still in flight.
 
+## External contracts and their doubles
+
+A suite proves only what its doubles promise. Where the change talks to an outside system, hold each fake,
+stub, cassette and fixture against that system's documented contract, not against the code that calls it.
+
+- A double that answers differently from the contract: a body where the real API sends none, a field under
+  another name, a status the real one never returns. Every spec built on it passes while production fails,
+  so the double is the finding.
+- A value one side of a boundary accepts and the other rejects: a size, a content type, a length, an enum
+  member. Work that carries a value across must check it against the narrower side, or it fails late, after
+  the wider side has committed to it.
+- Fixture data outside the contract, so the spec exercises a case production cannot produce, or never the
+  one it will.
+
 ## Do not flag
 
 - The absence of a guarantee that nothing depends on. An unordered query whose result is counted is fine.
