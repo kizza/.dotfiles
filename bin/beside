@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Opens a directory in the tmux window immediately to the right of the one this is run from, and
+# prints where it landed as session:index.
+#
+#   beside ~/Code/worktrees/lookout/api-fix-stale-cache     # open it, stay here
+#   beside --go <path>                                     # open it, and go there
+#
+# The window is found from $TMUX_PANE, which every shell and every agent's tool inherits — so an
+# agent working beside you can put a worktree where you expect to find it without being told which
+# window it is in. A window in this session already standing at that path is moved to the right
+# rather than opened twice.
+#
+# Nothing here knows about paddck: a window opened this way gets its sidebar slot the first time
+# you arrive at it, the same as one from prefix-c.
+
+set -euo pipefail
+
+go=0
+case "${1:-}" in
+  -g|--go) go=1; shift ;;
+esac
+
+[ $# -eq 1 ] || { echo "usage: beside [--go] <directory>" >&2; exit 2; }
+[ -n "${TMUX_PANE:-}" ] || { echo "beside: not inside tmux" >&2; exit 1; }
+[ -d "$1" ] || { echo "beside: no such directory: $1" >&2; exit 1; }
+
+directory="$(cd "$1" && pwd -P)"
+here="$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}')"
+
+# The first window in this session whose active pane is already standing there, other than this one
+existing="$(tmux list-windows -t "$TMUX_PANE" -F '#{window_id}	#{pane_current_path}' \
+  | awk -F '\t' -v here="$here" -v directory="$directory" '$1 != here && $2 == directory { print $1; exit }')"
+
+if [ -n "$existing" ]; then
+  tmux move-window -d -a -s "$existing" -t "$here"
+  window="$existing"
+else
+  window="$(tmux new-window -d -a -t "$here" -c "$directory" -P -F '#{window_id}')"
+fi
+
+[ "$go" -eq 0 ] || tmux select-window -t "$window"
+tmux display-message -p -t "$window" '#{session_name}:#{window_index}'
