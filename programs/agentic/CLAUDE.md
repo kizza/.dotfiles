@@ -32,21 +32,15 @@ A comment earns its place by carrying what the code cannot. Write it small, then
 
 - **Subject is a label, at 50 columns hard.** Imperative, sentence case, no full stop. Name the
   operation — `Extract`, `Introduce`, `Rename`, `Move`, `Use` — not the reasoning behind it.
-- **Name the artefact, spelled as the code spells it.** `Extract classification from
-  FundingSourceAdapter`, never "extract funding source adapter classification". Bare in the
-  subject, backticked in the body — and every code mention in the body is backticked. A domain word
-  used as prose stays lowercase (`sah`); inside an identifier it keeps its casing
-  (`Finance::SAH::ClaimCSVTotalsRow`).
-- **Body wraps at 72 columns.** The 120-column rule under Comments is for code, and does not reach
-  here. `textwidth=72` enforces it in the editor; a message written with `-m` or a heredoc bypasses
-  that, so wrap it yourself.
-- **Bullets beat paragraphs.** One line per decision or trade-off. Reach for prose only when the why
-  needs a sentence to hold together.
-- **A body only when it earns one.** What changed is the subject's job; the body carries why, and
-  what a reviewer would otherwise have to reconstruct.
+- **Name the artefact, spelled as the code spells it.** Bare in the subject, backticked in the body,
+  along with every other code mention.
+- **Body wraps at 72 columns**, and only when it earns one. The 120-column rule under Comments is
+  for code, and does not reach here.
+- **Bullets beat paragraphs.** One line per decision or trade-off — the why, not the what.
 
-The `commit` skill under `programs/agentic/skills/` carries the grouping rules — which changes
-belong in which commit.
+Documented in full as the `commit` skill under `programs/agentic/skills/` — read its
+`references/commit-messages.md` before writing any message. The skill itself carries the grouping
+rules: which changes belong in which commit.
 
 ## Voice intent before gated work
 
