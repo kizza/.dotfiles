@@ -32,6 +32,9 @@ result, and a real one.
 A finding is verified when you have read the code that makes it true, not when the diff suggests it. Open
 the caller. Check whether the constraint exists in the schema. Confirm the method does what its name says.
 
+The strongest verification is reproduction: a throwaway spec or script that shows the failure happening.
+That earns a 100. Keep it out of the branch and delete it afterwards; the reviewer still never edits.
+
 For guarantees findings in particular: **a behavioural claim needs a `file:line` citation, not an inference
 from naming.** "This looks like it might not be scoped" is a 25. "`Claim.where(status:)` at claims_controller.rb:31
 has no account scope, where every other query in this controller goes through `current_account.claims`" is a 100.
