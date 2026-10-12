@@ -1,5 +1,27 @@
 { config, pkgs, edgePkgs, ... }:
 
+let
+  # TEMP: 1.18.30 currently crashes when sending prompts.
+  # Remove this and restore edgePkgs.opencode once fixed upstream.
+  opencodePinned = pkgs.stdenv.mkDerivation rec {
+    pname = "opencode";
+    version = "1.18.20";
+    src = pkgs.fetchurl {
+      url = "https://github.com/anomalyco/opencode/releases/download/v${version}/opencode-darwin-arm64.zip";
+      hash = "sha256-tIPlR8AptPC6OB8NDFtCC+xIwkwrvsH7fyIlK66D2kY=";
+    };
+    nativeBuildInputs = [ pkgs.unzip ];
+    sourceRoot = ".";
+    unpackPhase = ''
+      unzip $src
+    '';
+    dontStrip = true;
+    installPhase = ''
+      install -Dm755 opencode $out/bin/opencode
+    '';
+    meta.mainProgram = "opencode";
+  };
+in
 {
   programs.zsh.envExtra = ''
     # Prevents session database being named opencode-stable.db
@@ -20,7 +42,8 @@
 
   programs.opencode = {
     enable = true;
-    package = edgePkgs.opencode; # Use edge packages for latest
+    # package = edgePkgs.opencode; # Use edge packages for latest
+    package = opencodePinned; # Use pinned version above
     agents = {
       pm = ''
         ---
