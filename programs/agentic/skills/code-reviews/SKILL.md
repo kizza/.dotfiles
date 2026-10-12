@@ -24,6 +24,7 @@ how findings reach `.remarks/`.
 | `lenses/expression.md` | Reading for how it reads: naming, comments, simplicity, tests |
 | `lenses/guarantees.md` | Reading for what a primitive promises and where the code over-trusts it |
 | `lenses/spec.md` | Reading for whether it builds what was asked |
+| `lenses/history.md` | Reading a multi-commit branch as a series, commit by commit |
 | `references/pull-request.md` | The target is a pull request, or a branch that is not yours |
 | `references/confidence.md` | Deciding whether a finding is worth a remark |
 
@@ -46,6 +47,8 @@ not by habit — an unwanted lens costs attention and returns noise:
   serialisation, anything concurrent. Skip it for a pure rename or a copy change.
 - **Spec** — whenever the intent is written down: a Basecamp card, an issue, a commit body, a wireframe.
   Skip it and say so when there is nothing to check against.
+- **History** — a branch of more than one commit that will be read commit by commit. Skip it for a single
+  commit or a branch that will be squashed.
 - **Security** — run `/security-review` when the change touches authentication, authorisation, user input,
   file handling, or anything reaching a log or an external service.
 
@@ -71,6 +74,9 @@ remarks add path/to/file.rb:42 <<'EOF'
 One or two sentences: what is wrong, and what it costs. Concrete, not a category.
 EOF
 ```
+
+On a branch of more than one commit, end the remark with the commit that introduced the line — `Fold into
+<sha>.` — so the fix lands in that commit rather than on the end.
 
 **7. Report** — the tally first, then findings grouped by lens, each as `file:line` and one line. Name the
 lenses you ran and the ones you skipped. Close with the count of remarks written and that `remarks list`
