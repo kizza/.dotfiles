@@ -22,4 +22,5 @@ export FZF_DEFAULT_OPTS='
 --color=light
 --color=fg:20,fg+:15,hl:5,hl+:2,bg:-1,bg+:18
 --color=info:14,prompt:5,pointer:6,marker:6,spinner:3,header:17,border:19
+--marker=" "
 '
