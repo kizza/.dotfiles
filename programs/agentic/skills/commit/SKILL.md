@@ -11,6 +11,7 @@ Review the uncommitted changes, determine how they naturally group into a set of
 
 * Group changes by intent, not by file.
 * Build towards a change, introducing elements or foundations, before their use
+* Rename or remove as a clean commit _before_ a refactor for clarity
 * Balance the above with the fewest commits that still clearly separate unrelated concerns.
 * Do not create commits for incidental fixes made while developing the branch (typos, formatting, small corrections).
 * Create separate commits when a change solves a different problem, represents an important design decision, or would reasonably be reverted independently.
