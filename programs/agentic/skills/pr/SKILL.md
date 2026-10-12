@@ -19,3 +19,14 @@ Push the branch (--force-with-lease only!) and create a pull request for the fin
 ## Output
 
 Open the new draft pull request via the default browser when complete
+
+When the PR carries screenshots for Keiran to upload, open the PR first and then, straight after, reveal the
+screenshots in Finder so he can drag them onto the page:
+
+```bash
+gh pr view --web
+open -R "<worktree>/<first screenshot>.png"   # reveals the folder with that file selected
+```
+
+Name the screenshots so they sort together in upload order (`01-…`, `02-…`). Selecting several at once needs
+Finder Apple Events, which agent shells are not authorised to send (`-1743`), so `open -R` on the first is the fallback.
