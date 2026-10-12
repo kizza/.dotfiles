@@ -13,6 +13,33 @@ These apply in every project, in addition to any project-level `CLAUDE.md`.
   hash value shorthand (and the equivalent in other languages) should carry the assignment. This
   pairs with the rule above: choosing the full, matching name is what makes the shorthand read well.
 
+## Method order
+
+- **Order methods in the sequence they're called (the Stepdown Rule).** Each method sits below the
+  one that first calls it, in the order its caller calls them, and a callee's own callees follow
+  it directly — so a reader who meets a call can look downward and find it. The public entry point
+  leads; `private` helpers step down beneath it, one level of abstraction at a time.
+
+  ```ruby
+  def wrappable_service_code
+    safe_join(service_code_segments, break_after_pipe)
+  end
+
+  private
+
+  def service_code_segments    # first call above
+    service_code.split("|")...
+  end
+
+  def service_code             # called by the method just above
+    invoice_line.external_id
+  end
+
+  def break_after_pipe         # second call in wrappable_service_code
+    ...
+  end
+  ```
+
 ## Comments
 
 A comment earns its place by carrying what the code cannot. Write it small, then smaller than that.
