@@ -20,11 +20,11 @@ Review the uncommitted changes, determine how they naturally group into a set of
   * What changed?
   * Why did it change?
 
-## Commit messages should:
+## Commit messages
 
-* Use a concise single-line subject that describes the intent of the change.
-* Add a body only when it provides useful context.
-* When a body is used, prefer bullet points and explain noteworthy decisions or trade-offs.
+Read `references/commit-messages.md` before writing any message — it owns the subject and body
+rules: the 50-column label naming the operation, the artefact spelled as the code spells it, the
+72-column body that only appears when it earns one.
 
 Before committing, briefly explain the proposed commit plan and why the chosen boundaries exist.
 
