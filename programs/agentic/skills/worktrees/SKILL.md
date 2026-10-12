@@ -123,7 +123,16 @@ The worktree then renders the main checkout's CSS and JS. For anything that is n
 is exactly right. A branch that *changes* assets needs its own `css:build` / `javascript:build` —
 that builds into the same directory, which is all the specs read.
 
-## 6. Work in it
+## 6. Open it beside him, then work in it
+
+Inside tmux, a single new worktree goes in the window directly to the right of this one — that is
+where Keiran keeps the worktree the agent is working in — the **`layout`** skill — and it is one line:
+
+```bash
+beside "$WORKTREE_PATH"
+```
+
+Skip it for a fan-out; a window per worktree is noise, and he will ask for the one he wants.
 
 `cd "$WORKTREE_PATH"` and carry on. Run commands under `direnv exec .` so the nix shell and the
 worktree's own env are loaded. Where that env shells out to a credential manager (1Password's `op`,
