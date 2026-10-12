@@ -283,6 +283,16 @@ function rm-worktree() {
   cd "$worktree_path" && git status --short --untracked-files=all
 }
 
+# One view onto every branch and worktree — see bin/wt. Only the parent shell can cd, so anywhere the
+# picker wants to send you comes back on its stdout and the move happens here. A directory is the whole
+# contract: anything else that reaches stdout is a bug leaking through, and is not somewhere to stand.
+function wt() {
+  local target
+  target=$(command wt "$@") || return
+  [[ -d "$target" ]] && cd "$target"
+  return 0
+}
+
 function ir() {
   git rebase -i $(rebase_to)
 }
