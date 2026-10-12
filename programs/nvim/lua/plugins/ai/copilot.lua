@@ -11,6 +11,7 @@ return {
   },
   {
     "folke/sidekick.nvim",
+    enabled = false,
     lazy = false,
     opts = {
       debug = true,
