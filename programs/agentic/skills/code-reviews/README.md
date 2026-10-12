@@ -33,6 +33,7 @@ ready, not that the review should keep spending.
 | Expression | `lenses/expression.md` | How it reads. Naming, comments, simplicity, test clarity. The rubric is `~/.claude/CLAUDE.md`. |
 | Guarantees | `lenses/guarantees.md` | What the chosen primitive promises, and whether the code leans on a promise it has not got. |
 | Spec | `lenses/spec.md` | Whether this builds the thing that was asked for. |
+| History | `lenses/history.md` | Whether a branch of several commits holds up at every commit, not just its tip. |
 | Security | *not here yet* — `/security-review` | See below. |
 
 Nothing here is invoked to *run* a review. The skill is loaded when review comes up, and what it carries
