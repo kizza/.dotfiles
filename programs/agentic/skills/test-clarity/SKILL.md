@@ -107,6 +107,13 @@ the fixture layer already provides.
   destroyed belongs inside the example that triggers the destruction. Asserted in its own
   example, away from the risk it guards, it is decoration.
 
+- **Find content by its text, role or label, never by a styling class.** A class like
+  `.text-manatee` can change without the behaviour changing, so asserting it pins presentation.
+  Where the text comes from a translation file, match on the lookup (`I18n.t("invoices.paid")`)
+  rather than the string, so a reworded translation does not fail the test. When the behaviour
+  *is* presentation — a colour, how a line wraps — no assertion can see it: show it in a
+  screenshot and leave it untested.
+
 ## Comments
 
 Comment craft is global — see the `## Comments` rules in the global instructions. Two things are
