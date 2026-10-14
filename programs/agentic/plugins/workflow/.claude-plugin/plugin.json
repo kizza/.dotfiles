@@ -1,0 +1,6 @@
+{
+  "name": "workflow",
+  "version": "0.1.0",
+  "description": "A small team of roles — manager, product, engineer, reviewer, retro — that takes work from a pile to a pull request, with the human deciding only what to pick up and when to push",
+  "author": { "name": "Keiran O'Leary" }
+}
