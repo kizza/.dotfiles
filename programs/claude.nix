@@ -57,8 +57,7 @@ let
       2. drop the two `++ paddckHooks` below, on SessionStart and Stop
       3. delete the whole `// lib.optionalAttrs (!paddckViaMod) { … }` group of six hook entries,
          and settle `Notification`'s matcher to the narrow spelling
-      4. make `env.CLAUDE_CODE_PLUGIN_DIRS` unconditional — it is the only reason `settings` is
-         spliced with `//` rather than written as one attrset
+      4. drop the `lib.optional paddckViaMod` around paddck's path in `CLAUDE_CODE_PLUGIN_DIRS`
       5. keep the `~/.claude/hooks/paddck-agent-state.sh` link — `Notification` is still reaching
          paddck through it
 
@@ -282,12 +281,16 @@ in
         SessionEnd = [ { hooks = [ paddckHook ]; } ];
       };
     }
-    # Loaded from the checkout rather than installed from a marketplace, for the same reason the
-    # paddck hook is a symlink: what you edit is what the next session loads, with no `switch` and
-    # no version to bump between writing a change and running it. Spliced in rather than declared
-    # above so that settings.json keeps no empty `env` while the hooks still have the job.
-    // lib.optionalAttrs paddckViaMod {
-      env.CLAUDE_CODE_PLUGIN_DIRS = "/Users/keiran/.dotfiles/programs/agentic/mods/paddck-state";
+    # Plugins loaded from the checkout rather than installed from a marketplace, for the same reason
+    # the paddck hook is a symlink: what you edit is what the next session loads, with no `switch`
+    # and no version to bump between writing a change and running it. Colon-separated — a comma is
+    # read as part of one path. The `workflow` plugin packages the team skills (`workflow:manager`
+    # and friends) from `agentic/plugins/`; paddck's mod rides along while the hooks are its fallback.
+    // {
+      env.CLAUDE_CODE_PLUGIN_DIRS = lib.concatStringsSep ":" (
+        [ "/Users/keiran/.dotfiles/programs/agentic/plugins/workflow" ]
+        ++ lib.optional paddckViaMod "/Users/keiran/.dotfiles/programs/agentic/mods/paddck-state"
+      );
     };
   };
 }
