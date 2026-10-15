@@ -10,6 +10,8 @@ Push the branch (--force-with-lease only!) and create a pull request for the fin
 
 - Read and use a .github/PULL_REQUEST_TEMPLATE.md if available
   - This template can have sections removed or skipped that are not relevant
+  - Delete checklist items that do not apply rather than leaving them unticked. "Tested on staging" goes by
+    default — keep it only when the change genuinely needs a staging run before merge
 - The "Discussion" context should be a series of bullet points that explain the rationale behind the work, and any noteworthy decisions or trade-offs that were made during development.
   - Less is more! Heavily summarise details to succinct high level details, or specific critical callouts
   - Terse, one or two sentences per bullet point are best
