@@ -33,6 +33,8 @@ Judge against the `## Comments` rules. A comment earns its place by carrying wha
 - **One on every line.** Four consecutive annotated lines is noise — the reader stops telling signal from
   habit. Flag the block, not each line, and say which one or two deserve to survive.
 - **Narrow and fragmented.** Wrapped short where 120 columns would have carried it in fewer, denser lines.
+- **Drifted upward.** Sitting on the method or `it` when the line it is about is several lines in. Say
+  which line it belongs beside.
 - **Stale.** The comment no longer describes what happens. The code is the truth: it gets rewritten or
   removed. This is the most severe comment finding and it is always worth a remark.
 

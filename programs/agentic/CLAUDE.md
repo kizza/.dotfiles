@@ -70,6 +70,9 @@ A comment earns its place by carrying what the code cannot. Write it small, then
   signature, no narrating what the next line plainly does.
 - **Two shapes, mostly.** A couple of words inline with what qualify, or one sentence above a
   small block. Rarely reach for anything longer.
+- **As close to the thing as it can sit.** Inline on the line it qualifies, or at worst directly above it;
+  never drifting up to the method or `it` that declares the block when the line it is about sits three
+  lines in.
 - **Not on every line.** A note against each of four lines is noise — the reader stops telling
   signal from habit. Annotate the one or two that need it.
 - **Full width, not narrow.** Wrap around 120 columns; fewer dense lines read better than many
