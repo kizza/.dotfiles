@@ -40,6 +40,28 @@ These apply in every project, in addition to any project-level `CLAUDE.md`.
   end
   ```
 
+## Control flow
+
+- **Guard clauses and early returns over branching expressions.** When a condition picks a whole path,
+  return that path and fall through to the other. The reader meets each path on its own line, and the
+  special case is named before the common one.
+
+  ```ruby
+  # Don't
+  claim.api? ? item.held_codes : item.held_or_ongoing_codes
+
+  # Do
+  return item.held_codes if claim.api?
+
+  item.held_or_ongoing_codes
+  ```
+
+- **A ternary carries a value, not a decision.** Keep it for a short choice between two plain values that
+  fits on one readable line. The moment either arm is a call that does something, or the line has to be
+  parsed to see which branch runs, it is a branch and wants the guard.
+- **Flatten nesting.** Exit cases first, then the body at the method's own indentation. Avoid inverted
+  conditions that read backwards.
+
 ## Comments
 
 A comment earns its place by carrying what the code cannot. Write it small, then smaller than that.

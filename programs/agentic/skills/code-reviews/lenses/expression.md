@@ -40,6 +40,9 @@ Judge against the `## Comments` rules. A comment earns its place by carrying wha
 
 - Something simple done in a complicated way. Say what the simpler shape is.
 - Nesting that a guard clause or an early return would flatten. Inverted conditions that read backwards.
+- A ternary that chooses between two paths rather than two values — a call in each arm, or a line the
+  reader has to parse to see which branch runs. Judge against `## Control flow`: the special case returns
+  early and the common one falls through.
 - Missing context — code that cannot be understood without knowledge absent from the file.
 - Dead code introduced by this change: unreachable branches, unused locals, commented-out code.
 - Duplication of logic that already exists elsewhere in the codebase. Point at the existing one.
