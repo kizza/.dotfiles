@@ -48,6 +48,7 @@
       htop
       jq
       tree-sitter
+      fnm
       volta
       watch
       yarn-berry # Yarn 4, matching the packageManager pin in the lookout repo

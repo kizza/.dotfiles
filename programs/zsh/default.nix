@@ -26,7 +26,7 @@
         ${builtins.readFile ./fzf.sh}
         ${builtins.readFile ./keybindings.sh}
         ${builtins.readFile ./nix.sh}
-        ${builtins.readFile ./nvm.sh}
+        ${builtins.readFile ./fnm.sh}
         ${builtins.readFile ./path.sh}
         ${builtins.readFile ./prompt.sh}
         ${builtins.readFile ./ripgrep.sh}
