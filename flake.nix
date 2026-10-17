@@ -124,6 +124,7 @@
             ./programs/karabiner
             # ./programs/macvim
             ./programs/opencode.nix
+            ./programs/pi.nix
           ];
         };
 
@@ -145,6 +146,7 @@
             }
             ./home.nix
             ./programs/opencode.nix
+            ./programs/pi.nix
           ];
         };
 
@@ -187,6 +189,7 @@
             ./programs/hyprlnd.nix
             ./programs/ghostty-wrapped.nix
             ./programs/opencode.nix
+            ./programs/pi.nix
           ];
         };
 
