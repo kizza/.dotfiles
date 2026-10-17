@@ -6,7 +6,7 @@ description: >-
   file:line, the single cheapest discriminating check, and a recommended next action with confidence. Read-only,
   one context, no subagents, deliberately cheap. Names the check rather than running the whole workup; says
   inconclusive rather than inferring a root cause. Use for a first read on any report, and when a full
-  `diagnose` workup is more than the report is worth.
+  workup is more than the report is worth.
 ---
 
 # Triage a report
@@ -14,16 +14,16 @@ description: >-
 A report says something is wrong. This skill spends one cheap pass establishing what is actually known,
 what could explain it, and the one check that would tell those explanations apart — then stops and hands over.
 
-It is the fast sibling of the `diagnose` skill. Same discipline about evidence, none of the workup: one
-context, no subagents, no case folder, no differential maintained across rounds. Where `diagnose` orders
-tests until a diagnosis closes, triage names the test and gives it back.
+It is the fast half of a workup. Same discipline about evidence, none of the ceremony: one context, no
+subagents, no case folder, no differential maintained across rounds. Where a full workup orders tests
+until a diagnosis closes, triage names the test and gives it back.
 
 **Investigate without changing code.** Read, grep, and reason. Nothing is edited, nothing is posted,
 nothing goes near production.
 
 ## Budget — the whole point
 
-Triage that sprawls is just a worse `diagnose`. Hold the line:
+Triage that sprawls is just a worse workup. Hold the line:
 
 - **One context.** No subagents, ever. Spawning one costs more than the packet is worth.
 - **Grep before read.** Read only the files a search actually implicated, and read the relevant span, not
@@ -34,7 +34,7 @@ Triage that sprawls is just a worse `diagnose`. Hold the line:
   read-only local commands. Anything needing a spec, a database, a deploy window, or a person goes in the
   packet as steps for whoever picks it up.
 - **Escalate rather than grind.** High stakes — money is wrong, data crosses tenants, work is blocked with
-  no workaround, several accounts named — means recommending `diagnose`, not doing it here.
+  no workaround, several accounts named — means recommending a full workup, not doing it here.
 
 ## Evidence, compressed
 
@@ -72,7 +72,7 @@ The deliverable, in the terminal, under 300 words. Five parts, in order:
    than because it confirms the favourite. Give the exact query, test, or repro steps, and the outcome each
    hypothesis predicts. If it does not predict different outcomes, it is not discriminating; pick another.
 5. **Recommended next action, with confidence** — a percentage and the one fact carrying it. Then whether
-   this is enough or wants a full `diagnose`.
+   this is enough or wants a full workup.
 
 **If the evidence cannot tell the hypotheses apart, say exactly that.** Do not infer a root cause. An honest
 "inconclusive, and here is the check that would settle it" is the correct output and a genuinely useful one —
@@ -88,5 +88,5 @@ a confident wrong answer costs the reporter far more than a second pass costs in
   report makes "no such record" a fact about the snapshot.
 - **Cite or drop it.** A claim with no `file:line`, URL, or query behind it does not go in the packet.
 - **Three hypotheses is a ceiling, not a quota.** Two well-evidenced beats three with one padded.
-- **Hand over, don't continue.** Offer the next step — run the check, escalate to `diagnose`, reply to the
+- **Hand over, don't continue.** Offer the next step — run the check, escalate to a full workup, reply to the
   reporter — and wait.
