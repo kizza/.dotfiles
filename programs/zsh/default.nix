@@ -51,7 +51,6 @@
 
     shellAliases = {
       reload = ". ~/.config/zsh/.zshrc";
-      ls = "ls --color";
       # v = "nvim";
       foo = "cat";
     };
