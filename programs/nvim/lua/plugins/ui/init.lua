@@ -81,7 +81,7 @@ return {
   -- },
   {
     "j-hui/fidget.nvim",
-    event = "VeryLazy",
+    event = "LspAttach", -- only ever shows LSP progress; vim.notify stays with noice/snacks
     opts = function()
       return {
         progress = {
@@ -205,7 +205,6 @@ return {
   {
     -- Highlight undo/redo changes (like yank text does)
     "y3owk1n/undo-glow.nvim",
-    event = "VeryLazy",
     opts = function()
       local colours = require("colours")
       local darken = colours.darken

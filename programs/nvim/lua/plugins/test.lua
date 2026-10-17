@@ -15,7 +15,7 @@ return {
   {
     "vim-test/vim-test",
     dependencies = { "preservim/vimux" },
-    event = "VeryLazy",
+    cmd = { "TestNearest", "TestFile", "TestClass", "TestSuite", "TestLast", "TestVisit" },
     keys = {
       {
         "<leader>tn",
@@ -84,7 +84,7 @@ return {
       "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter"
     },
-    event = "VeryLazy",
+    ft = "lua", -- plenary is the only adapter, so a Lua buffer is the earliest its status signs can matter
     opts = function()
       return {
         adapters = {

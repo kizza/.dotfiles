@@ -1,10 +1,61 @@
 local fmt = string.format
 
+local function is_codecompanion_open()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[buf].filetype == 'codecompanion' then
+      return true
+    end
+  end
+  return false
+end
+
+local function toggle_code_companion()
+  if is_codecompanion_open() then
+    vim.cmd('CodeCompanionChat Toggle')
+
+    -- local context = require("codecompanion.utils.context").get(api.nvim_get_current_buf())
+    -- local content = table.concat(context.lines, "\n")
+
+    -- local chat = CodeCompanion.last_chat()
+    -- if not chat then
+    --   chat = CodeCompanion.chat()
+
+    --   if not chat then
+    --     return log:warn("Could not create chat buffer")
+    --   end
+    -- end
+
+    -- chat:add_buf_message({
+    --   role = config.constants.USER_ROLE,
+    --   content = "Here is some code from "
+    --       .. context.filename
+    --       .. ":\n\n```"
+    --       .. context.filetype
+    --       .. "\n"
+    --       .. content
+    --       .. "\n```\n",
+    -- })
+    -- -- chat.ui:open()
+  else
+    vim.cmd('CodeCompanionChat')
+  end
+end
+
 return {
   "olimorris/codecompanion.nvim",
   build = false,
   -- version = "v17.33.0",
-  event = "VeryLazy",
+  -- Command and key driven. Loaded at VeryLazy, its setup also pulled blink.cmp and LuaSnip in through a `require`
+  cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions", "CodeCompanionCmd", "CodeCompanionCLI", "CodeCompanionCodeReview" },
+  keys = {
+    { "<leader>ac", toggle_code_companion, mode = { "n", "v" }, desc = "Execute custom action" },
+    { "<leader>aa", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, silent = true },
+    -- { "ga", "<cmd>CodeCompanionChat Add<cr>", mode = "v", silent = true },
+  },
+  init = function()
+    -- Expand 'cc' into 'CodeCompanion' in the command line
+    vim.cmd [[cab cc CodeCompanion]]
+  end,
   opts = {
     display = {
       action_palette = {
@@ -251,55 +302,6 @@ Replace the CURRENT EXACT NAME with the best alternative at the PRECISE location
   config = function(_, opts)
     CodeCompanion = require("codecompanion")
     CodeCompanion.setup(opts)
-
-    local function is_codecompanion_open()
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.bo[buf].filetype == 'codecompanion' then
-          return true
-        end
-      end
-      return false
-    end
-
-    local function toggle_code_companion()
-      if is_codecompanion_open() then
-        vim.cmd('CodeCompanionChat Toggle')
-
-        -- local context = require("codecompanion.utils.context").get(api.nvim_get_current_buf())
-        -- local content = table.concat(context.lines, "\n")
-
-        -- local chat = CodeCompanion.last_chat()
-        -- if not chat then
-        --   chat = CodeCompanion.chat()
-
-        --   if not chat then
-        --     return log:warn("Could not create chat buffer")
-        --   end
-        -- end
-
-        -- chat:add_buf_message({
-        --   role = config.constants.USER_ROLE,
-        --   content = "Here is some code from "
-        --       .. context.filename
-        --       .. ":\n\n```"
-        --       .. context.filetype
-        --       .. "\n"
-        --       .. content
-        --       .. "\n```\n",
-        -- })
-        -- -- chat.ui:open()
-      else
-        vim.cmd('CodeCompanionChat')
-      end
-    end
-
-    vim.keymap.set({ 'n', 'v' }, '<leader>ac', toggle_code_companion, { desc = 'Execute custom action' })
-
-    vim.keymap.set({ "n", "v" }, "<Leader>aa", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-    -- vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-
-    -- Expand 'cc' into 'CodeCompanion' in the command line
-    vim.cmd [[cab cc CodeCompanion]]
 
     -- Style highlights
     require("highlights").register(function()

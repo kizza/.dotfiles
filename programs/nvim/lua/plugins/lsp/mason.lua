@@ -1,7 +1,8 @@
 return {
   "williamboman/mason-lspconfig",
   -- lazy = true,
-  event = "VeryLazy",
+  -- Still a dependency of nvim-lspconfig, so mason's PATH is in place before any server is spawned
+  cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonUpdate", "MasonLog" },
   dependencies = {
     {
       "williamboman/mason.nvim",

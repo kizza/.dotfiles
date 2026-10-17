@@ -145,7 +145,6 @@ return {
   {
     -- A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
     "folke/trouble.nvim",
-    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
     opts = {},
     cmd = { "Trouble", "TroubleToggle" },
