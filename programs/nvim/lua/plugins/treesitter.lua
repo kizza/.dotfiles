@@ -33,13 +33,12 @@ return {
         "yaml",
       })
 
-      -- Enable Treesitter highlighting + parsing
+      -- Treesitter highlighting where a parser exists; regex syntax stays as the fallback where none does
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(args)
-          pcall(vim.treesitter.start, args.buf)
-
-          -- Recommended by upstream to avoid double-highlighting
-          vim.bo[args.buf].syntax = "off"
+          if pcall(vim.treesitter.start, args.buf) then
+            vim.bo[args.buf].syntax = "off" -- Recommended by upstream to avoid double-highlighting
+          end
         end,
       })
 
