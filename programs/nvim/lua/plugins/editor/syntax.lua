@@ -45,6 +45,19 @@ return {
     end
   },
   -- { "vim-ruby/vim-ruby",     ft = "ruby" }, -- Try with just treesitter
-  { "tpope/vim-rails",       ft = "ruby" },
+  {
+    "tpope/vim-rails",
+    ft = "ruby",
+    init = function()
+      -- vim-rails rebuilds `suffixesadd` in its own buffer setup, after the ftplugins and syntax files have
+      -- run, so the view suffixes it leaves out are appended once it says it is done
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "Rails",
+        callback = function()
+          vim.cmd("setlocal suffixesadd+=.html.erb,.turbo_stream.erb")
+        end,
+      })
+    end,
+  },
   { "klimeryk/vim-monkey-c", ft = "monkey-c" },
 }

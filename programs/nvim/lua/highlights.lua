@@ -121,6 +121,24 @@ local function defaults()
 
   -- Typescript
   hi("@tag", { fg = 5 })
+
+  -- Ruby, including the captures `after/queries/ruby/highlights.scm` adds
+  hi("@variable.member.ruby", { fg = cyan, italic = true })
+  hi("@lsp.type.namespace.ruby", { fg = 16, italic = true })
+  hi("@custom.class.called.methods", { italic = true })
+  hi("@custom.class.called.conditional", { fg = blue, italic = true })
+  hi("@custom.setter.method", { fg = 7 })
+  hi("@custom.keyword_parameter.name", { fg = 2 }) -- Named arguments, foo(name: :value)
+  hi("@custom.keyword_parameter.value", { fg = 7 })
+
+  -- Git rebase, the captures `after/queries/git_rebase/highlights.scm` adds
+  hi("@constant.git_rebase", { fg = magenta })
+  hi("@custom.gitrebase.pick", { fg = yellow, italic = true })
+  hi("@custom.gitrebase.edit", { fg = green, italic = true })
+  hi("@custom.gitrebase.reword", { fg = blue, italic = true })
+  hi("@custom.gitrebase.squash", { fg = 20, italic = true })
+  hi("@custom.gitrebase.fixup", { fg = cyan, italic = true })
+  hi("@custom.gitrebase.drop", { fg = red, italic = true })
 end
 
 -- Allow providing styles from plugin specs for ease repainting

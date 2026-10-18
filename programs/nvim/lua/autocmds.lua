@@ -2,24 +2,6 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("my_" .. name, { clear = true })
 end
 
--- Assign syntax files for *some* file types
-local syntax_group = augroup("syntax_settings")
-for filetype, syntax in pairs({
-  eruby = "eruby",
-  ruby = "ruby",
-  gitcommit = "gitcommit",
-  gitrebase = "gitrebase",
-}) do
-  vim.api.nvim_create_autocmd("FileType", {
-    group = syntax_group,
-    pattern = filetype,
-    -- command = string.format("set syntax=%s", syntax)
-    callback = function()
-      vim.bo.syntax = syntax
-    end,
-  })
-end
-
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
