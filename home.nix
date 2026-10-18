@@ -30,12 +30,6 @@
 
   home = {
     stateVersion = "22.05";
-    sessionPath = [
-      "$HOME/.volta/bin"
-    ];
-    sessionVariables = {
-      VOLTA_HOME = "$HOME/.volta";
-    };
     packages = with pkgs; [
       delta
       docker
@@ -49,7 +43,6 @@
       jq
       tree-sitter
       fnm
-      volta
       watch
       yarn-berry # Yarn 4, matching the packageManager pin in the lookout repo
       zoxide
