@@ -66,17 +66,7 @@ local function nvim_has_ssh_environment()
   return false
 end
 
-local function tmux_has_ssh_environment()
-  if not vim.env.TMUX or vim.fn.executable("tmux") ~= 1 then
-    return false
-  end
-
-  local tmux_environment = vim.fn.system({ "tmux", "show-environment", "-g" })
-
-  if vim.v.shell_error ~= 0 then
-    return false
-  end
-
+local function tmux_environment_has_ssh(tmux_environment)
   -- Line by line, because `show-environment` also lists variables it has *unset* as `-NAME`.
   for line in tmux_environment:gmatch("[^\n]+") do
     local variable = line:match("^([%w_]+)=")
@@ -89,27 +79,38 @@ local function tmux_has_ssh_environment()
   return false
 end
 
+-- Asked in the background: `tmux show-environment` took ~18ms of every start inside tmux, and nothing
+-- yanks to `+` in the first frame. `claim` runs on the main loop once tmux has answered.
+local function ask_tmux_for_ssh_environment(claim)
+  if not vim.env.TMUX or vim.fn.executable("tmux") ~= 1 then
+    return
+  end
+
+  vim.system({ "tmux", "show-environment", "-g" }, { text = true }, function(result)
+    if result.code ~= 0 or not tmux_environment_has_ssh(result.stdout) then
+      return
+    end
+
+    vim.schedule(claim)
+  end)
+end
+
 local function has_local_clipboard_display()
   return vim.env.WAYLAND_DISPLAY or vim.env.DISPLAY or vim.fn.has("macunix") == 1
 end
 
-local function should_claim_clipboard()
-  if nvim_has_ssh_environment() or tmux_has_ssh_environment() then
-    return true
-  end
-
+function M.setup()
   -- `wl-copy`/`xclip` being installed does not help from a plain SSH shell: without the display
   -- socket, Neovim's Linux providers have nowhere to send the clipboard.
-  return not has_local_clipboard_display()
-end
-
-function M.setup()
-  -- A tmux session on the far end outlives the ssh connection that started it, and tmux only
-  -- refreshes `SSH_CONNECTION` on reattach, so ask both Neovim's env and tmux's env before letting
-  -- Neovim fall back to a remote clipboard provider.
-  if should_claim_clipboard() then
+  if nvim_has_ssh_environment() or not has_local_clipboard_display() then
     claim_clipboard()
+    return
   end
+
+  -- A tmux session on the far end outlives the ssh connection that started it, and tmux only
+  -- refreshes `SSH_CONNECTION` on reattach, so ask tmux's env too before letting Neovim fall back to
+  -- a remote clipboard provider.
+  ask_tmux_for_ssh_environment(claim_clipboard)
 end
 
 return M
