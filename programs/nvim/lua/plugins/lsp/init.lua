@@ -246,14 +246,6 @@ function M.start_servers()
   })
   -- vim.lsp.enable('herb_ls')
 
-  vim.lsp.config('copilot_language_server', {
-    on_attach = function(client, bufnr)
-      print("Copilot LSP is connected!")
-      M.on_attach(client, bufnr)
-    end
-  })
-  vim.lsp.enable('copilot_language_server')
-
   local runtime_path = vim.split(package.path, ';')
   table.insert(runtime_path, 'lua/?.lua')
   table.insert(runtime_path, 'lua/?/init.lua')

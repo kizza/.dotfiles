@@ -40,16 +40,6 @@ return {
             return true
           end
 
-          -- Intercept copilot and accept its suggestion if present
-          if vim.fn['copilot#Enabled']() == 1 and vim.fn['copilot#GetDisplayedSuggestion']().text ~= "" then
-            vim.api.nvim_feedkeys(
-              vim.api.nvim_replace_termcodes("<Plug>(copilot-accept-line)", true, true, true),
-              "n",
-              true
-            )
-            return true
-          end
-
           if cmp.snippet_active() then
             return cmp.accept()
             -- else
