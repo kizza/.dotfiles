@@ -23,6 +23,8 @@ return {
   },
   {
     'bloznelis/before.nvim',
+    -- Loaded ahead of the first edit, which is the earliest there is any history to step through
+    event = { "InsertEnter", "TextChanged" },
     config = function()
       local before = require('before')
       before.setup()
