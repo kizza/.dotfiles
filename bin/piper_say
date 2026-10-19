@@ -7,8 +7,8 @@ if pgrep -xq "MSTeams"; then
 fi
 
 VOICE="${PIPER_VOICE:-$HOME/.config/piper/voices/alba-medium.onnx}"
+PIPER_URL="${PIPER_URL:-http://127.0.0.1:5100}" # The launchd piper-server, from programs/piper
 PLAY_CMD="ffplay -autoexit -nodisp -loglevel quiet -f s16le -ar 22050 -ch_layout mono -"
-PIPER_BIN="$(python3 -m site --user-base)/bin/piper"
 
 usage() {
   cat <<EOF
@@ -50,14 +50,30 @@ if [[ ! -f "$VOICE" ]]; then
   exit 1
 fi
 
-if [[ ! -x "$PIPER_BIN" ]]; then
-  echo "piper binary not found at $PIPER_BIN" >&2
-  echo "Install with: python3 -m pip install --user piper-tts" >&2
-  exit 1
-fi
+speak_through_server() {
+  curl -sf --connect-timeout 0.2 --url-query "voice=$(basename "$VOICE" .onnx)" --data-binary @- "$PIPER_URL" >/dev/null
+}
+
+speak_through_cli() {
+  local PIPER_BIN
+  PIPER_BIN="$(python3 -m site --user-base)/bin/piper"
+
+  if [[ ! -x "$PIPER_BIN" ]]; then
+    echo "piper binary not found at $PIPER_BIN" >&2
+    echo "Install with: python3 -m pip install --user piper-tts" >&2
+    exit 1
+  fi
+
+  "$PIPER_BIN" --model "$VOICE" --output-raw | $PLAY_CMD
+}
 
 if [[ $# -gt 0 ]]; then
-  printf '%s' "$*" | "$PIPER_BIN" --model "$VOICE" --output-raw | $PLAY_CMD
+  text="$*"
 else
-  cat | "$PIPER_BIN" --model "$VOICE" --output-raw | $PLAY_CMD
+  text="$(cat)"
 fi
+
+# The server speaks in the background and returns at once; the CLI blocks, loading the voice every line.
+printf '%s' "$text" | speak_through_server 2>/dev/null && exit 0
+
+printf '%s' "$text" | speak_through_cli

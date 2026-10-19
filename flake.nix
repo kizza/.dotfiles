@@ -125,6 +125,7 @@
             # ./programs/macvim
             ./programs/opencode.nix
             ./programs/pi.nix
+            ./programs/piper
           ];
         };
 
