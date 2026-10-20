@@ -103,13 +103,17 @@ speak ONE short line (≤ ~8 words) stating the WHY/WHERE via `piper_say '...'`,
   call is allowlisted, speak first. Over-speaking costs a second of audio; a silent prompt defeats
   the whole point. The only calls that stay silent are the obviously-routine allowlisted loop
   (rspec, linters, `ls` in the repo).
-- **Intent, not mechanics** — "can I dig into the DB for rollback patterns?", never "execute bin/bash psql...".
+- **Intent, not mechanics** — "can I search the DB for rollback patterns?", never "execute bin/bash psql...".
 - **One line per unit of work, not per command** — a single investigation that runs six gated
   commands gets one spoken line, not six.
 - `piper_say` is allowlisted so speaking never itself prompts; the osascript visual notification
   stays as the can't-miss fallback if a line is ever missed.
 
-Documented in full as the `voice-intent` skill under `programs/agentic/skills/`.
+That line is the only thing a working session says out loud. Findings, answers and summaries are
+written, as ever — a session that speaks its whole reply is the `conversation` program, not this.
+
+Documented in full as the `voice-intent` skill under `programs/agentic/skills/`; the command itself
+and the wording of anything spoken are the `speaking` skill's.
 
 ## Test clarity
 
