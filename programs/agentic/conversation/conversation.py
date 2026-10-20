@@ -1,6 +1,8 @@
 """Talk something through with a Claude agent, out loud.
 
-Type a line and the agent answers by speaking, for itself, through `piper_say`. Ctrl-C mid-reply
+Type, or hold Right Option and dictate: Karabiner runs `conversation-listen`, which brings this window
+forward and signals us, so the dictation VoiceInk pastes here sends itself and focus goes back to where
+it came from. The agent speaks for itself through `piper_say`; pressing Right Option or Ctrl-C mid-reply
 silences it and interrupts its turn. Ctrl-D ends the conversation.
 """
 
@@ -9,6 +11,8 @@ import asyncio
 import json
 import os
 import re
+import signal
+import subprocess
 import sys
 import time
 import urllib.request
@@ -16,6 +20,8 @@ from pathlib import Path
 
 from prompt_toolkit import PromptSession, print_formatted_text
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.keys import Keys
 from prompt_toolkit.patch_stdout import patch_stdout
 
 STATE_DIRECTORY = Path.home() / ".local/state/conversation"
@@ -51,19 +57,23 @@ class Conversation:
     def __init__(self, arguments: argparse.Namespace) -> None:
         self.arguments = arguments
         self.agent: asyncio.subprocess.Process
+        self.listening = False  # Right Option was pressed, so the dictation pasted next sends itself
         self.turn_in_flight = False
         self.interrupted = False
 
     async def run(self) -> None:
         self.agent = await self.start_agent()
+        self.claim_push_to_talk()
+        asyncio.get_running_loop().add_signal_handler(signal.SIGUSR1, self.listen)
         asyncio.create_task(self.relay_agent())
 
-        say("conversation", "Type to talk. Ctrl-C interrupts, Ctrl-D ends.")
+        say("conversation", "Type, or hold Right Option to talk. Ctrl-C interrupts, Ctrl-D ends.")
         if self.arguments.topic:
             self.send(" ".join(self.arguments.topic))
 
         await self.converse()
 
+        self.release_push_to_talk()
         self.stop_speaking()
         self.agent.terminate()
 
@@ -83,6 +93,14 @@ class Conversation:
             stderr=open(STATE_DIRECTORY / "agent.log", "w"),
             limit=16 * 1024 * 1024,  # A tool result arrives as one line, and a diff can be large
         )
+
+    def claim_push_to_talk(self) -> None:
+        (STATE_DIRECTORY / "pid").write_text(str(os.getpid()))
+        (STATE_DIRECTORY / "window").write_text(aerospace("list-windows", "--focused", "--format", "%{window-id}"))
+
+    def listen(self) -> None:
+        self.listening = True
+        self.interrupt()
 
     def interrupt(self) -> None:
         was_speaking = self.stop_speaking()
@@ -125,7 +143,7 @@ class Conversation:
         self.turn_in_flight = True
 
     async def converse(self) -> None:
-        session = PromptSession()
+        session = PromptSession(key_bindings=self.key_bindings())
 
         with patch_stdout(raw=True):
             while True:
@@ -139,6 +157,24 @@ class Conversation:
 
                 if text.strip():
                     self.send(text.strip())
+                if self.listening:
+                    self.listening = False
+                    return_focus()
+
+    def key_bindings(self) -> KeyBindings:
+        bindings = KeyBindings()
+
+        @bindings.add(Keys.BracketedPaste)
+        def paste(event) -> None:
+            event.current_buffer.insert_text(event.data.replace("\r\n", "\n").replace("\r", "\n"))
+            if self.listening:  # Dictation, rather than a paste of his own
+                event.current_buffer.validate_and_handle()
+
+        return bindings
+
+    def release_push_to_talk(self) -> None:
+        for name in ("pid", "window", "return-to"):
+            (STATE_DIRECTORY / name).unlink(missing_ok=True)
 
 
 def show(block: dict) -> None:
@@ -175,6 +211,19 @@ STYLES = {
 def say(kind: str, text: str) -> None:
     style, prefix = STYLES[kind]
     print_formatted_text(FormattedText([(style, prefix + text.strip())]))
+
+
+def return_focus() -> None:
+    return_to = STATE_DIRECTORY / "return-to"
+    if not return_to.exists():
+        return
+
+    aerospace("focus", "--window-id", return_to.read_text().strip())
+    return_to.unlink()
+
+
+def aerospace(*arguments: str) -> str:
+    return subprocess.run(["aerospace", *arguments], capture_output=True, text=True).stdout.strip()
 
 
 if __name__ == "__main__":

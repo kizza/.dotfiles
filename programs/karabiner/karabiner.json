@@ -309,6 +309,30 @@
                 "type": "basic"
               }
             ]
+          },
+          {
+            "description": "Right Option: VoiceInk push-to-talk, and listen in a running conversation",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "right_option",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "\"$HOME/.nix-profile/bin/conversation-listen\""
+                  },
+                  {
+                    "key_code": "right_option"
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
