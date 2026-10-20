@@ -2,7 +2,8 @@
 
 let
   italics = pkgs.callPackage ./terminfo.nix {};
-  resumeClaudePanes = pkgs.writeShellScript "resume-claude-panes" (builtins.readFile ./resume-claude-panes.sh);
+  recordPaddckPanes = pkgs.writeShellScript "record-paddck-panes" (builtins.readFile ./record-paddck-panes.sh);
+  closePaddckSlots = pkgs.writeShellScript "close-paddck-slots" (builtins.readFile ./close-paddck-slots.sh);
 in
 {
   programs.tmux = {
@@ -22,9 +23,11 @@ in
 
       # Resurrect and continuum load here rather than through `plugins`, which home-manager writes before this
       # config: continuum autosaves from `status-right`, so it has to load after the theme sets that.
+      set -g @resurrect-dir '~/.tmux/resurrect' # named, so the restore hook can find `last`
       set -g @resurrect-capture-pane-contents 'on'
       set -g @resurrect-processes '"~claude --resume"' # only panes the hook gave a session to resume
-      set -g @resurrect-hook-post-save-layout '${resumeClaudePanes}'
+      set -g @resurrect-hook-post-save-layout '${recordPaddckPanes}'
+      set -g @resurrect-hook-post-restore-all '${closePaddckSlots} ~/.tmux/resurrect/last'
       set -g @continuum-restore 'on'
       run-shell ${pkgs.tmuxPlugins.resurrect.rtp}
       run-shell ${pkgs.tmuxPlugins.continuum.rtp}
