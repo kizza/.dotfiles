@@ -111,6 +111,7 @@
             ./programs/aerospace.nix
             ./programs/basecamp-cli.nix
             ./programs/claude.nix
+            ./programs/agentic/conversation
             # ./programs/agent-safehouse.nix
             # ./programs/beads.nix
             ./programs/herdr
