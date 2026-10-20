@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Exit 0 when a microphone or camera is live — any call app, not just Teams — and 1 otherwise.
+
+Usage: in_a_meeting [-v]   (-v prints which devices are live)
+"""
+import ctypes
+import struct
+import sys
+
+
+def fourcc(code):
+    return struct.unpack(">I", code.encode())[0]
+
+
+class PropertyAddress(ctypes.Structure):
+    _fields_ = [("selector", ctypes.c_uint32), ("scope", ctypes.c_uint32), ("element", ctypes.c_uint32)]
+
+
+SYSTEM_OBJECT = 1
+DEVICES = PropertyAddress(fourcc("dev#"), fourcc("glob"), 0)
+INPUT_STREAMS = PropertyAddress(fourcc("stm#"), fourcc("inpt"), 0)
+RUNNING_SOMEWHERE = PropertyAddress(fourcc("gone"), fourcc("glob"), 0)
+
+core_audio = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/CoreAudio.framework/CoreAudio")
+core_media_io = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/CoreMediaIO.framework/CoreMediaIO")
+
+
+def main():
+    live_microphones = [device for device in audio_devices() if has_input_streams(device) and audio_running(device)]
+    live_cameras = [device for device in camera_devices() if camera_running(device)]
+
+    if "-v" in sys.argv:
+        print(f"microphones={live_microphones} cameras={live_cameras}")
+
+    sys.exit(0 if live_microphones or live_cameras else 1)
+
+
+def audio_devices():
+    size = ctypes.c_uint32(0)
+    core_audio.AudioObjectGetPropertyDataSize(SYSTEM_OBJECT, ctypes.byref(DEVICES), 0, None, ctypes.byref(size))
+    devices = (ctypes.c_uint32 * (size.value // 4))()
+    core_audio.AudioObjectGetPropertyData(SYSTEM_OBJECT, ctypes.byref(DEVICES), 0, None, ctypes.byref(size), devices)
+    return list(devices)
+
+
+def has_input_streams(device):
+    size = ctypes.c_uint32(0)
+    core_audio.AudioObjectGetPropertyDataSize(device, ctypes.byref(INPUT_STREAMS), 0, None, ctypes.byref(size))
+    return size.value > 0
+
+
+def audio_running(device):
+    running, size = ctypes.c_uint32(0), ctypes.c_uint32(4)
+    core_audio.AudioObjectGetPropertyData(
+        device, ctypes.byref(RUNNING_SOMEWHERE), 0, None, ctypes.byref(size), ctypes.byref(running)
+    )
+    return running.value != 0
+
+
+def camera_devices():
+    size, used = ctypes.c_uint32(0), ctypes.c_uint32(0)
+    core_media_io.CMIOObjectGetPropertyDataSize(SYSTEM_OBJECT, ctypes.byref(DEVICES), 0, None, ctypes.byref(size))
+    devices = (ctypes.c_uint32 * (size.value // 4))()
+    core_media_io.CMIOObjectGetPropertyData(
+        SYSTEM_OBJECT, ctypes.byref(DEVICES), 0, None, size, ctypes.byref(used), devices
+    )
+    return list(devices)
+
+
+def camera_running(device):
+    running, used = ctypes.c_uint32(0), ctypes.c_uint32(0)
+    core_media_io.CMIOObjectGetPropertyData(
+        device, ctypes.byref(RUNNING_SOMEWHERE), 0, None, 4, ctypes.byref(used), ctypes.byref(running)
+    )
+    return running.value != 0
+
+
+main()

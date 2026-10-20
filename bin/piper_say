@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if pgrep -xq "MSTeams"; then
-  echo "No vocalisation, as teams is running (don't want to interrupt meetings!)"
+if in_a_meeting; then
+  echo "No vocalisation, as a microphone or camera is live (don't want to interrupt meetings!)"
   exit 0
 fi
 
