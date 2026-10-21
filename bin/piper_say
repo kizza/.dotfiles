@@ -8,6 +8,7 @@ fi
 
 VOICE="${PIPER_VOICE:-$HOME/.config/piper/voices/alba-medium.onnx}"
 PIPER_URL="${PIPER_URL:-http://127.0.0.1:5100}" # The launchd piper-server, from programs/piper
+PIPER_AGENT="${PIPER_AGENT:-org.nix-community.home.piper-server}" # Its launchd label, so it can be booted
 PLAY_CMD="ffplay -autoexit -nodisp -loglevel quiet -f s16le -ar 22050 -ch_layout mono -"
 
 usage() {
@@ -51,7 +52,18 @@ if [[ ! -f "$VOICE" ]]; then
 fi
 
 speak_through_server() {
-  curl -sf --connect-timeout 0.2 --url-query "voice=$(basename "$VOICE" .onnx)" --data-binary @- "$PIPER_URL" >/dev/null
+  printf '%s' "$text" | curl -sf --connect-timeout 0.2 --url-query "voice=$(basename "$VOICE" .onnx)" --data-binary @- "$PIPER_URL" >/dev/null
+}
+
+boot_server() {
+  # launchd keeps the server alive, so it is only down mid-restart or because the agent was booted out
+  launchctl kickstart "gui/$(id -u)/$PIPER_AGENT" 2>/dev/null || return 1
+
+  for _ in $(seq 1 25); do # ~5s; loading the voice takes about two
+    curl -s -o /dev/null --connect-timeout 0.2 "$PIPER_URL" && return 0
+    sleep 0.2
+  done
+  return 1
 }
 
 speak_through_cli() {
@@ -74,6 +86,7 @@ else
 fi
 
 # The server speaks in the background and returns at once; the CLI blocks, loading the voice every line.
-printf '%s' "$text" | speak_through_server 2>/dev/null && exit 0
+speak_through_server 2>/dev/null && exit 0
+boot_server && speak_through_server 2>/dev/null && exit 0
 
 printf '%s' "$text" | speak_through_cli
