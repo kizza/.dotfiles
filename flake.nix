@@ -110,6 +110,7 @@
             ./home.nix
             ./programs/aerospace.nix
             ./programs/basecamp-cli.nix
+            ./programs/trello
             ./programs/claude.nix
             ./programs/agentic/conversation
             # ./programs/agent-safehouse.nix
