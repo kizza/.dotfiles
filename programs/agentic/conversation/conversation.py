@@ -4,6 +4,9 @@ Type, or hold Right Option and dictate: Karabiner runs `conversation-listen`, wh
 forward and signals us, so the dictation VoiceInk pastes here sends itself and focus goes back to where
 it came from. The agent speaks for itself through `piper_say`; pressing Right Option or Ctrl-C mid-reply
 silences it and interrupts its turn. Ctrl-D ends the conversation.
+
+The agent is read-only, so what he decides should change goes somewhere a working session will find it:
+a remark in the worktree that holds the branch, and a message to the session working there.
 """
 
 import argparse
@@ -28,6 +31,13 @@ STATE_DIRECTORY = Path.home() / ".local/state/conversation"
 
 READ_ONLY_TOOLS = [
     "Bash(piper_say *)",
+    "Bash(remarks add *)",  # What he says should change, left against the line for the engineer
+    "Bash(remarks list *)",
+    "Bash(remarks list)",
+    "Bash(git worktree list *)",
+    "Bash(git worktree list)",
+    "ListAgents",  # Which session works in that worktree, and where it sits
+    "SendMessage",
     "Bash(gh pr view *)",
     "Bash(gh pr diff *)",
     "Bash(gh pr checks *)",
@@ -40,6 +50,8 @@ READ_ONLY_TOOLS = [
     "Grep",
     "Glob",
 ]
+
+WORKING_DIRECTORIES = [Path.home() / "Code"]  # Where worktrees live, so a remark can be left in the one for the branch
 
 
 def main() -> None:
@@ -87,7 +99,8 @@ class Conversation:
             "--system-prompt", self.arguments.instructions.read_text(),
             # Without the user's settings, MCP servers and memory a session starts in ~1.5s, not ~6s
             "--setting-sources", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers": {}}',
-            "--tools", "Bash,Read,Grep,Glob", "--allowedTools", *READ_ONLY_TOOLS,
+            "--tools", "Bash,Read,Grep,Glob,ListAgents,SendMessage", "--allowedTools", *READ_ONLY_TOOLS,
+            "--add-dir", *map(str, WORKING_DIRECTORIES),
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=open(STATE_DIRECTORY / "agent.log", "w"),
