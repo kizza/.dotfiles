@@ -1,13 +1,13 @@
 ---
 name: manager
 description: >
-  The standup. One long-lived session that, every tick, re-reads what is in flight — worktrees, pull
-  requests, the engineers' sessions, the tracker — moves each piece forward, forks product when a slot is
-  free and the reviewer when a branch is ready, hands comments on their pull requests to the session in
-  that worktree, opens a reviewer on each pull request they are named to review, and tells the human only
-  what needs them. Use to start or
-  resume the manager, to run one standup by hand, or when they ask "where is everything", "what's in
-  flight", "what should I pick up". Never writes code.
+  The standup. One long-lived session that, each time the `workflow-state` watcher says something moved,
+  reads what is in flight — worktrees, pull requests, the engineers' sessions, the tracker — moves each
+  piece forward, forks product when a slot is free and the reviewer when a branch is ready, hands comments
+  on their pull requests to the session in that worktree, opens a reviewer on each pull request they are
+  named to review, and tells the human only what needs them. Use to start or resume the manager, to run
+  one standup by hand, or when they ask "where is everything", "what's in flight", "what should I pick
+  up". Never writes code.
 ---
 
 # Manager
@@ -33,31 +33,28 @@ the piles, what "valuable" means, and every proposal and outcome so far. No argu
 never pick one. Confirm it exists and has `Links` before the first tick; an empty one is theirs to fill,
 and the manager says so and waits.
 
-Once up, loop the standup: `/loop 10m /workflow:manager <Effort>`. The loop is self-pacing — a tick that
-finds nothing changed costs one cheap read and ends. There is no state to lose if the session dies;
-start another the same way.
+Once up, run one standup, then wait. There is no loop: the **`workflow-state`** watcher, a launchd timer,
+re-reads the world every five minutes and messages this session only when something moved — "Workflow
+watcher: n change(s) …, run your standup". A quiet day costs nothing. There is no state to lose if the
+session dies; start another the same way, and the next change finds it. `workflow-state status` on the
+command line shows when the watcher last ran and what it last saw.
 
 ## One tick — the standup
 
-**1. Read the world.** Nothing here is remembered from last tick; it is all re-derived.
+**1. Read the world.** The watcher has already gathered it. Nothing here is remembered from last tick:
 
-```bash
-git -C ~/Code/<repo> worktree list
-gh pr list --author @me --state open --json number,title,headRefName,isDraft,reviewDecision,statusCheckRollup
-gh pr list --search 'user-review-requested:@me' --state open --json number,title,author,url   # named, not via a team
-gh pr view $N --json reviews,comments                                     # each of their open PRs
-gh api repos/{owner}/{repo}/pulls/$N/comments --jq 'map({id,path,line,user:.user.login,body})'
-tmux list-windows -t Review -F '#W' 2>/dev/null
-ls ~/.config/paddck/annotations/
-```
+- `~/.config/workflow/last-change.md` — what moved since the last tick, one line each
+- `~/.config/workflow/state.json` — the world as it stands: `pull_requests` (theirs, last 30 days, with
+  review and comment counts and CI), `review_requests` (named, not via a team), `cards` (assigned to them,
+  not done), `worktrees`, `sessions` (the ones sitting in a worktree, with idle or busy), `annotations`
+  (stage per worktree), `remarks` (count per worktree), `review_windows`
 
-Engineers in flight: `ListAgents` names the sessions. Tracker notifications and the cards behind any
-brief: the skill that owns the tracker (`basecamp` here). Standing remarks on a branch: `remarks list`
-from its worktree.
+Read the comments themselves only for a pull request the change names, with `gh pr view $N --json
+reviews,comments` and `gh api repos/{owner}/{repo}/pulls/$N/comments`. What a session said when it went idle
+is in its message to you, not in the file. Cards behind a brief: the tracker's skill (`basecamp` here).
 
-**2. Diff against the last standup.** The last standup's board is the most recent dated entry under
-`Working notes` in the effort note. If nothing moved — no new notification, no CI or review change, no
-engineer changed state, no slot freed — say so in one line and end the tick.
+**2. Diff against the last standup.** The watcher's change list is the diff. A standup run by hand with no
+change file, or one whose changes are all noise, says so in one line and ends.
 
 **3. Move what is in flight.** For each slice, in annotation order:
 

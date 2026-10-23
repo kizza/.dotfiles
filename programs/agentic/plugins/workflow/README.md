@@ -14,7 +14,7 @@ on — loaded from this directory through `CLAUDE_CODE_PLUGIN_DIRS`, or installe
 
 | Role | Runs as | Job |
 |---|---|---|
-| **manager** | one long-lived session in the `Agentic` tmux session, looping every ten minutes | the standup: re-reads the world, moves what is in flight, keeps three slots, tells you what needs you |
+| **manager** | one long-lived session in the `Agentic` tmux session, woken by `workflow-state` when something moved | the standup: reads the world the watcher gathered, moves what is in flight, keeps three slots, tells you what needs you |
 | **product** | a read-only subagent the manager forks when a slot is free | reads the piles and proposes three slices that are almost no-brainers |
 | **engineer** | one session per slice, in its own worktree and tmux window | brief → build → commits → ready → remarks addressed → PR |
 | **reviewer** | a read-only subagent the manager forks when an engineer says ready; or a session per pull request you are asked to review, in the `Review` tmux session | reviews the team's branch against its brief and your own past remarks, as remarks, at most two passes; reviews a teammate's PR as a briefing you read in its window |
@@ -52,8 +52,11 @@ Three in flight at most. The stage says whose hands a slice is in, and that is a
 ```bash
 tmux new-session -s Agentic -n manager          # once
 claude --name manager '/workflow:manager <Effort>'
-/loop 10m /workflow:manager <Effort>
 ```
+
+That is all: the `workflow-state` watcher (`programs/workflow`, a launchd timer) re-reads the world every
+five minutes and messages the manager only when something moved, so a quiet day starts no Claude at all.
+`workflow-state status` shows what it last saw.
 
 `<Effort>` names the **effort note** the workflow runs under — `Effort*/<Effort>.md` in the vault. One
 initiative is one note and one manager. The manager opens each engineer in its own `Agentic` window, in
@@ -82,8 +85,8 @@ window.
 | replies to comments on your pull requests | the engineer's window, one per comment, after it has pushed |
 | corrections to the mechanics | the skill they belong in, logged in `~/.local/share/remarks/retro.md` |
 
-The manager remembers nothing between ticks on purpose. Kill it and start it again; the vault and
-paddck are the state.
+The manager remembers nothing between ticks on purpose. Kill it and start it again; the vault,
+paddck and the watcher's `state.json` are the state.
 
 ## Intervening
 

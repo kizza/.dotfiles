@@ -17,7 +17,7 @@ has leaked into a craft skill's job; a craft skill that says who to hand to has 
 
 | Role | Runs as | Does |
 |---|---|---|
-| **manager** | one long-lived session, `/loop`-ing a standup | advances what is in flight, keeps the limit, surfaces what needs the human |
+| **manager** | one long-lived session, woken by the `workflow-state` watcher when something moved | advances what is in flight, keeps the limit, surfaces what needs the human |
 | **product** | a read-only subagent the manager forks | reads the piles and proposes three slices |
 | **engineer** | one session per slice, in its own worktree and tmux window | brief to pull request |
 | **reviewer** | a read-only subagent the manager forks; or one session per pull request the human is asked to review | reviews the team's branch against its brief, as remarks; reviews a teammate's pull request as a briefing for the human |
