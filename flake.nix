@@ -128,6 +128,7 @@
             ./programs/opencode.nix
             ./programs/pi.nix
             ./programs/piper
+            ./programs/workflow
           ];
         };
 
