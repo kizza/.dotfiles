@@ -58,9 +58,10 @@ That is all: the `workflow-state` watcher (`programs/workflow`, a launchd timer)
 five minutes and messages the manager only when something moved, so a quiet day starts no Claude at all.
 `workflow-state status` shows what it last saw.
 
-`<Effort>` names the **effort note** the workflow runs under — `Effort*/<Effort>.md` in the vault. One
-initiative is one note and one manager. The manager opens each engineer in its own `Agentic` window, in
-the worktree, and paddck's sidebar shows them all.
+`<Effort>` names the **effort note** the workflow runs under — `Effort*/<Effort>.md` in the vault: the
+workflow's own note, `Workflow`, whose `Links` name the tracker project the piles come from and the
+initiatives' notes behind them. One note, one manager. The manager opens each engineer in its own
+`Agentic` window, in the worktree, and paddck's sidebar shows them all.
 
 It also watches for pull requests you have been asked to review by name — a request to a team you belong
 to is left alone. Each one with no window yet gets a window named for its title in a `Review` session, in a

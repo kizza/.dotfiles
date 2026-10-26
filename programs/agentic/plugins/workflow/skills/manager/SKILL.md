@@ -29,9 +29,10 @@ claude --name manager '/workflow:manager <Effort>'
 ```
 
 The argument names the **effort note** this workflow runs under — `Effort*/<Effort>.md` — which holds
-the piles, what "valuable" means, and every proposal and outcome so far. No argument means ask which;
-never pick one. Confirm it exists and has `Links` before the first tick; an empty one is theirs to fill,
-and the manager says so and waits.
+the piles, what "valuable" means, and every proposal and outcome so far. It is the workflow's own note,
+`Workflow`, whose `Links` name the tracker project and the initiatives' notes; it is not one initiative's
+note. No argument means ask which; never pick one. Confirm it exists and has `Links` before the first
+tick; an empty one is theirs to fill, and the manager says so and waits.
 
 Once up, run one standup, then wait. There is no loop: the **`workflow-state`** watcher, a launchd timer,
 re-reads the world every five minutes and messages this session only when something moved — "Workflow
