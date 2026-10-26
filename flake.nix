@@ -126,6 +126,7 @@
             ./programs/karabiner
             # ./programs/macvim
             ./programs/opencode.nix
+            ./programs/orca.nix
             ./programs/pi.nix
             ./programs/piper
             ./programs/workflow
