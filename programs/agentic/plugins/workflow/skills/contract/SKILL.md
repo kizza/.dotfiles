@@ -170,18 +170,15 @@ shell sits in a worktree of that branch. The human places a pull request by its 
 window name is the state — a request with no window is unhandled, and the manager opens one:
 
 ```bash
-if ! tmux list-windows -t Review -F '#W' 2>/dev/null | grep -qxF "$TITLE"; then
-  if tmux has-session -t Review 2>/dev/null; then
-    WINDOW=$(tmux new-window -P -F '#{window_id}' -t Review -n "$TITLE" -c "$WORKTREE_PATH")
-  else
-    WINDOW=$(tmux new-session -d -P -F '#{window_id}' -s Review -n "$TITLE" -c "$WORKTREE_PATH")
-  fi
-  tmux send-keys -t "$WINDOW" "claude --name \"$TITLE\" '/workflow:reviewer $PR_URL'" Enter
-fi
+workflow-review "$PR_URL"
 ```
 
-Target the window by its id: a title's `:` and `.` read as tmux target separators. The session takes the
-title as its `--name` too, since that is what the human sees in its prompt box.
+`workflow-review` (`programs/workflow`) reads the title from GitHub, adds the worktree at `pr-<number>` if
+there is none, opens the window named for the title and starts `claude --name "<title>" '/workflow:reviewer
+<url>'` in it; a window already named for the title means it is open, and it does nothing. The title is the
+window's name and the session's `--name`, since that is what the human sees in paddck and the prompt box —
+never the worktree's slug, which is the only thing that keeps `pr-<number>`. Target a window by its id: a
+title's `:` and `.` read as tmux target separators.
 
 These windows are the human's reading room, not slots: they do not count against the limit of three, and
 nothing in them is posted to the pull request. The human closes a window when they are done with it.

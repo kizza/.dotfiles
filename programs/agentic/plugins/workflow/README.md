@@ -64,7 +64,7 @@ the worktree, and paddck's sidebar shows them all.
 
 It also watches for pull requests you have been asked to review by name — a request to a team you belong
 to is left alone. Each one with no window yet gets a window named for its title in a `Review` session, in a
-worktree of that branch, with a reviewer reading it. By the time you look, the briefing is waiting: what
+worktree of that branch, with a reviewer reading it (`workflow-review`, in `programs/workflow`). By the time you look, the briefing is waiting: what
 it does, the risks ranked, the questions to ask, the comments worth posting. Nothing is posted; you do that.
 
 Comments on your own pull requests — Copilot's, a colleague's — go to whichever session sits in that

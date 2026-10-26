@@ -5,6 +5,9 @@
 # into ~/.config/workflow/state.json every five minutes, and only when something changed does it notify
 # Keiran and wake the manager session, through a one-shot Claude that sends it the message. A quiet day
 # costs no tokens. See state.py for the graph and the diff, and the `workflow:manager` skill for the standup.
+#
+# `workflow-review`: opens the reading room for a pull request Keiran was asked to review — worktree, `Review`
+# tmux window and reviewer session, the last two named for the pull request's title. See review.sh.
 
 let
   logFile = "${config.home.homeDirectory}/Library/Logs/workflow-state.log";
@@ -18,9 +21,18 @@ let
       exec python3 ${./state.py} "$@"
     '';
   };
+
+  workflow-review = pkgs.writeShellApplication {
+    name = "workflow-review";
+    runtimeInputs = [ pkgs.gh pkgs.git pkgs.tmux ];
+    text = ''
+      export PATH="$HOME/.nix-profile/bin:$PATH"  # claude, for the reviewer session
+      exec bash ${./review.sh} "$@"
+    '';
+  };
 in
 {
-  home.packages = [ workflow-state ];
+  home.packages = [ workflow-state workflow-review ];
 
   launchd.agents.workflow-state = {
     enable = true;

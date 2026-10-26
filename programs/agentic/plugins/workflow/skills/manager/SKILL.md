@@ -85,12 +85,12 @@ it to is whichever one sits in the branch's worktree: `git worktree list` gives 
 names the session on that pane. No session there: it goes to the human as *needs you*; the manager does not
 start one. New feedback is what the last board did not count — the *in PR* line carries the number seen.
 
-**4. Open what they were asked to review.** Every pull request in `user-review-requested:@me` with no
-window named for its title in the `Review` session gets one, as the contract shows: a worktree of the branch
-through the **`worktrees`** skill, the window, and a reviewer started on the pull request's URL. Several
-at once is fine — they are reading, not building, and do not count against the three. A window whose pull
-request has since merged, closed, or carries the human's own submitted review is stale: say so in the
-roll-up, and leave closing it to them.
+**4. Open what they were asked to review.** Every entry in `review_requests` whose `title` is not a window
+name in `review_windows` gets one: `workflow-review <url>`, as the contract shows, adds the worktree, opens
+the `Review` window named for the title and starts the reviewer in it. The window and the session are
+named for the title, never the worktree's `pr-<number>`. Several at once is fine — they are reading, not
+building, and do not count against the three. A window whose pull request has since merged, closed, or
+carries the human's own submitted review is stale: say so in the roll-up, and leave closing it to them.
 A request that reaches the human only through a team they belong to is not theirs to open — `review-requested:@me`
 would include those, and does not get used.
 
